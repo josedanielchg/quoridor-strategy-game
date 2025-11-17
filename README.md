@@ -3,7 +3,7 @@
 University project for the **IN204 – Object-Oriented Programming** course.  
 Goal: build a **2D Quoridor board game** in **C++ + SFML** with a **clean OOP architecture** and a **configurable AI** based on search and heuristics.
 
-> Authors: **MENESES Carlos ** & **CHACÓN José**
+> Authors: **MENESES Carlos** & **CHACÓN José**
 
 ---
 
