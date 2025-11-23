@@ -1,51 +1,67 @@
 #include "app/Application.hpp"
 #include <iostream>
 
-namespace App {
+namespace App
+{
 
-    Application::Application() 
-        // SFML 3 Change: Use braces {} for Vector2 parameters (VideoMode)
-        : m_window(sf::VideoMode({800, 600}), "Quoridor POC - SFML 3.0")
+    Application::Application()
+        : m_window(sf::VideoMode({1280, 720}), "Quoridor Isometric")
     {
-        // Setup a simple green circle to prove rendering works
-        m_testShape.setRadius(50.f);
-        m_testShape.setFillColor(sf::Color::Green);
-        
-        // SFML 3 Change: setPosition takes a Vector2f, use braces {}
-        m_testShape.setPosition({350.f, 250.f});
-
-        // Limit framerate
         m_window.setFramerateLimit(60);
-    }
 
-    void Application::run() {
-        while (m_window.isOpen()) {
-            processEvents();
-            update();
-            render();
+        // 1. Init Logic
+        m_board.init(); // Creates graph
+
+        // 2. Init Resources (Textures)
+        if (!m_renderer.init())
+        {
+            std::cerr << "Failed to load assets. Exiting.\n";
+            exit(-1);
         }
+
+        // 3. Place Dummy Players for Visualization
+        // Player 1 at Top (4, 0)
+        m_board.getField(4, 0)->setOccupantId(1);
+
+        // Player 2 at Bottom (4, 8)
+        m_board.getField(4, 8)->setOccupantId(2);
+
+        // Initialize View
+        m_renderer.handleResize(m_window, m_window.getSize());
     }
 
-    void Application::processEvents() {
-        // SFML 3 Breaking Change: pollEvent returns std::optional<sf::Event>
-        while (const std::optional event = m_window.pollEvent()) {
-            
-            // SFML 3 Breaking Change: Use event->is<Type>() or event->getIf<Type>()
-            
-            // 1. Check for Close
-            if (event->is<sf::Event::Closed>()) {
+    void Application::processEvents()
+    {
+        while (const std::optional event = m_window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+            {
                 m_window.close();
             }
-            // 2. Check for Key Press (Example of getIf)
-            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
+            else if (const auto *resized = event->getIf<sf::Event::Resized>())
+            {
+                m_renderer.handleResize(m_window, resized->size);
+            }
+            else if (const auto *key = event->getIf<sf::Event::KeyPressed>())
+            {
+                if (key->scancode == sf::Keyboard::Scancode::Escape)
                     m_window.close();
-                }
             }
         }
     }
 
-    void Application::update() {
+    void Application::render()
+    {
+        m_window.clear(sf::Color(30, 30, 30)); // Dark background
+
+        // Pass the model to the view
+        m_renderer.render(m_window, m_board);
+
+        m_window.display();
+    }
+
+    void Application::update()
+    {
         // Game logic updates go here
         // For POC, let's just pulse the color slightly
         static float time = 0.0f;
@@ -53,10 +69,13 @@ namespace App {
         // Minimal logic just to show update loop is running
     }
 
-    void Application::render() {
-        m_window.clear(sf::Color::Black);
-        m_window.draw(m_testShape);
-        m_window.display();
+    void Application::run()
+    {
+        while (m_window.isOpen())
+        {
+            processEvents();
+            update();
+            render();
+        }
     }
-
 }

@@ -31,10 +31,7 @@ FetchContent_MakeAvailable(SFML)
 # --------------------------------------------------------
 
 # Define your source files
-set(SRC_FILES
-    src/main.cpp
-    src/app/Application.cpp
-)
+file(GLOB_RECURSE SRC_FILES "src/*.cpp")
 
 # Create the executable
 add_executable(${PROJECT_NAME} ${SRC_FILES})
