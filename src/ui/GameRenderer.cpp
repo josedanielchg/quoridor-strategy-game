@@ -74,9 +74,17 @@ namespace UI {
         for (const auto& field : fields) {
             sf::Vector2f pos = cartesianToIsometric(field.x(), field.y());
 
+            // --- HOVER EFFECT ---
+            if (field.x() == m_hoveredCoords.x && field.y() == m_hoveredCoords.y) {
+                m_spriteTile.setColor(sf::Color::White); // Full Brightness
+            } else {
+                m_spriteTile.setColor(sf::Color(200, 200, 200)); // Slightly dimmed
+            }
+
             m_spriteTile.setPosition(pos);
             window.draw(m_spriteTile);
 
+            // Draw Pawn
             int occupant = field.occupantId();
             if (occupant != 0) {
                 // Swap the texture depending on the player
@@ -113,5 +121,33 @@ namespace UI {
         }
 
         m_view.setViewport(viewport);
+    }
+
+    sf::Vector2i GameRenderer::getMouseGridPos(const sf::RenderWindow& window, sf::Vector2i mousePos) const {
+        // 1. Convert Screen Pixels -> World Coords (taking View/Zoom into account)
+        sf::Vector2f worldPos = window.mapPixelToCoords(mousePos, m_view);
+
+        // 2. Remove the Board Origin Offset
+        float localX = worldPos.x - m_boardOrigin.x;
+        float localY = worldPos.y - m_boardOrigin.y;
+
+        // 3. Inverse Isometric Formula
+        float approxX = (localX / m_isoWidth + localY / m_isoHeight) / 2.f;
+        float approxY = (localY / m_isoHeight - localX / m_isoWidth) / 2.f;
+
+        // 4. Round to nearest integer index
+        int gridX = static_cast<int>(std::round(approxX));
+        int gridY = static_cast<int>(std::round(approxY));
+
+        // 5. Bounds Check (Quoridor is 9x9, indices 0..8)
+        if (gridX >= 0 && gridX < 9 && gridY >= 0 && gridY < 9) {
+            return {gridX, gridY};
+        }
+
+        return {-1, -1};
+    }
+
+    void GameRenderer::setHoveredTile(sf::Vector2i gridCoords) {
+        m_hoveredCoords = gridCoords;
     }
 }

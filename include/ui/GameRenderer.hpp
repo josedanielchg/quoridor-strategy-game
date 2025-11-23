@@ -27,6 +27,8 @@ namespace UI
 
             sf::View m_view;
 
+            sf::Vector2i m_hoveredCoords = {-1, -1};
+
         public:
             GameRenderer();
 
@@ -38,6 +40,12 @@ namespace UI
 
             // Handle resizing (centering the isometric board)
             void handleResize(sf::RenderWindow &window, sf::Vector2u size);
+
+            // Updates the hovered tile indices
+            void setHoveredTile(sf::Vector2i gridCoords);
+
+            // Converts Screen Pixel (Mouse) -> Grid Index (0..8) / Returns {-1, -1} if outside board
+            sf::Vector2i getMouseGridPos(const sf::RenderWindow& window, sf::Vector2i mousePos) const;
     };
 
 }
