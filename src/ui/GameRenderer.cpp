@@ -4,13 +4,31 @@
 
 namespace UI {
 
+    static const sf::Vector2f REFERENCE_SIZE = {2200.f, 1400.f};
+
+    static const float ISO_WIDTH = 112.f;
+    static const float ISO_HEIGHT = 57.f;
+
     GameRenderer::GameRenderer()
         : m_spriteTile(m_texTile)     
         , m_spritePawn(m_texPawnP1) // Initialize with P1 texture by default
-        , m_isoWidth(112.f) // From your specs
-        , m_isoHeight(57.f) // From your specs
-        , m_boardOrigin({400.f, 100.f}) // Initial guess, updated on resize
+        , m_isoWidth(ISO_WIDTH)
+        , m_isoHeight(ISO_HEIGHT)
     {
+        // 1. Calculate the full height of the board in pixels
+        float boardGeoHeight = (8 + 8) * m_isoHeight; 
+
+        // 2. Find the vertical center of the board geometry
+        float boardCenterY = boardGeoHeight / 2.f;
+
+        // 3. Align Board Center with Screen Center
+        float originY = (REFERENCE_SIZE.y / 2.f) - boardCenterY;
+
+        // 4. Horizontal Center is simple
+        float originX = REFERENCE_SIZE.x / 2.f;
+
+        // 5. Visual Tweak: Move it slightly UP (-50.f) because Pawns stick up 
+        m_boardOrigin = {originX, originY - 30.f};
     }
 
     bool GameRenderer::init() {
@@ -36,7 +54,7 @@ namespace UI {
 
         // 3. Setup Pawn Sprite
         m_spritePawn.setTexture(m_texPawnP1, true);
-        m_spritePawn.setOrigin({112.f / 2.f, 165.f - 15.f}); 
+        m_spritePawn.setOrigin({112.f / 2.f, 165.f - 20.f}); 
 
         return true;
     }
@@ -72,8 +90,28 @@ namespace UI {
     }
 
     void GameRenderer::handleResize(sf::RenderWindow& window, sf::Vector2u size) {
-        m_view.setSize({float(size.x), float(size.y)});
-        m_view.setCenter({float(size.x) / 2.f, float(size.y) / 2.f});
-        m_boardOrigin = {float(size.x) / 2.f, float(size.y) / 4.f}; 
+        m_view.setSize(REFERENCE_SIZE);
+        m_view.setCenter(REFERENCE_SIZE / 2.f);
+
+        float windowRatio = float(size.x) / float(size.y);
+        float refRatio = REFERENCE_SIZE.x / REFERENCE_SIZE.y;
+        
+        // SFML 3.0 Rect Constructor: {{pos}, {size}}
+        sf::FloatRect viewport({0.f, 0.f}, {1.f, 1.f});
+
+        if (windowRatio > refRatio) {
+            // Window is WIDER -> Black bars on sides
+            float scale = refRatio / windowRatio;
+            viewport.size.x = scale;
+            viewport.position.x = (1.f - scale) / 2.f; 
+        } 
+        else {
+            // Window is TALLER -> Black bars on top/bottom
+            float scale = windowRatio / refRatio;
+            viewport.size.y = scale;
+            viewport.position.y = (1.f - scale) / 2.f; 
+        }
+
+        m_view.setViewport(viewport);
     }
 }

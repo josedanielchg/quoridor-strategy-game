@@ -19,12 +19,12 @@ namespace App
             exit(-1);
         }
 
-        // 3. Place Dummy Players for Visualization
+        // 3. Place Players for Visualization
         // Player 1 at Top (4, 0)
-        m_board.getField(4, 0)->setOccupantId(1);
-
+        m_board.getField(4, 8)->setOccupantId(1);
+        
         // Player 2 at Bottom (4, 8)
-        m_board.getField(4, 8)->setOccupantId(2);
+        m_board.getField(4, 0)->setOccupantId(2);
 
         // Initialize View
         m_renderer.handleResize(m_window, m_window.getSize());
@@ -63,10 +63,8 @@ namespace App
     void Application::update()
     {
         // Game logic updates go here
-        // For POC, let's just pulse the color slightly
         static float time = 0.0f;
         time += 0.1f;
-        // Minimal logic just to show update loop is running
     }
 
     void Application::run()
