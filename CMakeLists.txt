@@ -50,8 +50,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     SFML::System 
     SFML::Audio
     SFML::Network
-    SFML::Main
 )
+if(WIN32)
+    target_link_libraries(QuoridorGame PRIVATE SFML::Main)
+endif()
 
 # --------------------------------------------------------
 # ASSETS (Copy assets folder to build directory)
