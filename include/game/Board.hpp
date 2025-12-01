@@ -2,8 +2,6 @@
 #include "game/Field.hpp"
 #include "game/Wall.hpp"
 #include <vector>
-#include <memory>
-#include <array>
 #include <optional>
 
 namespace Game
@@ -14,7 +12,7 @@ namespace Game
             static constexpr int SIZE = 9;
     
         private:
-        std::array<Field, SIZE * SIZE> m_fields;
+        std::vector<Field> m_fields;
 
         std::vector<Wall> m_walls;
             
@@ -28,7 +26,7 @@ namespace Game
             Field& getField(int x, int y);
             const Field& getField(int x, int y) const;
 
-            const std::array<Field, SIZE * SIZE>& getAllFields() const;
+            const std::vector<Field>& getAllFields() const;
             
             const std::vector<Wall> &getAllWalls() const;
 

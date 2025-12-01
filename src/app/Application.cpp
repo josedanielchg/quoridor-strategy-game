@@ -23,10 +23,10 @@ namespace App
 
         // Place Players for Visualization
         // Player 1 at Top (4, 0)
-        m_board.getField(4, 8)->setOccupantId(1);
+        m_board.getField(4, 8).setOccupantId(1);
         
         // Player 2 at Bottom (4, 8)
-        m_board.getField(4, 0)->setOccupantId(2);
+        m_board.getField(4, 0).setOccupantId(2);
 
         m_renderer.handleResize(m_window, m_window.getSize());
     }
@@ -64,16 +64,16 @@ namespace App
         if (gridPos.x == -1 || gridPos.y == -1) return;
 
         // 2. Get the target field
-        Game::Field* target = m_board.getField(gridPos.x, gridPos.y);
+        Game::Field& target = m_board.getField(gridPos.x, gridPos.y);
         
         // 3. Simple Rule: Target must be empty
-        if (target->occupantId() != 0) return;
+        if (target.occupantId() != 0) return;
 
         // 4. Find Current Player Position to clear it
         Game::Field* currentField = nullptr;
         for (const auto& f : m_board.getAllFields()) {
             if (f.occupantId() == m_currentPlayer) {
-                currentField = m_board.getField(f.x(), f.y());
+                currentField = &m_board.getField(f.x(), f.y());
                 break;
             }
         }
@@ -81,7 +81,7 @@ namespace App
         if (currentField) {
             // Move Pawn
             currentField->setOccupantId(0);
-            target->setOccupantId(m_currentPlayer);
+            target.setOccupantId(m_currentPlayer);
 
             // Switch Turn
             m_currentPlayer = (m_currentPlayer == 1) ? 2 : 1;
