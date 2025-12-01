@@ -1,109 +1,107 @@
 #include "game/Board.hpp"
-#include <iostream>
+#include <stdexcept>
 
 namespace Game
 {
     Board::Board()
     {
-        // Pre-allocate fields
-        m_fields.reserve(SIZE * SIZE);
+        // El std::array ya está creado en memoria. Solo configuramos las coordenadas.
         for (int y = 0; y < SIZE; ++y)
         {
             for (int x = 0; x < SIZE; ++x)
             {
-                m_fields.emplace_back(x, y);
+                int index = y * SIZE + x;
+                m_fields[index] = Field(x, y); 
             }
         }
     }
 
     void Board::init()
     {
-        // Reset neighbors
-        // This creates the full graph where every cell connects to adjacent ones
+        // Reiniciar el tablero sobrescribiendo con Fields nuevos (conexiones en true)
         for (int y = 0; y < SIZE; ++y)
         {
             for (int x = 0; x < SIZE; ++x)
             {
-                Field *current = getField(x, y);
-
-                if (y > 0)
-                    current->addNeighbor(getField(x, y - 1)); // Up
-                if (y < SIZE - 1)
-                    current->addNeighbor(getField(x, y + 1)); // Down
-                if (x > 0)
-                    current->addNeighbor(getField(x - 1, y)); // Left
-                if (x < SIZE - 1)
-                    current->addNeighbor(getField(x + 1, y)); // Right
+                int index = y * SIZE + x;
+                m_fields[index] = Field(x, y);
             }
         }
         m_walls.clear();
     }
 
-    Field *Board::getField(int x, int y)
+    Field& Board::getField(int x, int y)
     {
-        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE)
-            return nullptr;
-        return &m_fields[y * SIZE + x];
+        if (!isValid(x, y)) {
+            throw std::out_of_range("Board::getField - Coordenadas fuera de rango");
+        }
+        return m_fields[y * SIZE + x];
     }
 
-    const Field *Board::getField(int x, int y) const
+    const Field& Board::getField(int x, int y) const
     {
-        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE)
-            return nullptr;
-        return &m_fields[y * SIZE + x];
+        if (!isValid(x, y)) {
+            throw std::out_of_range("Board::getField const - Coordenadas fuera de rango");
+        }
+        return m_fields[y * SIZE + x];
     }
 
-    const std::vector<Field> &Board::getAllFields() const
+    const std::array<Field, Board::SIZE * Board::SIZE>& Board::getAllFields() const
     {
         return m_fields;
     }
 
-    const std::vector<Wall> &Board::getAllWalls() const
+    const std::vector<Wall>& Board::getAllWalls() const
     {
         return m_walls;
     }
 
-    void Board::disconnect(Field *a, Field *b)
-    {
-        if (a && b)
-        {
-            a->removeNeighbor(b);
-            b->removeNeighbor(a);
-        }
-    }
-
     bool Board::placeWall(int x, int y, Orientation orientation)
     {
-        // Validate bounds for a wall (walls go between cells)
+        // 1. Validar límites del tablero (0..7 para paredes)
         if (x < 0 || x >= SIZE - 1 || y < 0 || y >= SIZE - 1)
             return false;
 
+        // 2. Validar colisión con paredes existentes
+        for (const auto& w : m_walls) {
+            // Si ya hay una pared exacta
+            if (w.x() == x && w.y() == y && w.orientation() == orientation) return false;
+            
+            // Validación básica de cruce (Horizontal encima de Vertical en el mismo centro)
+            if (w.x() == x && w.y() == y) return false;
+        }
+
+        // 3. ACTUALIZAR EL GRAFO (Cortar conexiones bidireccionalmente)
         if (orientation == Orientation::Horizontal)
         {
-            // Horizontal wall at (x,y) cuts:
-            // (x,y)|(x,y+1) AND (x+1,y)|(x+1,y+1)
-            Field *tl = getField(x, y);         // Top-Left
-            Field *bl = getField(x, y + 1);     // Bottom-Left
-            Field *tr = getField(x + 1, y);     // Top-Right
-            Field *br = getField(x + 1, y + 1); // Bottom-Right
+            // Pared Horizontal: Corta verticalmente entre filas y y y+1
+            
+            // Lado Izquierdo de la pared
+            getField(x, y).disconnect(Direction::Down);
+            getField(x, y + 1).disconnect(Direction::Up);
 
-            disconnect(tl, bl);
-            disconnect(tr, br);
+            // Lado Derecho de la pared
+            getField(x + 1, y).disconnect(Direction::Down);
+            getField(x + 1, y + 1).disconnect(Direction::Up);
         }
-        else
+        else // Vertical
         {
-            // Vertical wall at (x,y) cuts:
-            // (x,y)|(x+1,y) AND (x,y+1)|(x+1,y+1)
-            Field *tl = getField(x, y);
-            Field *tr = getField(x + 1, y);
-            Field *bl = getField(x, y + 1);
-            Field *br = getField(x + 1, y + 1);
+            // Pared Vertical: Corta horizontalmente entre columnas x y x+1
 
-            disconnect(tl, tr);
-            disconnect(bl, br);
+            // Parte Superior de la pared
+            getField(x, y).disconnect(Direction::Right);
+            getField(x + 1, y).disconnect(Direction::Left);
+
+            // Parte Inferior de la pared
+            getField(x, y + 1).disconnect(Direction::Right);
+            getField(x + 1, y + 1).disconnect(Direction::Left);
         }
 
+        // 4. Guardar pared física
         m_walls.emplace_back(x, y, orientation);
         return true;
+    }
+    bool Board::isValid(int x,int y) const{
+        return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
     }
 }

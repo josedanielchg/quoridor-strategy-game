@@ -2,11 +2,13 @@
 
 namespace Game
 {
+    Field::Field() : m_x(0), m_y(0), m_occupantId(0) {
+            std::fill(std::begin(m_connections), std::end(m_connections), true);
+        }
 
     Field::Field(int x, int y): m_x(x), m_y(y), m_occupantId(0)
     {
-        // Reserve 4 to avoid reallocations, standard grid max neighbors
-        m_neighbors.reserve(4);
+        std::fill(std::begin(m_connections), std::end(m_connections), true);
     }
 
     // Getters
@@ -19,27 +21,11 @@ namespace Game
 
     // ====
     
-    void Field::addNeighbor(Field *neighbor)
-    {
-        if (neighbor && !hasNeighbor(neighbor))
-        {
-            m_neighbors.push_back(neighbor);
-        }
+    void Field::disconnect(Direction dir) {
+        m_connections[static_cast<int>(dir)] = false;
     }
 
-    void Field::removeNeighbor(Field *neighbor)
-    {
-        // C++20 Erase-Remove idiom simplified
-        std::erase(m_neighbors, neighbor);
-    }
-
-    const std::vector<Field *> &Field::getNeighbors() const
-    {
-        return m_neighbors;
-    }
-
-    bool Field::hasNeighbor(const Field *neighbor) const
-    {
-        return std::find(m_neighbors.begin(), m_neighbors.end(), neighbor) != m_neighbors.end();
+    bool Field::hasPath(Direction dir) const {
+        return m_connections[static_cast<int>(dir)];
     }
 }
