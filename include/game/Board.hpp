@@ -12,9 +12,8 @@ namespace Game
             static constexpr int SIZE = 9;
     
         private:
-        std::vector<Field> m_fields;
-
-        std::vector<Wall> m_walls;
+            std::vector<Field> m_fields;
+            std::vector<Wall> m_walls;
             
         public:
             Board();
