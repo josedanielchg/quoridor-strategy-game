@@ -4,6 +4,7 @@
 
 namespace Game
 {
+    enum class Direction { Up = 0, Right = 1, Down = 2, Left = 3, Count = 4 };
 
     class Field
     {
@@ -11,9 +12,11 @@ namespace Game
             int m_x;
             int m_y;
             int m_occupantId;
-            std::vector<Field *> m_neighbors;
+
+            bool m_connections[static_cast<int>(Direction::Count)];
 
         public:
+            Field();
             Field(int x, int y);
 
             // Getters
@@ -25,11 +28,8 @@ namespace Game
             void setOccupantId(int id);
 
             // Graph Logic
-            void addNeighbor(Field *neighbor);
-            void removeNeighbor(Field *neighbor);
-            const std::vector<Field *> &getNeighbors() const;
+            void disconnect(Direction dir);
 
-            // Check if connected to specific neighbor
-            bool hasNeighbor(const Field *neighbor) const;
+            bool hasPath(Direction dir) const;
     };
 }
