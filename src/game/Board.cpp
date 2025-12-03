@@ -5,13 +5,11 @@ namespace Game
 {
     Board::Board()
     {
-        // El std::array ya está creado en memoria. Solo configuramos las coordenadas.
         m_fields.reserve(SIZE * SIZE);
         for (int y = 0; y < SIZE; ++y)
         {
             for (int x = 0; x < SIZE; ++x)
             {
-                // Usamos emplace_back como antes, que funciona perfecto con vector
                 m_fields.emplace_back(x, y);
             }
         }
@@ -19,12 +17,11 @@ namespace Game
 
     void Board::init()
     {
-        // Reiniciar el tablero sobrescribiendo con Fields nuevos (conexiones en true)
         m_fields.clear();
         m_fields.reserve(SIZE * SIZE);
         for (int y = 0; y < SIZE; ++y) {
             for (int x = 0; x < SIZE; ++x) {
-                m_fields.emplace_back(x, y); // Crea Fields nuevos conectados
+                m_fields.emplace_back(x, y);
             }
         }
         m_walls.clear();
@@ -33,7 +30,7 @@ namespace Game
     Field& Board::getField(int x, int y)
     {
         if (!isValid(x, y)) throw std::out_of_range("Out of bounds");
-        return m_fields[y * SIZE + x]; // Acceso lineal igual de rápido
+        return m_fields[y * SIZE + x];
     }
 
     const Field& Board::getField(int x, int y) const
@@ -44,7 +41,7 @@ namespace Game
 
     const std::vector<Field>& Board::getAllFields() const
     {
-        return m_fields; // Compatible 100%
+        return m_fields;
     }
     
     const std::vector<Wall>& Board::getAllWalls() const
@@ -54,11 +51,12 @@ namespace Game
 
     bool Board::placeWall(int x, int y, Orientation orientation)
     {
+        // Walls sit between cells; valid anchors range from 0 to SIZE-2.
         if (x < 0 || x >= SIZE - 1 || y < 0 || y >= SIZE - 1) return false;
 
         for (const auto& w : m_walls) 
         {
-
+            // Prevent overlaps or perpendicular crossings at the same anchor.
             if (w.x() == x && w.y() == y && w.orientation() == orientation) return false;
             if (w.x() == x && w.y() == y) return false;
 
