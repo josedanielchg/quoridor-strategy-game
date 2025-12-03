@@ -11,7 +11,8 @@ namespace UI {
 
     GameRenderer::GameRenderer()
         : m_spriteTile(m_texTile)     
-        , m_spritePawn(m_texPawnP1) // Initialize with P1 texture by default
+        , m_spritePawn(m_texPawnP1)
+        , m_spriteWall(m_texWall)
         , m_isoWidth(ISO_WIDTH)
         , m_isoHeight(ISO_HEIGHT)
     {
@@ -45,6 +46,10 @@ namespace UI {
             std::cerr << "Error: Could not load pawn_p2.png\n";
             return false;
         }
+        if (!m_texWall.loadFromFile("assets/textures/wall.png")) {
+            std::cerr << "Error: Could not load wall.png\n";
+            return false;
+        }
 
         // 2. Setup Tile Sprite 
         m_spriteTile.setTexture(m_texTile, true); 
@@ -55,6 +60,10 @@ namespace UI {
         // 3. Setup Pawn Sprite
         m_spritePawn.setTexture(m_texPawnP1, true);
         m_spritePawn.setOrigin({112.f / 2.f, 165.f - 20.f}); 
+
+        m_spriteWall.setTexture(m_texWall, true); 
+        sf::Vector2u wSize = m_texWall.getSize();
+        m_spriteWall.setOrigin({float(wSize.x) / 2.f, float(wSize.y) / 2.f});
 
         return true;
     }
@@ -69,8 +78,8 @@ namespace UI {
     void GameRenderer::render(sf::RenderWindow& window, const Game::Board& board) {
         window.setView(m_view);
 
+        // 1. Draw Fields & Pawns (Existing logic)
         const auto& fields = board.getAllFields();
-        
         for (const auto& field : fields) {
             sf::Vector2f pos = cartesianToIsometric(field.x(), field.y());
 
@@ -94,6 +103,44 @@ namespace UI {
                 m_spritePawn.setPosition(pos);
                 window.draw(m_spritePawn);
             }
+        }
+
+        // 2. Helper Lambda to draw a wall
+        auto drawWall = [&](int x, int y, Game::Orientation ori, bool isPreview) {
+            // Logic to position wall relative to the TILE center
+            sf::Vector2f pos = cartesianToIsometric(x, y);
+
+            if (ori == Game::Orientation::Horizontal) {
+                pos.x += m_isoWidth;
+                pos.y += m_isoHeight;
+                m_spriteWall.setRotation(sf::degrees(0));
+            } 
+            else {
+                pos.x += m_isoWidth;
+                pos.y -= m_isoHeight;
+                m_spriteWall.setRotation(sf::degrees(90));
+            }
+            
+            // Adjustments based on your specific art assets might be needed here!
+            m_spriteWall.setPosition(pos);
+
+            if (isPreview) {
+                m_spriteWall.setColor(sf::Color(255, 255, 255, 128)); 
+            } else {
+                m_spriteWall.setColor(sf::Color(255, 150, 50));
+            }
+            
+            window.draw(m_spriteWall);
+        };
+
+        // 3. Draw Placed Walls
+        for (const auto& wall : board.getAllWalls()) {
+            drawWall(wall.x(), wall.y(), wall.orientation(), false);
+        }
+
+        // 4. Draw Preview Wall
+        if (m_showWallPreview && m_previewWallPos.x != -1) {
+            drawWall(m_previewWallPos.x, m_previewWallPos.y, m_previewWallOri, true);
         }
     }
 
@@ -149,5 +196,11 @@ namespace UI {
 
     void GameRenderer::setHoveredTile(sf::Vector2i gridCoords) {
         m_hoveredCoords = gridCoords;
+    }
+
+    void GameRenderer::setWallPreview(bool active, sf::Vector2i gridPos, Game::Orientation orientation) {
+        m_showWallPreview = active;
+        m_previewWallPos = gridPos;
+        m_previewWallOri = orientation;
     }
 }

@@ -17,6 +17,10 @@ namespace App {
         void render();
         void attemptMove(sf::Vector2i gridPos);
 
+        void attemptPlaceWall(sf::Vector2i gridPos);
+        void toggleWallMode();
+        void rotateWall();
+
     private:
         // SFML 3: Window is managed usually the same, but initialization differs slightly
         sf::RenderWindow m_window;
@@ -25,7 +29,10 @@ namespace App {
         UI::GameRenderer m_renderer;
         UI::Hud m_hud;
 
-        int m_currentPlayer = 1; 
+        int m_currentPlayer = 1;
+
+        bool m_isPlacingWall = false;
+        Game::Orientation m_currentWallOri = Game::Orientation::Horizontal;
     };
 
 }
