@@ -34,15 +34,10 @@ namespace App
             {
                 if (key->scancode == sf::Keyboard::Scancode::Escape)
                     m_window.close();
-
                 if (key->scancode == sf::Keyboard::Scancode::W)
-                {
                     toggleWallMode();
-                }
                 if (key->scancode == sf::Keyboard::Scancode::R)
-                {
                     rotateWall();
-                }
             }
 
             // --- MOUSE MOVED (Hover Effect) ---
