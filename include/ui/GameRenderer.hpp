@@ -15,10 +15,18 @@ namespace UI
             sf::Texture m_texTile;
             sf::Texture m_texPawnP1;
             sf::Texture m_texPawnP2;
+            sf::Texture m_texWall;
 
             // Flyweight Sprites
             sf::Sprite m_spriteTile;
             sf::Sprite m_spritePawn;
+            sf::Sprite m_spriteWall;
+
+            sf::Vector2i m_hoveredCoords = {-1, -1};
+
+            bool m_showWallPreview = false;
+            sf::Vector2i m_previewWallPos = {0, 0};
+            Game::Orientation m_previewWallOri = Game::Orientation::Horizontal;
 
             // Isometric Layout Config
             sf::Vector2f m_boardOrigin; // Screen center offset
@@ -26,8 +34,6 @@ namespace UI
             float m_isoHeight;          // 57.f
 
             sf::View m_view;
-
-            sf::Vector2i m_hoveredCoords = {-1, -1};
 
         public:
             GameRenderer();
@@ -46,6 +52,9 @@ namespace UI
 
             // Converts Screen Pixel (Mouse) -> Grid Index (0..8) / Returns {-1, -1} if outside board
             sf::Vector2i getMouseGridPos(const sf::RenderWindow& window, sf::Vector2i mousePos) const;
+
+            // Wall Preview Logic 
+            void setWallPreview(bool active, sf::Vector2i gridPos, Game::Orientation orientation);
     };
 
 }

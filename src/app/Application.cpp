@@ -8,26 +8,12 @@ namespace App
         : m_window(sf::VideoMode({1280, 720}), "Quoridor Isometric")
     {
         m_window.setFramerateLimit(60);
-        m_board.init();
+        m_board.init(); // This now creates the pawns internally
 
         if (!m_renderer.init())
-        {
-            std::cerr << "Failed to load assets. Exiting.\n";
             exit(-1);
-        }
-
-        // Init HUD (Fonts)
         if (!m_hud.init())
-        {
-            std::cerr << "Warning: HUD failed to init (Font missing?)\n";
-        }
-
-        // Place Players for Visualization
-        // Player 1 at Top (4, 0)
-        m_board.getField(4, 8).setOccupantId(1);
-
-        // Player 2 at Bottom (4, 8)
-        m_board.getField(4, 0).setOccupantId(2);
+            std::cerr << "Warning: HUD failed\n";
 
         m_renderer.handleResize(m_window, m_window.getSize());
     }
@@ -48,13 +34,27 @@ namespace App
             {
                 if (key->scancode == sf::Keyboard::Scancode::Escape)
                     m_window.close();
+                if (key->scancode == sf::Keyboard::Scancode::W)
+                    toggleWallMode();
+                if (key->scancode == sf::Keyboard::Scancode::R)
+                    rotateWall();
             }
 
             // --- MOUSE MOVED (Hover Effect) ---
             else if (const auto *mouseMove = event->getIf<sf::Event::MouseMoved>())
             {
                 sf::Vector2i gridPos = m_renderer.getMouseGridPos(m_window, mouseMove->position);
-                m_renderer.setHoveredTile(gridPos);
+
+                if (m_isPlacingWall)
+                {
+                    m_renderer.setHoveredTile({-1, -1});
+                    m_renderer.setWallPreview(true, gridPos, m_currentWallOri);
+                }
+                else
+                {
+                    m_renderer.setHoveredTile(gridPos);
+                    m_renderer.setWallPreview(false, {0, 0}, m_currentWallOri);
+                }
             }
 
             // --- MOUSE CLICK (Movement) ---
@@ -63,7 +63,15 @@ namespace App
                 if (mouseBtn->button == sf::Mouse::Button::Left)
                 {
                     sf::Vector2i gridPos = m_renderer.getMouseGridPos(m_window, mouseBtn->position);
-                    attemptMove(gridPos);
+
+                    if (m_isPlacingWall)
+                    {
+                        attemptPlaceWall(gridPos);
+                    }
+                    else
+                    {
+                        attemptMove(gridPos);
+                    }
                 }
             }
         }
@@ -71,37 +79,20 @@ namespace App
 
     void Application::attemptMove(sf::Vector2i gridPos)
     {
-        // 1. Basic Validation: Is click inside board?
+        // 1. Basic Validation
         if (gridPos.x == -1 || gridPos.y == -1)
             return;
 
-        // 2. Get the target field
-        Game::Field &target = m_board.getField(gridPos.x, gridPos.y);
-
-        // 3. Simple Rule: Target must be empty
-        if (target.occupantId() != 0)
-            return;
-
-        // 4. Find Current Player Position to clear it
-        Game::Field *currentField = nullptr;
-        for (const auto &f : m_board.getAllFields())
+        // 2. Delegate to Board/Pawn logic
+        if (m_board.movePawn(m_currentPlayer, gridPos.x, gridPos.y))
         {
-            if (f.occupantId() == m_currentPlayer)
-            {
-                currentField = &m_board.getField(f.x(), f.y());
-                break;
-            }
-        }
-
-        if (currentField)
-        {
-            // Move Pawn
-            currentField->setOccupantId(0);
-            target.setOccupantId(m_currentPlayer);
-
-            // Switch Turn
+            // If successful:
             m_currentPlayer = (m_currentPlayer == 1) ? 2 : 1;
             m_hud.update(m_currentPlayer);
+        }
+        else
+        {
+            std::cout << "Invalid Move!" << std::endl;
         }
     }
 
@@ -132,6 +123,40 @@ namespace App
             processEvents();
             update();
             render();
+        }
+    }
+
+    void Application::toggleWallMode()
+    {
+        m_isPlacingWall = !m_isPlacingWall;
+        std::cout << "Wall Mode: " << (m_isPlacingWall ? "ON" : "OFF") << std::endl;
+    }
+
+    void Application::rotateWall()
+    {
+        if (m_currentWallOri == Game::Orientation::Horizontal)
+            m_currentWallOri = Game::Orientation::Vertical;
+        else
+            m_currentWallOri = Game::Orientation::Horizontal;
+    }
+
+    void Application::attemptPlaceWall(sf::Vector2i gridPos)
+    {
+        if (gridPos.x == -1)
+            return;
+
+        bool success = m_board.placeWall(gridPos.x, gridPos.y, m_currentWallOri);
+
+        if (success)
+        {
+            std::cout << "Wall placed at " << gridPos.x << ", " << gridPos.y << std::endl;
+            m_currentPlayer = (m_currentPlayer == 1) ? 2 : 1;
+            m_hud.update(m_currentPlayer);
+            m_isPlacingWall = false;
+        }
+        else
+        {
+            std::cout << "Invalid Wall Position!" << std::endl;
         }
     }
 }
