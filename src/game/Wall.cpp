@@ -23,19 +23,29 @@ namespace Game
             return false;
         }
 
-        // 2. Check Overlap with existing walls
+        // 2. Check overlap with existing walls
         for (const auto &w : board.getAllWalls())
         {
-            // Exact same position?
-            if (w.x() == targetX && w.y() == targetY)
+            // Reject perpendicular walls sharing the same anchor
+            if (w.x() == targetX && w.y() == targetY && w.orientation() != m_orientation)
                 return false;
 
-            // TODO:
-            // Vertical vs Horizontal Cross overlap?
-            // (A vertical wall at x,y doesn't block a horizontal at x,y directly,
-            // but usually in Quoridor they cannot cross center).
-            // Simplification: Can't place if exact center is taken.
-            // but we want strict Quoridor rules, walls cannot cross each other.
+            if (w.orientation() == m_orientation)
+            {
+                int diffX = std::abs(w.x() - targetX);
+                int diffY = std::abs(w.y() - targetY);
+
+                if (m_orientation == Orientation::Vertical)
+                {
+                    // Vertical walls cannot overlap or share a segment
+                    if (diffX == 0 && diffY < 2) return false;
+                }
+                else // Horizontal
+                {
+                    // Horizontal walls cannot overlap or share a segment
+                    if (diffY == 0 && diffX < 2) return false;
+                }
+            }
         }
 
         return true;
