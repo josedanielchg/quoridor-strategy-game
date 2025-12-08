@@ -102,7 +102,7 @@ namespace UI
             window.draw(m_spriteTile);
         }
 
-        // 2. Draw Pawns (NEW LOGIC)
+        // 2. Draw Pawns
         const auto &pawns = board.getAllPawns();
         for (const auto &pawn : pawns)
         {
@@ -120,31 +120,29 @@ namespace UI
         }
 
         // 3. Walls (Helper & Loop) ... (Keep existing wall logic)
-        auto drawWall = [&](int x, int y, Game::Orientation ori, bool isPreview)
-        {
-            // ... paste your existing drawWall lambda logic here ...
+        auto drawWall = [&](int x, int y, Game::Orientation ori, bool isPreview) {
             sf::Vector2f pos = cartesianToIsometric(x, y);
 
-            if (ori == Game::Orientation::Horizontal)
-            {
-                pos.x += m_isoWidth;
-                pos.y += m_isoHeight;
-                m_spriteWall.setRotation(sf::degrees(0));
-            }
-            else
-            {
-                pos.x += m_isoWidth;
-                pos.y -= m_isoHeight;
-                m_spriteWall.setRotation(sf::degrees(90));
-            }
+            // Reset Transforms
+            m_spriteWall.setRotation(sf::degrees(0));
+            m_spriteWall.setScale({1.f, 1.f});
 
+            if (ori == Game::Orientation::Horizontal) {
+                pos.y += m_isoHeight * 0.1f; 
+            } 
+            else {
+                // Flip for vertical orientation
+                m_spriteWall.setScale({-1.f, 1.f}); 
+            }
+            
             m_spriteWall.setPosition(pos);
 
-            if (isPreview)
-                m_spriteWall.setColor(sf::Color(255, 255, 255, 128));
-            else
-                m_spriteWall.setColor(sf::Color(255, 150, 50));
-
+            if (isPreview) {
+                m_spriteWall.setColor(sf::Color(255, 255, 255, 128)); 
+            } else {
+                m_spriteWall.setColor(sf::Color(255, 255, 255));
+            }
+            
             window.draw(m_spriteWall);
         };
 
