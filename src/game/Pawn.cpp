@@ -32,22 +32,60 @@ namespace Game
         // 3. Calculate distance
         int dx = targetX - m_x;
         int dy = targetY - m_y;
+        int distance = std::abs(dx) + std::abs(dy);
 
-        // Only allow 1 step (Up/Down/Left/Right) - No diagonals
-        if (std::abs(dx) + std::abs(dy) != 1)
+        // Only allow 1 step or 2 step (jump) moves - No diagonals
+        if (distance != 1 && distance != 2)
             return false;
 
-        // 4. Check for Walls (Graph Connectivity)
+        // Determine direction (normalized)
+        int dirX = (dx == 0) ? 0 : (dx > 0 ? 1 : -1);
+        int dirY = (dy == 0) ? 0 : (dy > 0 ? 1 : -1);
+
+        // 4. Check for Walls (Graph Connectivity) for the first step
         const Field &currentField = board.getField(m_x, m_y);
 
-        if (dx == 1)
-            return currentField.hasPath(Direction::Right);
-        if (dx == -1)
-            return currentField.hasPath(Direction::Left);
-        if (dy == 1)
-            return currentField.hasPath(Direction::Down);
-        if (dy == -1)
-            return currentField.hasPath(Direction::Up);
+        if (dirX == 1 && !currentField.hasPath(Direction::Right))
+            return false;
+        if (dirX == -1 && !currentField.hasPath(Direction::Left))
+            return false;
+        if (dirY == 1 && !currentField.hasPath(Direction::Down))
+            return false;
+        if (dirY == -1 && !currentField.hasPath(Direction::Up))
+            return false;
+
+        // If it's a normal 1-step move, we're done
+        if (distance == 1)
+            return true;
+
+        // If it's a 2-step move (jump), validate jump logic
+        if (distance == 2)
+        {
+            // Check if there's an opponent pawn at the intermediate position
+            int intermediateX = m_x + dirX;
+            int intermediateY = m_y + dirY;
+
+            if (!board.isValid(intermediateX, intermediateY))
+                return false;
+
+            const Pawn *intermediatePawn = board.getPawnAt(intermediateX, intermediateY);
+            if (intermediatePawn == nullptr || intermediatePawn->id() == m_id)
+                return false; // No opponent to jump over
+
+            // Check if we can move from intermediate to target (wall check)
+            const Field &intermediateField = board.getField(intermediateX, intermediateY);
+
+            if (dirX == 1 && !intermediateField.hasPath(Direction::Right))
+                return false;
+            if (dirX == -1 && !intermediateField.hasPath(Direction::Left))
+                return false;
+            if (dirY == 1 && !intermediateField.hasPath(Direction::Down))
+                return false;
+            if (dirY == -1 && !intermediateField.hasPath(Direction::Up))
+                return false;
+
+            return true;
+        }
 
         return false;
     }
