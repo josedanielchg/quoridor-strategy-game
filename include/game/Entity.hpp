@@ -19,6 +19,7 @@ namespace Game
         // Getters
         int x() const { return m_x; }
         int y() const { return m_y; }
+
         void setPosition(int x, int y)
         {
             m_x = x;

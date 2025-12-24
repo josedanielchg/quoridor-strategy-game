@@ -40,6 +40,9 @@ namespace Game
         bool placeWall(int x, int y, Orientation orientation);
         bool movePawn(int pawnId, int targetX, int targetY);
 
+        // Win Condition Check
+        bool hasPlayerWon(int playerId) const;
+
         bool isValid(int x, int y) const;
     };
 

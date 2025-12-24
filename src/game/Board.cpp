@@ -113,4 +113,29 @@ namespace Game
     {
         return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
     }
+
+    bool Board::hasPlayerWon(int playerId) const
+    {
+        const Pawn *pawn = nullptr;
+        for (const auto &p : m_pawns)
+        {
+            if (p.id() == playerId)
+            {
+                pawn = &p;
+                break;
+            }
+        }
+
+        if (!pawn)
+            return false;
+
+        // Player 1 starts at y=8 and wins by reaching y=0
+        // Player 2 starts at y=0 and wins by reaching y=8 (SIZE - 1)
+        if (playerId == 1)
+            return pawn->y() == 0;
+        else if (playerId == 2)
+            return pawn->y() == SIZE - 1;
+
+        return false;
+    }
 }

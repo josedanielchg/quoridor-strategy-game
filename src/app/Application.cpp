@@ -8,7 +8,7 @@ namespace App
         : m_window(sf::VideoMode({1280, 720}), "Quoridor Isometric")
     {
         m_window.setFramerateLimit(60);
-        m_board.init(); // This now creates the pawns internally
+        m_board.init();
 
         if (!m_renderer.init())
             exit(-1);
@@ -79,16 +79,29 @@ namespace App
 
     void Application::attemptMove(sf::Vector2i gridPos)
     {
-        // 1. Basic Validation
+        // 1. Check if game is already won
+        if (m_winner != 0)
+        {
+            std::cout << "Game Over! Player " << m_winner << " has won!" << std::endl;
+            return;
+        }
+
+        // 2. Basic Validation
         if (gridPos.x == -1 || gridPos.y == -1)
             return;
 
-        // 2. Delegate to Board/Pawn logic
+        // 3. Delegate to Board/Pawn logic
         if (m_board.movePawn(m_currentPlayer, gridPos.x, gridPos.y))
         {
-            // If successful:
-            m_currentPlayer = (m_currentPlayer == 1) ? 2 : 1;
-            m_hud.update(m_currentPlayer);
+            // 4. Check for win condition
+            checkWinCondition();
+
+            // If successful and no winner yet:
+            if (m_winner == 0)
+            {
+                m_currentPlayer = (m_currentPlayer == 1) ? 2 : 1;
+                m_hud.update(m_currentPlayer);
+            }
         }
         else
         {
@@ -157,6 +170,15 @@ namespace App
         else
         {
             std::cout << "Invalid Wall Position!" << std::endl;
+        }
+    }
+
+    void Application::checkWinCondition()
+    {
+        if (m_board.hasPlayerWon(m_currentPlayer))
+        {
+            m_winner = m_currentPlayer;
+            std::cout << "=== Player " << m_winner << " has WON! ===" << std::endl;
         }
     }
 }
