@@ -88,7 +88,7 @@ namespace UI
         {
             sf::Vector2f pos = cartesianToIsometric(field.x(), field.y());
 
-            // Hover
+            // Hover effect
             if (field.x() == m_hoveredCoords.x && field.y() == m_hoveredCoords.y && !m_showWallPreview)
             {
                 m_spriteTile.setColor(sf::Color::White);

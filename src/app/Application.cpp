@@ -8,7 +8,7 @@ namespace App
         : m_window(sf::VideoMode({1280, 720}), "Quoridor Isometric")
     {
         m_window.setFramerateLimit(60);
-        m_board.init(); // This now creates the pawns internally
+        m_board.init();
 
         if (!m_renderer.init())
             exit(-1);

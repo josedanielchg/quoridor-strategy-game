@@ -1,5 +1,5 @@
 #include "game/Pawn.hpp"
-#include "game/Board.hpp" // Now we can include Board fully
+#include "game/Board.hpp"
 #include <cmath>
 
 namespace Game

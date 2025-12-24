@@ -130,7 +130,7 @@ namespace Game
             return false;
 
         // Player 1 starts at y=8 and wins by reaching y=0
-        // Player 2 starts at y=0 and wins by reaching y=8
+        // Player 2 starts at y=0 and wins by reaching y=8 (SIZE - 1)
         if (playerId == 1)
             return pawn->y() == 0;
         else if (playerId == 2)
