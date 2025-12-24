@@ -78,37 +78,48 @@ namespace UI
         return {x + m_boardOrigin.x, y + m_boardOrigin.y};
     }
 
-    void GameRenderer::render(sf::RenderWindow &window, const Game::Board &board)
+    void GameRenderer::drawWallSprite(sf::RenderWindow &window, int x, int y, Game::Orientation ori, bool isPreview)
     {
-        window.setView(m_view);
+        sf::Vector2f pos = cartesianToIsometric(x, y);
 
-        // 1. Draw Fields
-        const auto &fields = board.getAllFields();
-        for (const auto &field : fields)
+        m_spriteWall.setRotation(sf::degrees(0));
+        m_spriteWall.setScale({1.f, 1.f});
+
+        if (ori == Game::Orientation::Horizontal) {
+            pos.y += m_isoHeight * 0.1f;
+        } else {
+            m_spriteWall.setScale({-1.f, 1.f});
+        }
+
+        m_spriteWall.setPosition(pos);
+        m_spriteWall.setColor(isPreview ? sf::Color(255,255,255,128) : sf::Color(255,255,255));
+        window.draw(m_spriteWall);
+    }
+
+    void GameRenderer::drawTilesRow(sf::RenderWindow &window, int row)
+    {
+        for (int x = 0; x < Game::Board::SIZE; ++x)
         {
-            sf::Vector2f pos = cartesianToIsometric(field.x(), field.y());
+            sf::Vector2f pos = cartesianToIsometric(x, row);
 
-            // Hover effect
-            if (field.x() == m_hoveredCoords.x && field.y() == m_hoveredCoords.y && !m_showWallPreview)
-            {
+            if (x == m_hoveredCoords.x && row == m_hoveredCoords.y && !m_showWallPreview)
                 m_spriteTile.setColor(sf::Color::White);
-            }
             else
-            {
                 m_spriteTile.setColor(sf::Color(200, 200, 200));
-            }
 
             m_spriteTile.setPosition(pos);
             window.draw(m_spriteTile);
         }
+    }
 
-        // 2. Draw Pawns
-        const auto &pawns = board.getAllPawns();
+    void GameRenderer::drawPawnsRow(sf::RenderWindow &window, const std::vector<Game::Pawn> &pawns, int row)
+    {
         for (const auto &pawn : pawns)
         {
+            if (pawn.y() != row) continue;
+
             sf::Vector2f pos = cartesianToIsometric(pawn.x(), pawn.y());
 
-            // Determine texture based on ID
             if (pawn.id() == 1)
                 m_spritePawn.setTexture(m_texPawnP1, true);
             else
@@ -118,42 +129,57 @@ namespace UI
             m_spritePawn.setPosition(pos);
             window.draw(m_spritePawn);
         }
+    }
 
-        // 3. Walls (Helper & Loop) ... (Keep existing wall logic)
-        auto drawWall = [&](int x, int y, Game::Orientation ori, bool isPreview) {
-            sf::Vector2f pos = cartesianToIsometric(x, y);
-
-            // Reset Transforms
-            m_spriteWall.setRotation(sf::degrees(0));
-            m_spriteWall.setScale({1.f, 1.f});
-
-            if (ori == Game::Orientation::Horizontal) {
-                pos.y += m_isoHeight * 0.1f; 
-            } 
-            else {
-                // Flip for vertical orientation
-                m_spriteWall.setScale({-1.f, 1.f}); 
-            }
-            
-            m_spriteWall.setPosition(pos);
-
-            if (isPreview) {
-                m_spriteWall.setColor(sf::Color(255, 255, 255, 128)); 
-            } else {
-                m_spriteWall.setColor(sf::Color(255, 255, 255));
-            }
-            
-            window.draw(m_spriteWall);
-        };
-
-        for (const auto &wall : board.getAllWalls())
+    void GameRenderer::drawWallsRow(sf::RenderWindow &window, const std::vector<Game::Wall> &walls, int row)
+    {
+        // Vertical first
+        for (const auto &wall : walls)
         {
-            drawWall(wall.x(), wall.y(), wall.orientation(), false);
+            if (wall.orientation() == Game::Orientation::Vertical)
+            {
+                if (wall.y() == row || wall.y() + 1 == row)
+                    drawWallSprite(window, wall.x(), wall.y(), wall.orientation(), false);
+            }
         }
 
-        if (m_showWallPreview && m_previewWallPos.x != -1)
+        // Vertical preview
+        if (m_showWallPreview && m_previewWallPos.x != -1 && m_previewWallOri == Game::Orientation::Vertical)
         {
-            drawWall(m_previewWallPos.x, m_previewWallPos.y, m_previewWallOri, true);
+            if (m_previewWallPos.y == row || m_previewWallPos.y + 1 == row)
+                drawWallSprite(window, m_previewWallPos.x, m_previewWallPos.y, m_previewWallOri, true);
+        }
+
+        // Horizontal next
+        for (const auto &wall : walls)
+        {
+            if (wall.orientation() == Game::Orientation::Horizontal)
+            {
+                if (wall.y() == row)
+                    drawWallSprite(window, wall.x(), wall.y(), wall.orientation(), false);
+            }
+        }
+
+        // Horizontal preview
+        if (m_showWallPreview && m_previewWallPos.x != -1 && m_previewWallOri == Game::Orientation::Horizontal)
+        {
+            if (m_previewWallPos.y == row)
+                drawWallSprite(window, m_previewWallPos.x, m_previewWallPos.y, m_previewWallOri, true);
+        }
+    }
+
+    void GameRenderer::render(sf::RenderWindow &window, const Game::Board &board)
+    {
+        window.setView(m_view);
+
+        const auto &pawns = board.getAllPawns();
+        const auto &walls = board.getAllWalls();
+
+        for (int row = 0; row < Game::Board::SIZE; ++row)
+        {
+            drawTilesRow(window, row);
+            drawPawnsRow(window, pawns, row);
+            drawWallsRow(window, walls, row);
         }
     }
 

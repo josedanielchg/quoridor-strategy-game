@@ -11,6 +11,12 @@ namespace UI
             // Helper: Convert Grid(x,y) to Screen(px,py)
             sf::Vector2f cartesianToIsometric(int gridX, int gridY) const;
 
+            // Drawing helpers (extracted from render for clarity)
+            void drawWallSprite(sf::RenderWindow &window, int x, int y, Game::Orientation ori, bool isPreview);
+            void drawTilesRow(sf::RenderWindow &window, int row);
+            void drawPawnsRow(sf::RenderWindow &window, const std::vector<Game::Pawn> &pawns, int row);
+            void drawWallsRow(sf::RenderWindow &window, const std::vector<Game::Wall> &walls, int row);
+
             // Textures (Must stay alive while game runs)
             sf::Texture m_texTile;
             sf::Texture m_texPawnP1;
