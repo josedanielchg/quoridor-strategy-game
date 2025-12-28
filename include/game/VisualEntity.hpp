@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
+#include <utility>
 
 namespace Game
 {
@@ -17,6 +18,26 @@ namespace Game
     public:
         VisualEntity(int x, int y) : Entity(x, y), m_sprite(nullptr) {}
         virtual ~VisualEntity() = default;
+        VisualEntity(const VisualEntity &) = delete;
+        VisualEntity &operator=(const VisualEntity &) = delete;
+        VisualEntity(VisualEntity &&other) noexcept
+            : Entity(std::move(other)), m_texture(std::move(other.m_texture)), m_sprite(std::move(other.m_sprite))
+        {
+            if (m_sprite)
+                m_sprite->setTexture(m_texture, false);
+        }
+        VisualEntity &operator=(VisualEntity &&other) noexcept
+        {
+            if (this != &other)
+            {
+                Entity::operator=(std::move(other));
+                m_texture = std::move(other.m_texture);
+                m_sprite = std::move(other.m_sprite);
+                if (m_sprite)
+                    m_sprite->setTexture(m_texture, false);
+            }
+            return *this;
+        }
 
         // Load texture from path returned by getTexturePath(), setup sprite and origin
         bool initSprite()
