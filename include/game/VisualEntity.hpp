@@ -2,6 +2,7 @@
 #include "game/Entity.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <memory>
 
 namespace Game
 {
@@ -11,10 +12,10 @@ namespace Game
     {
     protected:
         sf::Texture m_texture;
-        sf::Sprite m_sprite;
+        std::unique_ptr<sf::Sprite> m_sprite;
 
     public:
-        VisualEntity(int x, int y) : Entity(x, y) {}
+        VisualEntity(int x, int y) : Entity(x, y), m_sprite(nullptr) {}
         virtual ~VisualEntity() = default;
 
         // Load texture from path returned by getTexturePath(), setup sprite and origin
@@ -30,11 +31,12 @@ namespace Game
                 return false;
             }
 
-            m_sprite.setTexture(m_texture, true);
+            // create the sprite after the texture is loaded
+            m_sprite = std::make_unique<sf::Sprite>(m_texture);
 
             sf::Vector2u texSize = m_texture.getSize();
             sf::Vector2f origin = getSpriteOrigin(texSize);
-            m_sprite.setOrigin(origin);
+            m_sprite->setOrigin(origin);
 
             return true;
         }
@@ -46,8 +48,8 @@ namespace Game
         }
 
         // Access the sprite for rendering (copy if you need to mutate safely)
-        const sf::Sprite &sprite() const { return m_sprite; }
-        sf::Sprite &sprite() { return m_sprite; }
+        const sf::Sprite &sprite() const { return *m_sprite; }
+        sf::Sprite &sprite() { return *m_sprite; }
     };
 
 }
