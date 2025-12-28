@@ -5,7 +5,10 @@ namespace Game
 {
 
     Wall::Wall(int x, int y, Orientation orientation)
-        : Entity(x, y), m_orientation(orientation) {}
+        : VisualEntity(x, y), m_orientation(orientation)
+    {
+        (void)initSprite();
+    }
 
     Orientation Wall::orientation() const { return m_orientation; }
 

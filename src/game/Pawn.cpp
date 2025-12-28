@@ -6,8 +6,9 @@ namespace Game
 {
 
     Pawn::Pawn(int id, int startX, int startY)
-        : Entity(startX, startY), m_id(id)
+        : VisualEntity(startX, startY), m_id(id)
     {
+        (void)initSprite();
     }
 
     int Pawn::id() const { return m_id; }
@@ -17,6 +18,12 @@ namespace Game
         if (m_id == 1)
             return "assets/textures/pawn_p1.png";
         return "assets/textures/pawn_p2.png";
+    }
+
+    sf::Vector2f Pawn::getSpriteOrigin(const sf::Vector2u &texSize) const
+    {
+        // Hardcoded values to preserve previous visual tweaks
+        return {112.f / 2.f, 165.f - 20.f};
     }
 
     bool Pawn::isValidMove(const Board &board, int targetX, int targetY) const

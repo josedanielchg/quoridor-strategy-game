@@ -1,5 +1,5 @@
 #pragma once
-#include "game/Entity.hpp"
+#include "game/VisualEntity.hpp"
 
 namespace Game
 {
@@ -10,7 +10,7 @@ namespace Game
         Vertical
     };
 
-    class Wall : public Entity
+    class Wall : public VisualEntity
     {
     private:
         Orientation m_orientation;
