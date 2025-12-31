@@ -12,8 +12,6 @@ namespace UI
 
     GameRenderer::GameRenderer()
         : m_spriteTile(m_texTile),
-          m_spriteWallUpper(m_texWallUpper),
-          m_spriteWallDown(m_texWallDown),
           m_isoWidth(ISO_WIDTH),
           m_isoHeight(ISO_HEIGHT)
     {
@@ -47,24 +45,6 @@ namespace UI
         sf::Vector2u tSize = m_texTile.getSize();
         m_spriteTile.setOrigin({float(tSize.x) / 2.f, float(tSize.y) / 2.f});
 
-        // Load wall textures for per-tile rendering
-        if (!m_texWallUpper.loadFromFile("assets/textures/wall-upper.png"))
-        {
-            std::cerr << "Error: Could not load wall-upper.png\n";
-            return false;
-        }
-        if (!m_texWallDown.loadFromFile("assets/textures/wall-down.png"))
-        {
-            std::cerr << "Error: Could not load wall-down.png\n";
-            return false;
-        }
-        m_spriteWallUpper.setTexture(m_texWallUpper, true);
-        m_spriteWallDown.setTexture(m_texWallDown, true);
-        sf::Vector2u wUpperSize = m_texWallUpper.getSize();
-        sf::Vector2u wDownSize = m_texWallDown.getSize();
-        m_spriteWallUpper.setOrigin({float(wUpperSize.x) / 1.0f, float(wUpperSize.y) / 1.31f});
-        m_spriteWallDown.setOrigin({float(wDownSize.x) / 1.08f, float(wDownSize.y) / 1.31f});
-
         return true;
     }
 
@@ -91,10 +71,10 @@ namespace UI
         }
     }
 
-    void GameRenderer::drawWallPart(sf::RenderWindow &window, sf::Vector2i gridPos, Game::Orientation orientation, bool isUpper, bool isPreview)
+    void GameRenderer::drawWallPart(sf::RenderWindow &window, sf::Vector2i gridPos, Game::Orientation orientation, const sf::Sprite &baseSprite, bool isPreview)
     {
         sf::Vector2f pos = cartesianToIsometric(gridPos.x, gridPos.y);
-        sf::Sprite s = isUpper ? m_spriteWallUpper : m_spriteWallDown;
+        sf::Sprite s = baseSprite;
         applyWallTransform(s, pos, orientation);
 
         s.setPosition(pos);
@@ -137,19 +117,19 @@ namespace UI
         {
             if (wall.x() == gridX && wall.y() == gridY)
             {
-                drawWallPart(window, {gridX, gridY}, wall.orientation(), true, false);
+                drawWallPart(window, {gridX, gridY}, wall.orientation(), wall.upperSprite(), false);
                 continue;
             }
 
             if (wall.orientation() == Game::Orientation::Vertical)
             {
                 if (wall.x() == gridX && wall.y() + 1 == gridY)
-                    drawWallPart(window, {gridX, gridY}, wall.orientation(), false, false);
+                    drawWallPart(window, {gridX, gridY}, wall.orientation(), wall.downSprite(), false);
             }
             else
             {
                 if (wall.x() + 1 == gridX && wall.y() == gridY)
-                    drawWallPart(window, {gridX, gridY}, wall.orientation(), false, false);
+                    drawWallPart(window, {gridX, gridY}, wall.orientation(), wall.downSprite(), false);
             }
         }
 
@@ -157,17 +137,17 @@ namespace UI
         {
             if (m_previewWallPos.x == gridX && m_previewWallPos.y == gridY)
             {
-                drawWallPart(window, {gridX, gridY}, m_previewWallOri, true, true);
+                drawWallPart(window, {gridX, gridY}, m_previewWallOri, Game::Wall::previewUpperSprite(), true);
             }
             else if (m_previewWallOri == Game::Orientation::Vertical)
             {
                 if (m_previewWallPos.x == gridX && m_previewWallPos.y + 1 == gridY)
-                    drawWallPart(window, {gridX, gridY}, m_previewWallOri, false, true);
+                    drawWallPart(window, {gridX, gridY}, m_previewWallOri, Game::Wall::previewDownSprite(), true);
             }
             else
             {
                 if (m_previewWallPos.x + 1 == gridX && m_previewWallPos.y == gridY)
-                    drawWallPart(window, {gridX, gridY}, m_previewWallOri, false, true);
+                    drawWallPart(window, {gridX, gridY}, m_previewWallOri, Game::Wall::previewDownSprite(), true);
             }
         }
     }

@@ -13,7 +13,7 @@ namespace UI
 
             // Drawing helpers (extracted from render for clarity)
             void applyWallTransform(sf::Sprite &sprite, sf::Vector2f &pos, Game::Orientation orientation) const;
-            void drawWallPart(sf::RenderWindow &window, sf::Vector2i gridPos, Game::Orientation orientation, bool isUpper, bool isPreview);
+            void drawWallPart(sf::RenderWindow &window, sf::Vector2i gridPos, Game::Orientation orientation, const sf::Sprite &baseSprite, bool isPreview);
             void drawTile(sf::RenderWindow &window, int gridX, int gridY);
             void drawPawnAt(sf::RenderWindow &window, const std::vector<Game::Pawn> &pawns, int gridX, int gridY);
             void drawWallsAt(sf::RenderWindow &window, const std::vector<Game::Wall> &walls, int gridX, int gridY);
@@ -23,12 +23,6 @@ namespace UI
 
             // Flyweight Sprite for tiles
             sf::Sprite m_spriteTile;
-            // Wall textures/sprites (renderer-owned)
-            sf::Texture m_texWallUpper;
-            sf::Texture m_texWallDown;
-            sf::Sprite m_spriteWallUpper;
-            sf::Sprite m_spriteWallDown;
-
             sf::Vector2i m_hoveredCoords = {-1, -1};
 
             bool m_showWallPreview = false;
