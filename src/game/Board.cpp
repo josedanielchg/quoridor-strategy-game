@@ -1,4 +1,5 @@
 #include "game/Board.hpp"
+#include "game/PathFinder.hpp"
 #include <stdexcept>
 
 namespace Game
@@ -74,24 +75,59 @@ namespace Game
         if (!tempWall.isValidMove(*this, x, y))
             return false;
 
-        // Apply Logic (Cutting connections)
-        if (orientation == Orientation::Horizontal)
+        // Apply temporarily to validate path availability
+        toggleWall(x, y, orientation, true);
+
+        const Pawn *p1 = getPawnById(1);
+        const Pawn *p2 = getPawnById(2);
+
+        bool p1HasPath = p1 && PathFinder::doesPathExist(*this, p1->x(), p1->y(), 0);
+        bool p2HasPath = p2 && PathFinder::doesPathExist(*this, p2->x(), p2->y(), SIZE - 1);
+
+        if (!p1HasPath || !p2HasPath)
         {
-            getField(x, y).disconnect(Direction::Down);
-            getField(x, y + 1).disconnect(Direction::Up);
-            getField(x + 1, y).disconnect(Direction::Down);
-            getField(x + 1, y + 1).disconnect(Direction::Up);
-        }
-        else
-        {
-            getField(x, y).disconnect(Direction::Right);
-            getField(x + 1, y).disconnect(Direction::Left);
-            getField(x, y + 1).disconnect(Direction::Right);
-            getField(x + 1, y + 1).disconnect(Direction::Left);
+            toggleWall(x, y, orientation, false);
+            return false;
         }
 
         m_walls.emplace_back(x, y, orientation);
         return true;
+    }
+    void Board::toggleWall(int x, int y, Orientation ori, bool blocking){
+        if (ori == Orientation::Horizontal)
+        {
+            if (blocking)
+            {
+                getField(x, y).disconnect(Direction::Down);
+                getField(x, y + 1).disconnect(Direction::Up);
+                getField(x + 1, y).disconnect(Direction::Down);
+                getField(x + 1, y + 1).disconnect(Direction::Up);
+            }
+            else
+            {
+                getField(x, y).connect(Direction::Down);
+                getField(x, y + 1).connect(Direction::Up);
+                getField(x + 1, y).connect(Direction::Down);
+                getField(x + 1, y + 1).connect(Direction::Up);
+            }
+        }
+        else
+        {
+            if (blocking)
+            {
+                getField(x, y).disconnect(Direction::Right);
+                getField(x + 1, y).disconnect(Direction::Left);
+                getField(x, y + 1).disconnect(Direction::Right);
+                getField(x + 1, y + 1).disconnect(Direction::Left);
+            }
+            else
+            {
+                getField(x, y).connect(Direction::Right);
+                getField(x + 1, y).connect(Direction::Left);
+                getField(x, y + 1).connect(Direction::Right);
+                getField(x + 1, y + 1).connect(Direction::Left);
+            }
+        }
     }
 
     bool Board::movePawn(int pawnId, int targetX, int targetY)

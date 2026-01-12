@@ -44,6 +44,8 @@ namespace Game
         bool hasPlayerWon(int playerId) const;
 
         bool isValid(int x, int y) const;
+
+        void toggleWall(int x, int y, Orientation ori, bool blocking);
     };
 
 }

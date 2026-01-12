@@ -25,6 +25,10 @@ namespace Game
     {
         m_connections[static_cast<int>(dir)] = false;
     }
+    void Field::connect(Direction dir)
+    {
+        m_connections[static_cast<int>(dir)] = true;
+    }
 
     bool Field::hasPath(Direction dir) const
     {

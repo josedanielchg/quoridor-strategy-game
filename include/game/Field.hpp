@@ -29,6 +29,7 @@ namespace Game
 
             // Graph Logic
             void disconnect(Direction dir);
+            void connect(Direction dir);
 
             bool hasPath(Direction dir) const;
     };
