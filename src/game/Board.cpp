@@ -1,5 +1,5 @@
 #include "game/Board.hpp"
-#include "game/PathFinder.hpp"
+#include "ai/PathFinder.hpp"
 #include <stdexcept>
 
 namespace Game
