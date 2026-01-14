@@ -156,6 +156,8 @@ namespace UI
     {
         window.setView(m_view);
 
+        board.drawBackground(window);
+
         const auto &pawns = board.getAllPawns();
         const auto &walls = board.getAllWalls();
 
