@@ -3,6 +3,7 @@
 #include "game/Wall.hpp"
 #include "game/Pawn.hpp"
 #include <SFML/Graphics.hpp>
+#include <array>
 #include <vector>
 #include <optional>
 
@@ -12,6 +13,7 @@ namespace Game
     {
     public:
         static constexpr int SIZE = 9;
+        static constexpr int MAX_WALLS_PER_PLAYER = 10;
 
     private:
         std::vector<Field> m_fields;
@@ -20,6 +22,7 @@ namespace Game
         sf::Texture m_backgroundTexture;
         sf::Sprite m_backgroundSprite;
         bool m_hasBackground = false;
+        std::array<int, 3> m_wallCounts = {0, 0, 0};
 
     public:
         Board();
@@ -42,7 +45,7 @@ namespace Game
         Pawn *getPawnById(int id);
 
         // Actions
-        bool placeWall(int x, int y, Orientation orientation);
+        bool placeWall(int playerId, int x, int y, Orientation orientation);
         bool movePawn(int pawnId, int targetX, int targetY);
 
         // Win Condition Check
