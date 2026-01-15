@@ -23,9 +23,15 @@ namespace Game
 
     bool PathFinder::doesPathExist(const Board& board, int startX, int startY, int targetRow)
     {
-        if (!board.isValid(startX, startY)) return false;
+        return shortestPathLength(board, startX, startY, targetRow) >= 0;
+    }
+
+    int PathFinder::shortestPathLength(const Board& board, int startX, int startY, int targetRow)
+    {
+        // Guard: start must be inside the board.
+        if (!board.isValid(startX, startY)) return -1;
         
-        if (startY == targetRow) return true;
+        if (startY == targetRow) return 0;
 
         std::priority_queue<Node, std::vector<Node>, std::greater<Node>> openSet;
 
@@ -45,7 +51,7 @@ namespace Game
 
             if (current.y == targetRow)
             {
-                return true;
+                return current.gCost;
             }
 
             int currentIdx = current.y * Board::SIZE + current.x;
@@ -82,6 +88,6 @@ namespace Game
             }
         }
 
-        return false;
+        return -1;
     }
 }
