@@ -67,6 +67,16 @@ namespace Game
         return nullptr;
     }
 
+    const Pawn *Board::getPawnById(int id) const
+    {
+        for (const auto &p : m_pawns)
+        {
+            if (p.id() == id)
+                return &p;
+        }
+        return nullptr;
+    }
+
     bool Board::placeWall(int x, int y, Orientation orientation)
     {
         // Create temp wall to check validity

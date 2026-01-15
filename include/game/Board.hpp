@@ -35,6 +35,7 @@ namespace Game
         // Helper: Returns pointer to pawn at x,y or nullptr
         const Pawn *getPawnAt(int x, int y) const;
         Pawn *getPawnById(int id);
+        const Pawn *getPawnById(int id) const;
 
         // Actions
         bool placeWall(int x, int y, Orientation orientation);
