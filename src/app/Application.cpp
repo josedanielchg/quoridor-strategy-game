@@ -158,7 +158,7 @@ namespace App
         if (gridPos.x == -1)
             return;
 
-        bool success = m_board.placeWall(gridPos.x, gridPos.y, m_currentWallOri);
+        bool success = m_board.placeWall(m_currentPlayer, gridPos.x, gridPos.y, m_currentWallOri);
 
         if (success)
         {
