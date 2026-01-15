@@ -13,7 +13,6 @@ namespace Game
     {
     public:
         static constexpr int SIZE = 9;
-        static constexpr int MAX_WALLS_PER_PLAYER = 10;
 
     private:
         std::vector<Field> m_fields;
@@ -22,13 +21,12 @@ namespace Game
         sf::Texture m_backgroundTexture;
         sf::Sprite m_backgroundSprite;
         bool m_hasBackground = false;
-        std::array<int, 3> m_wallCounts = {0, 0, 0};
 
     public:
         Board();
 
         // Initialize grid and neighbor connections
-        void init();
+        void init(bool loadVisuals = true);
         void drawBackground(sf::RenderWindow &window) const;
 
         // Graph Operations
@@ -39,17 +37,16 @@ namespace Game
         // Entity Access
         const std::vector<Wall> &getAllWalls() const;
         const std::vector<Pawn> &getAllPawns() const;
+        void setPawns(int p1x, int p1y, int p2x, int p2y);
 
         // Helper: Returns pointer to pawn at x,y or nullptr
         const Pawn *getPawnAt(int x, int y) const;
         Pawn *getPawnById(int id);
+        const Pawn *getPawnById(int id) const;
 
         // Actions
-        bool placeWall(int playerId, int x, int y, Orientation orientation);
+        bool placeWall(int x, int y, Orientation orientation);
         bool movePawn(int pawnId, int targetX, int targetY);
-
-        // Win Condition Check
-        bool hasPlayerWon(int playerId) const;
 
         bool isValid(int x, int y) const;
 

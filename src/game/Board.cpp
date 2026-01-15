@@ -1,5 +1,4 @@
 #include "game/Board.hpp"
-#include "ai/PathFinder.hpp"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -14,7 +13,7 @@ namespace Game
         init();
     }
 
-    void Board::init()
+    void Board::init(bool loadVisuals)
     {
         m_fields.clear();
         m_fields.reserve(SIZE * SIZE);
@@ -27,13 +26,7 @@ namespace Game
         }
         m_walls.clear();
 
-        // Initialize Players here instead of Application
-        m_pawns.clear();
-        m_pawns.emplace_back(1, 4, 8); // Player 1 starts bottom
-        m_pawns.emplace_back(2, 4, 0); // Player 2 starts top
-        m_wallCounts = {0, 0, 0};
-
-        if (!m_hasBackground)
+        if (loadVisuals && !m_hasBackground)
         {
             if (!m_backgroundTexture.loadFromFile("assets/textures/bg.png"))
             {
@@ -68,6 +61,13 @@ namespace Game
     const std::vector<Field> &Board::getAllFields() const { return m_fields; }
     const std::vector<Wall> &Board::getAllWalls() const { return m_walls; }
     const std::vector<Pawn> &Board::getAllPawns() const { return m_pawns; }
+
+    void Board::setPawns(int p1x, int p1y, int p2x, int p2y)
+    {
+        m_pawns.clear();
+        m_pawns.emplace_back(1, p1x, p1y);
+        m_pawns.emplace_back(2, p2x, p2y);
+    }
 
     void Board::drawBackground(sf::RenderWindow &window) const
     {
@@ -122,40 +122,26 @@ namespace Game
         return nullptr;
     }
 
-    bool Board::placeWall(int playerId, int x, int y, Orientation orientation)
+    const Pawn *Board::getPawnById(int id) const
     {
-        const bool isPlayerIdValid = playerId > 0 &&
-                                     playerId < static_cast<int>(m_wallCounts.size());
-        if (!isPlayerIdValid)
-            return false;
+        for (const auto &p : m_pawns)
+        {
+            if (p.id() == id)
+                return &p;
+        }
+        return nullptr;
+    }
 
-        const bool hasWallsRemaining = m_wallCounts[playerId] < MAX_WALLS_PER_PLAYER;
-        if (!hasWallsRemaining)
-            return false;
-
+    bool Board::placeWall(int x, int y, Orientation orientation)
+    {
         // Create temp wall to check validity
         Wall tempWall(x, y, orientation);
 
         if (!tempWall.isValidMove(*this, x, y))
             return false;
 
-        // Apply temporarily to validate path availability
         toggleWall(x, y, orientation, true);
-
-        const Pawn *p1 = getPawnById(1);
-        const Pawn *p2 = getPawnById(2);
-
-        bool p1HasPath = p1 && PathFinder::doesPathExist(*this, p1->x(), p1->y(), 0);
-        bool p2HasPath = p2 && PathFinder::doesPathExist(*this, p2->x(), p2->y(), SIZE - 1);
-
-        if (!p1HasPath || !p2HasPath)
-        {
-            toggleWall(x, y, orientation, false);
-            return false;
-        }
-
         m_walls.emplace_back(x, y, orientation);
-        ++m_wallCounts[playerId];
         return true;
     }
     void Board::toggleWall(int x, int y, Orientation ori, bool blocking){
@@ -215,28 +201,5 @@ namespace Game
         return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
     }
 
-    bool Board::hasPlayerWon(int playerId) const
-    {
-        const Pawn *pawn = nullptr;
-        for (const auto &p : m_pawns)
-        {
-            if (p.id() == playerId)
-            {
-                pawn = &p;
-                break;
-            }
-        }
-
-        if (!pawn)
-            return false;
-
-        // Player 1 starts at y=8 and wins by reaching y=0
-        // Player 2 starts at y=0 and wins by reaching y=8 (SIZE - 1)
-        if (playerId == 1)
-            return pawn->y() == 0;
-        else if (playerId == 2)
-            return pawn->y() == SIZE - 1;
-
-        return false;
-    }
+    // Win condition now lives in GameState.
 }
