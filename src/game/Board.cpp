@@ -31,7 +31,6 @@ namespace Game
         m_pawns.clear();
         m_pawns.emplace_back(1, 4, 8); // Player 1 starts bottom
         m_pawns.emplace_back(2, 4, 0); // Player 2 starts top
-        m_wallCounts = {0, 0, 0};
 
         if (!m_hasBackground)
         {
@@ -122,17 +121,18 @@ namespace Game
         return nullptr;
     }
 
-    bool Board::placeWall(int playerId, int x, int y, Orientation orientation)
+    const Pawn *Board::getPawnById(int id) const
     {
-        const bool isPlayerIdValid = playerId > 0 &&
-                                     playerId < static_cast<int>(m_wallCounts.size());
-        if (!isPlayerIdValid)
-            return false;
+        for (const auto &p : m_pawns)
+        {
+            if (p.id() == id)
+                return &p;
+        }
+        return nullptr;
+    }
 
-        const bool hasWallsRemaining = m_wallCounts[playerId] < MAX_WALLS_PER_PLAYER;
-        if (!hasWallsRemaining)
-            return false;
-
+    bool Board::placeWall(int x, int y, Orientation orientation)
+    {
         // Create temp wall to check validity
         Wall tempWall(x, y, orientation);
 
@@ -155,7 +155,6 @@ namespace Game
         }
 
         m_walls.emplace_back(x, y, orientation);
-        ++m_wallCounts[playerId];
         return true;
     }
     void Board::toggleWall(int x, int y, Orientation ori, bool blocking){

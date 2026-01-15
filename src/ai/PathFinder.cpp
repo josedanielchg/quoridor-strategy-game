@@ -7,14 +7,17 @@
 
 namespace Game
 {
+    // A* search node for a board cell.
     struct Node
     {
         int x, y;
-        int gCost;
-        int hCost;
+        int gCost; 
+        int hCost; 
 
+        // Total priority (F = G + H).
         int fCost() const { return gCost + hCost; }
 
+        // Invert comparison so the priority_queue pops the lowest fCost first.
         bool operator>(const Node& other) const
         {
             return fCost() > other.fCost();
@@ -33,11 +36,14 @@ namespace Game
         
         if (startY == targetRow) return 0;
 
+        // Open set for A* (nodes to explore next).
         std::priority_queue<Node, std::vector<Node>, std::greater<Node>> openSet;
 
+        // Best known gCost per cell (flat array for speed).
         std::array<int, Board::SIZE * Board::SIZE> minCosts;
         minCosts.fill(std::numeric_limits<int>::max());
 
+        // Seed with the start node.
         int startIdx = startY * Board::SIZE + startX;
         minCosts[startIdx] = 0;
 
@@ -54,9 +60,11 @@ namespace Game
                 return current.gCost;
             }
 
+            // Skip if we already found a cheaper path to this cell.
             int currentIdx = current.y * Board::SIZE + current.x;
             if (current.gCost > minCosts[currentIdx]) continue;
 
+            // Neighbor offsets: Up, Right, Down, Left.
             const int dx[] = {0, 1, 0, -1};
             const int dy[] = {-1, 0, 1, 0};
 
@@ -66,6 +74,7 @@ namespace Game
             {
                 Direction dir = static_cast<Direction>(i);
 
+                // Only move if there is no wall blocking this direction.
                 if (currentField.hasPath(dir))
                 {
                     int nextX = current.x + dx[i];
@@ -73,6 +82,7 @@ namespace Game
 
                     if (board.isValid(nextX, nextY))
                     {
+                        // Each step has uniform cost 1.
                         int newGCost = current.gCost + 1;
                         int nextIdx = nextY * Board::SIZE + nextX;
 
@@ -80,6 +90,7 @@ namespace Game
                         {
                             minCosts[nextIdx] = newGCost;
                             
+                            // Heuristic: vertical distance to target row.
                             int newH = std::abs(nextY - targetRow);
                             openSet.push({nextX, nextY, newGCost, newH});
                         }

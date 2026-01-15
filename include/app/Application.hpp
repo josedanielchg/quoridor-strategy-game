@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "game/Board.hpp"
+#include "game/GameState.hpp"
 #include "ui/GameRenderer.hpp"
 #include "ui/Hud.hpp"
 
@@ -20,12 +21,13 @@ namespace App {
         void attemptPlaceWall(sf::Vector2i gridPos);
         void toggleWallMode();
         void rotateWall();
-        void checkWinCondition();
+        void checkWinCondition(int playerId);
 
     private:
         sf::RenderWindow m_window;
         sf::CircleShape m_testShape;
         Game::Board m_board;
+        Game::GameState m_gameState;
         UI::GameRenderer m_renderer;
         UI::Hud m_hud;
 
