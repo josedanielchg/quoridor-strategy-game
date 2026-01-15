@@ -10,11 +10,8 @@ namespace App
     {
         m_window.setFramerateLimit(60);
         m_board.init();
-        m_gameState = Game::GameState(
-            m_board,
-            m_currentPlayer,
-            Game::GameState::MAX_WALLS_PER_PLAYER,
-            Game::GameState::MAX_WALLS_PER_PLAYER);
+        m_gameState = Game::GameState();
+        m_gameState.syncBoard(m_board);
 
         if (!m_renderer.init())
             exit(-1);
@@ -86,9 +83,9 @@ namespace App
     void Application::attemptMove(sf::Vector2i gridPos)
     {
         // 1. Check if game is already won
-        if (m_winner != 0)
+        if (m_gameState.isGameOver())
         {
-            std::cout << "Game Over! Player " << m_winner << " has won!" << std::endl;
+            std::cout << "Game Over! Player " << m_gameState.winner() << " has won!" << std::endl;
             return;
         }
 
@@ -96,7 +93,7 @@ namespace App
         if (gridPos.x == -1 || gridPos.y == -1)
             return;
 
-        int playerId = m_currentPlayer;
+        int playerId = m_gameState.currentPlayer();
         Game::Move move = Game::Move::Pawn(gridPos.x, gridPos.y, playerId);
 
         if (m_gameState.applyMove(move))
@@ -110,10 +107,9 @@ namespace App
             checkWinCondition(playerId);
 
             // If successful and no winner yet:
-            if (m_winner == 0)
+            if (!m_gameState.isGameOver())
             {
-                m_currentPlayer = m_gameState.currentPlayer();
-                m_hud.update(m_currentPlayer);
+                m_hud.update(m_gameState.currentPlayer());
             }
         }
         else
@@ -171,7 +167,7 @@ namespace App
         if (gridPos.x == -1)
             return;
 
-        int playerId = m_currentPlayer;
+        int playerId = m_gameState.currentPlayer();
         Game::Move move = Game::Move::Wall(gridPos.x, gridPos.y, m_currentWallOri, playerId);
         bool success = m_gameState.applyMove(move);
 
@@ -183,8 +179,7 @@ namespace App
                 return;
             }
             std::cout << "Wall placed at " << gridPos.x << ", " << gridPos.y << std::endl;
-            m_currentPlayer = m_gameState.currentPlayer();
-            m_hud.update(m_currentPlayer);
+            m_hud.update(m_gameState.currentPlayer());
             m_isPlacingWall = false;
         }
         else
@@ -195,10 +190,9 @@ namespace App
 
     void Application::checkWinCondition(int playerId)
     {
-        if (m_gameState.hasPlayerWon(playerId))
+        if (m_gameState.winner() == playerId)
         {
-            m_winner = playerId;
-            std::cout << "=== Player " << m_winner << " has WON! ===" << std::endl;
+            std::cout << "=== Player " << playerId << " has WON! ===" << std::endl;
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Game
         std::vector<WallState> m_walls;
         std::array<int, 2> m_wallsRemaining;
         int m_currentPlayer;
+        int m_winner;
 
         bool buildBoard(Board &board) const;
 
@@ -40,6 +41,8 @@ namespace Game
         int wallsRemaining(int playerId) const;
         PawnState pawn(int playerId) const;
         const std::vector<WallState> &walls() const;
+        int winner() const;
+        bool isGameOver() const;
 
         bool applyMove(const Move &move);
         bool hasPlayerWon(int playerId) const;

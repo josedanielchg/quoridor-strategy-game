@@ -31,8 +31,6 @@ namespace App {
         UI::GameRenderer m_renderer;
         UI::Hud m_hud;
 
-        int m_currentPlayer = 1;
-        int m_winner = 0;
 
         bool m_isPlacingWall = false;
         Game::Orientation m_currentWallOri = Game::Orientation::Horizontal;
