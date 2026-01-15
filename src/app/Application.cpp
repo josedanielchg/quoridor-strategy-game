@@ -1,4 +1,5 @@
 #include "app/Application.hpp"
+#include "game/Move.hpp"
 #include <iostream>
 
 namespace App
@@ -9,6 +10,11 @@ namespace App
     {
         m_window.setFramerateLimit(60);
         m_board.init();
+        m_gameState = Game::GameState(
+            m_board,
+            m_currentPlayer,
+            Game::GameState::MAX_WALLS_PER_PLAYER,
+            Game::GameState::MAX_WALLS_PER_PLAYER);
 
         if (!m_renderer.init())
             exit(-1);
@@ -90,16 +96,23 @@ namespace App
         if (gridPos.x == -1 || gridPos.y == -1)
             return;
 
-        // 3. Delegate to Board/Pawn logic
-        if (m_board.movePawn(m_currentPlayer, gridPos.x, gridPos.y))
+        int playerId = m_currentPlayer;
+        Game::Move move = Game::Move::Pawn(gridPos.x, gridPos.y, playerId);
+
+        if (m_gameState.applyMove(move))
         {
-            // 4. Check for win condition
-            checkWinCondition();
+            if (!m_gameState.syncBoard(m_board))
+            {
+                std::cout << "Error: Failed to sync board state." << std::endl;
+                return;
+            }
+
+            checkWinCondition(playerId);
 
             // If successful and no winner yet:
             if (m_winner == 0)
             {
-                m_currentPlayer = (m_currentPlayer == 1) ? 2 : 1;
+                m_currentPlayer = m_gameState.currentPlayer();
                 m_hud.update(m_currentPlayer);
             }
         }
@@ -158,12 +171,19 @@ namespace App
         if (gridPos.x == -1)
             return;
 
-        bool success = m_board.placeWall(m_currentPlayer, gridPos.x, gridPos.y, m_currentWallOri);
+        int playerId = m_currentPlayer;
+        Game::Move move = Game::Move::Wall(gridPos.x, gridPos.y, m_currentWallOri, playerId);
+        bool success = m_gameState.applyMove(move);
 
         if (success)
         {
+            if (!m_gameState.syncBoard(m_board))
+            {
+                std::cout << "Error: Failed to sync board state." << std::endl;
+                return;
+            }
             std::cout << "Wall placed at " << gridPos.x << ", " << gridPos.y << std::endl;
-            m_currentPlayer = (m_currentPlayer == 1) ? 2 : 1;
+            m_currentPlayer = m_gameState.currentPlayer();
             m_hud.update(m_currentPlayer);
             m_isPlacingWall = false;
         }
@@ -173,11 +193,11 @@ namespace App
         }
     }
 
-    void Application::checkWinCondition()
+    void Application::checkWinCondition(int playerId)
     {
-        if (m_board.hasPlayerWon(m_currentPlayer))
+        if (m_gameState.hasPlayerWon(playerId))
         {
-            m_winner = m_currentPlayer;
+            m_winner = playerId;
             std::cout << "=== Player " << m_winner << " has WON! ===" << std::endl;
         }
     }

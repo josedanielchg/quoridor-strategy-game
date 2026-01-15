@@ -175,4 +175,9 @@ namespace Game
 
         return moves;
     }
+
+    bool GameState::syncBoard(Board &board) const
+    {
+        return buildBoard(board);
+    }
 }

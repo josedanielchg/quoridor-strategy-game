@@ -44,5 +44,6 @@ namespace Game
         bool applyMove(const Move &move);
         bool hasPlayerWon(int playerId) const;
         std::vector<Move> generateLegalMoves() const;
+        bool syncBoard(Board &board) const;
     };
 }
