@@ -1,11 +1,15 @@
 #include "game/Board.hpp"
 #include "ai/PathFinder.hpp"
+#include <algorithm>
+#include <iostream>
 #include <stdexcept>
 
 namespace Game
 {
+    static const sf::Vector2f BACKGROUND_CANVAS_SIZE = {1728.f, 1117.f};
 
     Board::Board()
+        : m_backgroundSprite(m_backgroundTexture)
     {
         init();
     }
@@ -27,6 +31,23 @@ namespace Game
         m_pawns.clear();
         m_pawns.emplace_back(1, 4, 8); // Player 1 starts bottom
         m_pawns.emplace_back(2, 4, 0); // Player 2 starts top
+
+        if (!m_hasBackground)
+        {
+            if (!m_backgroundTexture.loadFromFile("assets/textures/bg.png"))
+            {
+                std::cerr << "Error: Could not load bg.png\n";
+                m_hasBackground = false;
+            }
+            else
+            {
+                m_backgroundSprite.setTexture(m_backgroundTexture, true);
+                sf::Vector2u texSize = m_backgroundTexture.getSize();
+                m_backgroundSprite.setOrigin({float(texSize.x) / 2.f, float(texSize.y) / 2.f});
+                m_backgroundSprite.setPosition({0.f, 0.f});
+                m_hasBackground = true;
+            }
+        }
     }
 
     Field &Board::getField(int x, int y)
@@ -46,6 +67,39 @@ namespace Game
     const std::vector<Field> &Board::getAllFields() const { return m_fields; }
     const std::vector<Wall> &Board::getAllWalls() const { return m_walls; }
     const std::vector<Pawn> &Board::getAllPawns() const { return m_pawns; }
+
+    void Board::drawBackground(sf::RenderWindow &window) const
+    {
+        if (!m_hasBackground)
+            return;
+
+        sf::Sprite sprite = m_backgroundSprite;
+        sf::View oldView = window.getView();
+        const sf::Vector2u windowSize = window.getSize();
+        sf::View backgroundView;
+        backgroundView.setSize({float(windowSize.x), float(windowSize.y)});
+        backgroundView.setCenter({float(windowSize.x) / 2.f, float(windowSize.y) / 2.f});
+        window.setView(backgroundView);
+
+        const sf::Vector2f viewSize = backgroundView.getSize();
+        const sf::Vector2f viewCenter = backgroundView.getCenter();
+        const sf::Vector2u texSize = m_backgroundTexture.getSize();
+        if (texSize.x == 0 || texSize.y == 0)
+        {
+            window.setView(oldView);
+            return;
+        }
+
+        const float scale = std::max(viewSize.x / BACKGROUND_CANVAS_SIZE.x,
+                                     viewSize.y / BACKGROUND_CANVAS_SIZE.y);
+        const float designToTextureScale = BACKGROUND_CANVAS_SIZE.x / float(texSize.x);
+        const float uniformScale = scale * designToTextureScale;
+        sprite.setScale({uniformScale, uniformScale});
+        sprite.setPosition(viewCenter);
+        window.draw(sprite);
+
+        window.setView(oldView);
+    }
 
     const Pawn *Board::getPawnAt(int x, int y) const
     {

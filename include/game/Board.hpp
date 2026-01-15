@@ -2,6 +2,7 @@
 #include "game/Field.hpp"
 #include "game/Wall.hpp"
 #include "game/Pawn.hpp"
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <optional>
 
@@ -16,12 +17,16 @@ namespace Game
         std::vector<Field> m_fields;
         std::vector<Wall> m_walls;
         std::vector<Pawn> m_pawns;
+        sf::Texture m_backgroundTexture;
+        sf::Sprite m_backgroundSprite;
+        bool m_hasBackground = false;
 
     public:
         Board();
 
         // Initialize grid and neighbor connections
         void init();
+        void drawBackground(sf::RenderWindow &window) const;
 
         // Graph Operations
         Field &getField(int x, int y);
