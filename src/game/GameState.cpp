@@ -1,4 +1,6 @@
 #include "game/GameState.hpp"
+#include "ai/PathFinder.hpp"
+#include "game/Wall.hpp"
 
 namespace Game
 {
@@ -6,7 +8,8 @@ namespace Game
         : m_pawns{PawnState{4, Board::SIZE - 1}, PawnState{4, 0}},
           m_walls(),
           m_wallsRemaining{MAX_WALLS_PER_PLAYER, MAX_WALLS_PER_PLAYER},
-          m_currentPlayer(1)
+          m_currentPlayer(1),
+          m_winner(0)
     {
     }
 
@@ -14,7 +17,8 @@ namespace Game
         : m_pawns{PawnState{4, Board::SIZE - 1}, PawnState{4, 0}},
           m_walls(),
           m_wallsRemaining{p1WallsRemaining, p2WallsRemaining},
-          m_currentPlayer(currentPlayer)
+          m_currentPlayer(currentPlayer),
+          m_winner(0)
     {
         const Pawn *p1 = board.getPawnById(1);
         const Pawn *p2 = board.getPawnById(2);
@@ -31,6 +35,8 @@ namespace Game
     }
 
     int GameState::currentPlayer() const { return m_currentPlayer; }
+    int GameState::winner() const { return m_winner; }
+    bool GameState::isGameOver() const { return m_winner != 0; }
 
     int GameState::wallsRemaining(int playerId) const
     {
@@ -52,15 +58,9 @@ namespace Game
 
     bool GameState::buildBoard(Board &board) const
     {
-        board.init();
+        board.init(false);
 
-        Pawn *p1 = board.getPawnById(1);
-        Pawn *p2 = board.getPawnById(2);
-
-        if (p1)
-            p1->setPosition(m_pawns[0].x, m_pawns[0].y);
-        if (p2)
-            p2->setPosition(m_pawns[1].x, m_pawns[1].y);
+        board.setPawns(m_pawns[0].x, m_pawns[0].y, m_pawns[1].x, m_pawns[1].y);
 
         for (const auto &wall : m_walls)
         {
@@ -103,16 +103,32 @@ namespace Game
             if (m_wallsRemaining[idx] <= 0)
                 return false;
 
-            success = board.placeWall(move.x(), move.y(), move.orientation());
-            if (success)
-            {
-                m_walls.push_back({move.x(), move.y(), move.orientation()});
-                m_wallsRemaining[idx] -= 1;
-            }
+            Wall tempWall(move.x(), move.y(), move.orientation());
+            if (!tempWall.isValidMove(board, move.x(), move.y()))
+                return false;
+
+            board.toggleWall(move.x(), move.y(), move.orientation(), true);
+
+            const Pawn *p1 = board.getPawnById(1);
+            const Pawn *p2 = board.getPawnById(2);
+
+            bool p1HasPath = p1 && PathFinder::doesPathExist(board, p1->x(), p1->y(), 0);
+            bool p2HasPath = p2 && PathFinder::doesPathExist(board, p2->x(), p2->y(), Board::SIZE - 1);
+
+            board.toggleWall(move.x(), move.y(), move.orientation(), false);
+
+            if (!p1HasPath || !p2HasPath)
+                return false;
+
+            success = true;
+            m_walls.push_back({move.x(), move.y(), move.orientation()});
+            m_wallsRemaining[idx] -= 1;
         }
 
         if (success)
         {
+            if (hasPlayerWon(playerId))
+                m_winner = playerId;
             m_currentPlayer = (playerId == 1) ? 2 : 1;
         }
 
@@ -164,7 +180,21 @@ namespace Game
                         if (!buildBoard(tempBoard))
                             continue;
 
-                        if (tempBoard.placeWall(x, y, orientation))
+                        Wall tempWall(x, y, orientation);
+                        if (!tempWall.isValidMove(tempBoard, x, y))
+                            continue;
+
+                        tempBoard.toggleWall(x, y, orientation, true);
+
+                        const Pawn *p1 = tempBoard.getPawnById(1);
+                        const Pawn *p2 = tempBoard.getPawnById(2);
+
+                        bool p1HasPath = p1 && PathFinder::doesPathExist(tempBoard, p1->x(), p1->y(), 0);
+                        bool p2HasPath = p2 && PathFinder::doesPathExist(tempBoard, p2->x(), p2->y(), Board::SIZE - 1);
+
+                        tempBoard.toggleWall(x, y, orientation, false);
+
+                        if (p1HasPath && p2HasPath)
                         {
                             moves.push_back(Move::Wall(x, y, orientation, m_currentPlayer));
                         }

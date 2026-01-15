@@ -26,7 +26,7 @@ namespace Game
         Board();
 
         // Initialize grid and neighbor connections
-        void init();
+        void init(bool loadVisuals = true);
         void drawBackground(sf::RenderWindow &window) const;
 
         // Graph Operations
@@ -37,6 +37,7 @@ namespace Game
         // Entity Access
         const std::vector<Wall> &getAllWalls() const;
         const std::vector<Pawn> &getAllPawns() const;
+        void setPawns(int p1x, int p1y, int p2x, int p2y);
 
         // Helper: Returns pointer to pawn at x,y or nullptr
         const Pawn *getPawnAt(int x, int y) const;
@@ -46,9 +47,6 @@ namespace Game
         // Actions
         bool placeWall(int x, int y, Orientation orientation);
         bool movePawn(int pawnId, int targetX, int targetY);
-
-        // Win Condition Check
-        bool hasPlayerWon(int playerId) const;
 
         bool isValid(int x, int y) const;
 
