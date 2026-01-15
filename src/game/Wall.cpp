@@ -21,7 +21,7 @@ namespace Game
         {
             m_spriteDown.setTexture(m_texDown, true);
             sf::Vector2u downSize = m_texDown.getSize();
-            m_spriteDown.setOrigin({float(downSize.x) / 1.08f, float(downSize.y) / 1.31f});
+            m_spriteDown.setOrigin({float(downSize.x) / 1.09f, float(downSize.y) / 1.29f});
         }
     }
 
@@ -76,7 +76,7 @@ namespace Game
 
     sf::Vector2f Wall::getSpriteOrigin(const sf::Vector2u &texSize) const
     {
-        return {float(texSize.x) / 1.0f, float(texSize.y) / 1.31f};
+        return {float(texSize.x) / 1.09f, float(texSize.y) / 1.29f};
     }
 
     bool Wall::isValidMove(const Board &board, int targetX, int targetY) const
