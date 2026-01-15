@@ -4,6 +4,7 @@
 #include <cmath>
 #include <array>
 #include <limits>
+#include <deque>
 
 namespace Game
 {
@@ -100,5 +101,53 @@ namespace Game
         }
 
         return -1;
+    }
+
+    bool PathFinder::doesPathExistBFS(const Board& board, int startX, int startY, int targetRow)
+    {
+        if (!board.isValid(startX, startY)) return false;
+        if (startY == targetRow) return true;
+
+        std::array<bool, Board::SIZE * Board::SIZE> visited;
+        visited.fill(false);
+        std::deque<std::pair<int, int>> queue;
+
+        visited[startY * Board::SIZE + startX] = true;
+        queue.push_back({startX, startY});
+
+        const int dx[] = {0, 1, 0, -1};
+        const int dy[] = {-1, 0, 1, 0};
+
+        while (!queue.empty())
+        {
+            auto [x, y] = queue.front();
+            queue.pop_front();
+
+            if (y == targetRow)
+                return true;
+
+            const Field& field = board.getField(x, y);
+
+            for (int i = 0; i < 4; ++i)
+            {
+                Direction dir = static_cast<Direction>(i);
+                if (!field.hasPath(dir))
+                    continue;
+
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                if (!board.isValid(nx, ny))
+                    continue;
+
+                int idx = ny * Board::SIZE + nx;
+                if (visited[idx])
+                    continue;
+
+                visited[idx] = true;
+                queue.push_back({nx, ny});
+            }
+        }
+
+        return false;
     }
 }

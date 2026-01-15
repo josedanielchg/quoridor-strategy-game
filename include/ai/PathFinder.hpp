@@ -11,5 +11,6 @@ namespace Game
         
         static bool doesPathExist(const Board& board, int startX, int startY, int targetRow);
         static int shortestPathLength(const Board& board, int startX, int startY, int targetRow);
+        static bool doesPathExistBFS(const Board& board, int startX, int startY, int targetRow);
     };
 }

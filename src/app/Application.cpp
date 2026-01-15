@@ -1,4 +1,5 @@
 #include "app/Application.hpp"
+#include "ai/AiEngine.hpp"
 #include "game/Move.hpp"
 #include <iostream>
 
@@ -12,6 +13,8 @@ namespace App
         m_board.init();
         m_gameState = Game::GameState();
         m_gameState.syncBoard(m_board);
+        m_cpuNeedsMove = (m_gameState.currentPlayer() == m_cpuPlayerId);
+        m_cpuClock.restart();
 
         if (!m_renderer.init())
             exit(-1);
@@ -89,6 +92,9 @@ namespace App
             return;
         }
 
+        if (m_cpuEnabled && m_gameState.currentPlayer() == m_cpuPlayerId)
+            return;
+
         // 2. Basic Validation
         if (gridPos.x == -1 || gridPos.y == -1)
             return;
@@ -110,6 +116,8 @@ namespace App
             if (!m_gameState.isGameOver())
             {
                 m_hud.update(m_gameState.currentPlayer());
+                m_cpuNeedsMove = (m_gameState.currentPlayer() == m_cpuPlayerId);
+                m_cpuClock.restart();
             }
         }
         else
@@ -136,6 +144,8 @@ namespace App
         // Game logic updates go here
         static float time = 0.0f;
         time += 0.1f;
+
+        handleCpuTurn();
     }
 
     void Application::run()
@@ -167,6 +177,9 @@ namespace App
         if (gridPos.x == -1)
             return;
 
+        if (m_cpuEnabled && m_gameState.currentPlayer() == m_cpuPlayerId)
+            return;
+
         int playerId = m_gameState.currentPlayer();
         Game::Move move = Game::Move::Wall(gridPos.x, gridPos.y, m_currentWallOri, playerId);
         bool success = m_gameState.applyMove(move);
@@ -181,6 +194,8 @@ namespace App
             std::cout << "Wall placed at " << gridPos.x << ", " << gridPos.y << std::endl;
             m_hud.update(m_gameState.currentPlayer());
             m_isPlacingWall = false;
+            m_cpuNeedsMove = (m_gameState.currentPlayer() == m_cpuPlayerId);
+            m_cpuClock.restart();
         }
         else
         {
@@ -193,6 +208,35 @@ namespace App
         if (m_gameState.winner() == playerId)
         {
             std::cout << "=== Player " << playerId << " has WON! ===" << std::endl;
+        }
+    }
+
+    void Application::handleCpuTurn()
+    {
+        if (!m_cpuEnabled)
+            return;
+        if (m_gameState.isGameOver())
+            return;
+        if (m_gameState.currentPlayer() != m_cpuPlayerId || !m_cpuNeedsMove)
+            return;
+        if (m_cpuClock.getElapsedTime().asSeconds() < m_cpuDelaySeconds)
+            return;
+
+        m_cpuNeedsMove = false;
+        Game::Move move = Game::AiEngine::findBestMove(m_gameState, m_cpuDepth);
+        if (!m_gameState.applyMove(move))
+            return;
+
+        if (!m_gameState.syncBoard(m_board))
+        {
+            std::cout << "Error: Failed to sync board state." << std::endl;
+            return;
+        }
+
+        checkWinCondition(m_cpuPlayerId);
+        if (!m_gameState.isGameOver())
+        {
+            m_hud.update(m_gameState.currentPlayer());
         }
     }
 }

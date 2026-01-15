@@ -45,8 +45,10 @@ namespace Game
         bool isGameOver() const;
 
         bool applyMove(const Move &move);
+        bool applyMoveUnchecked(const Move &move);
         bool hasPlayerWon(int playerId) const;
         std::vector<Move> generateLegalMoves() const;
+        std::vector<Move> generatePawnMoves() const;
         bool syncBoard(Board &board) const;
     };
 }

@@ -22,6 +22,7 @@ namespace App {
         void toggleWallMode();
         void rotateWall();
         void checkWinCondition(int playerId);
+        void handleCpuTurn();
 
     private:
         sf::RenderWindow m_window;
@@ -34,6 +35,12 @@ namespace App {
 
         bool m_isPlacingWall = false;
         Game::Orientation m_currentWallOri = Game::Orientation::Horizontal;
+        bool m_cpuEnabled = true;
+        int m_cpuPlayerId = 2;
+        int m_cpuDepth = 1;
+        bool m_cpuNeedsMove = false;
+        sf::Clock m_cpuClock;
+        float m_cpuDelaySeconds = 0.15f;
     };
 
 }

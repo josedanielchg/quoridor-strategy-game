@@ -1,6 +1,7 @@
 #include "game/GameState.hpp"
 #include "ai/PathFinder.hpp"
 #include "game/Wall.hpp"
+#include <array>
 
 namespace Game
 {
@@ -112,8 +113,8 @@ namespace Game
             const Pawn *p1 = board.getPawnById(1);
             const Pawn *p2 = board.getPawnById(2);
 
-            bool p1HasPath = p1 && PathFinder::doesPathExist(board, p1->x(), p1->y(), 0);
-            bool p2HasPath = p2 && PathFinder::doesPathExist(board, p2->x(), p2->y(), Board::SIZE - 1);
+            bool p1HasPath = p1 && PathFinder::doesPathExistBFS(board, p1->x(), p1->y(), 0);
+            bool p2HasPath = p2 && PathFinder::doesPathExistBFS(board, p2->x(), p2->y(), Board::SIZE - 1);
 
             board.toggleWall(move.x(), move.y(), move.orientation(), false);
 
@@ -123,6 +124,43 @@ namespace Game
             success = true;
             m_walls.push_back({move.x(), move.y(), move.orientation()});
             m_wallsRemaining[idx] -= 1;
+        }
+
+        if (success)
+        {
+            if (hasPlayerWon(playerId))
+                m_winner = playerId;
+            m_currentPlayer = (playerId == 1) ? 2 : 1;
+        }
+
+        return success;
+    }
+
+    bool GameState::applyMoveUnchecked(const Move &move)
+    {
+        int playerId = move.playerId();
+        if (playerId == 0)
+            playerId = m_currentPlayer;
+
+        if (playerId != m_currentPlayer)
+            return false;
+
+        bool success = false;
+
+        if (move.type() == MoveType::PawnMove)
+        {
+            m_pawns[playerId - 1] = {move.x(), move.y()};
+            success = true;
+        }
+        else if (move.type() == MoveType::WallPlacement)
+        {
+            int idx = playerId - 1;
+            if (m_wallsRemaining[idx] <= 0)
+                return false;
+
+            m_walls.push_back({move.x(), move.y(), move.orientation()});
+            m_wallsRemaining[idx] -= 1;
+            success = true;
         }
 
         if (success)
@@ -168,37 +206,80 @@ namespace Game
         }
 
         int wallIdx = m_currentPlayer - 1;
-        if (m_wallsRemaining[wallIdx] > 0)
+        if (m_wallsRemaining[wallIdx] <= 0)
+            return moves;
+
+        const Pawn *p1 = board.getPawnById(1);
+        const Pawn *p2 = board.getPawnById(2);
+        if (!p1 || !p2)
+            return moves;
+
+        const int radius = 2;
+        const int maxWallCoord = Board::SIZE - 2;
+        std::array<bool, (Board::SIZE - 1) * (Board::SIZE - 1) * 2> seen{};
+
+        auto markSeen = [&](int x, int y, Orientation o) -> bool {
+            int oIdx = (o == Orientation::Horizontal) ? 0 : 1;
+            int idx = (y * (Board::SIZE - 1) + x) * 2 + oIdx;
+            if (seen[idx])
+                return false;
+            seen[idx] = true;
+            return true;
+        };
+
+        auto addCandidate = [&](int x, int y, Orientation o) {
+            if (x < 0 || y < 0 || x > maxWallCoord || y > maxWallCoord)
+                return;
+            if (!markSeen(x, y, o))
+                return;
+
+            Wall tempWall(x, y, o);
+            if (!tempWall.isValidMove(board, x, y))
+                return;
+
+            board.toggleWall(x, y, o, true);
+            bool p1HasPath = PathFinder::doesPathExistBFS(board, p1->x(), p1->y(), 0);
+            bool p2HasPath = PathFinder::doesPathExistBFS(board, p2->x(), p2->y(), Board::SIZE - 1);
+            board.toggleWall(x, y, o, false);
+
+            if (p1HasPath && p2HasPath)
+                moves.push_back(Move::Wall(x, y, o, m_currentPlayer));
+        };
+
+        const Pawn *focusPawn = (m_currentPlayer == 1) ? p2 : p1;
+        for (int y = focusPawn->y() - radius; y <= focusPawn->y() + radius; ++y)
         {
-            for (int y = 0; y < Board::SIZE - 1; ++y)
+            for (int x = focusPawn->x() - radius; x <= focusPawn->x() + radius; ++x)
             {
-                for (int x = 0; x < Board::SIZE - 1; ++x)
+                for (Orientation o : {Orientation::Horizontal, Orientation::Vertical})
                 {
-                    for (Orientation orientation : {Orientation::Horizontal, Orientation::Vertical})
-                    {
-                        Board tempBoard;
-                        if (!buildBoard(tempBoard))
-                            continue;
+                    addCandidate(x, y, o);
+                }
+            }
+        }
 
-                        Wall tempWall(x, y, orientation);
-                        if (!tempWall.isValidMove(tempBoard, x, y))
-                            continue;
+        return moves;
+    }
 
-                        tempBoard.toggleWall(x, y, orientation, true);
+    std::vector<Move> GameState::generatePawnMoves() const
+    {
+        std::vector<Move> moves;
 
-                        const Pawn *p1 = tempBoard.getPawnById(1);
-                        const Pawn *p2 = tempBoard.getPawnById(2);
+        Board board;
+        if (!buildBoard(board))
+            return moves;
 
-                        bool p1HasPath = p1 && PathFinder::doesPathExist(tempBoard, p1->x(), p1->y(), 0);
-                        bool p2HasPath = p2 && PathFinder::doesPathExist(tempBoard, p2->x(), p2->y(), Board::SIZE - 1);
+        const Pawn *pawn = board.getPawnById(m_currentPlayer);
+        if (!pawn)
+            return moves;
 
-                        tempBoard.toggleWall(x, y, orientation, false);
-
-                        if (p1HasPath && p2HasPath)
-                        {
-                            moves.push_back(Move::Wall(x, y, orientation, m_currentPlayer));
-                        }
-                    }
+        for (int y = 0; y < Board::SIZE; ++y)
+        {
+            for (int x = 0; x < Board::SIZE; ++x)
+            {
+                if (pawn->isValidMove(board, x, y))
+                {
+                    moves.push_back(Move::Pawn(x, y, m_currentPlayer));
                 }
             }
         }
