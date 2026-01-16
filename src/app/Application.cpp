@@ -17,6 +17,11 @@ namespace App
             exit(-1);
         if (!m_hud.init())
             std::cerr << "Warning: HUD failed\n";
+        else
+            m_hud.update(m_gameState.currentPlayer(),
+                         m_gameState.wallsRemaining(1),
+                         m_gameState.wallsRemaining(2),
+                         Game::GameState::MAX_WALLS_PER_PLAYER);
 
         m_renderer.handleResize(m_window, m_window.getSize());
     }
@@ -109,7 +114,10 @@ namespace App
             // If successful and no winner yet:
             if (!m_gameState.isGameOver())
             {
-                m_hud.update(m_gameState.currentPlayer());
+                m_hud.update(m_gameState.currentPlayer(),
+                             m_gameState.wallsRemaining(1),
+                             m_gameState.wallsRemaining(2),
+                             Game::GameState::MAX_WALLS_PER_PLAYER);
             }
         }
         else
@@ -179,7 +187,10 @@ namespace App
                 return;
             }
             std::cout << "Wall placed at " << gridPos.x << ", " << gridPos.y << std::endl;
-            m_hud.update(m_gameState.currentPlayer());
+            m_hud.update(m_gameState.currentPlayer(),
+                         m_gameState.wallsRemaining(1),
+                         m_gameState.wallsRemaining(2),
+                         Game::GameState::MAX_WALLS_PER_PLAYER);
             m_isPlacingWall = false;
         }
         else
