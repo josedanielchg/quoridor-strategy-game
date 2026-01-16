@@ -37,7 +37,7 @@ namespace App {
         Game::Orientation m_currentWallOri = Game::Orientation::Horizontal;
         bool m_cpuEnabled = true;
         int m_cpuPlayerId = 2;
-        int m_cpuDepth = 1;
+        int m_cpuDepth = 2;
         bool m_cpuNeedsMove = false;
         sf::Clock m_cpuClock;
         float m_cpuDelaySeconds = 0.15f;

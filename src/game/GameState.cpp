@@ -2,6 +2,8 @@
 #include "ai/PathFinder.hpp"
 #include "game/Wall.hpp"
 #include <array>
+#include <chrono>
+#include <iostream>
 
 namespace Game
 {
@@ -184,6 +186,7 @@ namespace Game
 
     std::vector<Move> GameState::generateLegalMoves() const
     {
+        auto start = std::chrono::high_resolution_clock::now();
         std::vector<Move> moves;
 
         Board board;
@@ -217,6 +220,8 @@ namespace Game
         const int radius = 2;
         const int maxWallCoord = Board::SIZE - 2;
         std::array<bool, (Board::SIZE - 1) * (Board::SIZE - 1) * 2> seen{};
+        int wallCandidates = 0;
+        int wallAccepted = 0;
 
         auto markSeen = [&](int x, int y, Orientation o) -> bool {
             int oIdx = (o == Orientation::Horizontal) ? 0 : 1;
@@ -233,6 +238,7 @@ namespace Game
             if (!markSeen(x, y, o))
                 return;
 
+            wallCandidates += 1;
             Wall tempWall(x, y, o);
             if (!tempWall.isValidMove(board, x, y))
                 return;
@@ -243,7 +249,10 @@ namespace Game
             board.toggleWall(x, y, o, false);
 
             if (p1HasPath && p2HasPath)
+            {
                 moves.push_back(Move::Wall(x, y, o, m_currentPlayer));
+                wallAccepted += 1;
+            }
         };
 
         const Pawn *focusPawn = (m_currentPlayer == 1) ? p2 : p1;
@@ -257,6 +266,13 @@ namespace Game
                 }
             }
         }
+
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                           std::chrono::high_resolution_clock::now() - start)
+                           .count();
+        std::cout << "[AI] generateLegalMoves " << elapsed << " ms | "
+                  << "moves=" << moves.size() << ", walls=" << wallAccepted
+                  << ", candidates=" << wallCandidates << "\n";
 
         return moves;
     }

@@ -5,9 +5,21 @@
 #include <array>
 #include <limits>
 #include <deque>
+#include <chrono>
 
 namespace Game
 {
+    namespace
+    {
+        PathFinder::PathStats g_stats;
+
+        static long long msSince(const std::chrono::high_resolution_clock::time_point &start)
+        {
+            return std::chrono::duration_cast<std::chrono::milliseconds>(
+                       std::chrono::high_resolution_clock::now() - start)
+                .count();
+        }
+    }
     // A* search node for a board cell.
     struct Node
     {
@@ -30,12 +42,89 @@ namespace Game
         return shortestPathLength(board, startX, startY, targetRow) >= 0;
     }
 
+    static int shortestPathLengthBFS(const Board& board, int startX, int startY, int targetRow)
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+        if (!board.isValid(startX, startY))
+        {
+            g_stats.astarCalls += 1;
+            g_stats.astarMs += msSince(start);
+            return -1;
+        }
+        if (startY == targetRow)
+        {
+            g_stats.astarCalls += 1;
+            g_stats.astarMs += msSince(start);
+            return 0;
+        }
+
+        std::array<int, Board::SIZE * Board::SIZE> dist;
+        dist.fill(-1);
+        std::deque<std::pair<int, int>> queue;
+        dist[startY * Board::SIZE + startX] = 0;
+        queue.push_back({startX, startY});
+
+        const int dx[] = {0, 1, 0, -1};
+        const int dy[] = {-1, 0, 1, 0};
+
+        while (!queue.empty())
+        {
+            auto [x, y] = queue.front();
+            queue.pop_front();
+
+            if (y == targetRow)
+            {
+                g_stats.astarCalls += 1;
+                g_stats.astarMs += msSince(start);
+                return dist[y * Board::SIZE + x];
+            }
+
+            const Field& field = board.getField(x, y);
+            for (int i = 0; i < 4; ++i)
+            {
+                Direction dir = static_cast<Direction>(i);
+                if (!field.hasPath(dir))
+                    continue;
+
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                if (!board.isValid(nx, ny))
+                    continue;
+
+                int idx = ny * Board::SIZE + nx;
+                if (dist[idx] != -1)
+                    continue;
+
+                dist[idx] = dist[y * Board::SIZE + x] + 1;
+                queue.push_back({nx, ny});
+            }
+        }
+
+        g_stats.astarCalls += 1;
+        g_stats.astarMs += msSince(start);
+        return -1;
+    }
+
     int PathFinder::shortestPathLength(const Board& board, int startX, int startY, int targetRow)
     {
+        // BFS is faster than A* for small grids and guarantees shortest path length.
+        return shortestPathLengthBFS(board, startX, startY, targetRow);
+
+        auto start = std::chrono::high_resolution_clock::now();
         // Guard: start must be inside the board.
-        if (!board.isValid(startX, startY)) return -1;
+        if (!board.isValid(startX, startY))
+        {
+            g_stats.astarCalls += 1;
+            g_stats.astarMs += msSince(start);
+            return -1;
+        }
         
-        if (startY == targetRow) return 0;
+        if (startY == targetRow)
+        {
+            g_stats.astarCalls += 1;
+            g_stats.astarMs += msSince(start);
+            return 0;
+        }
 
         // Open set for A* (nodes to explore next).
         std::priority_queue<Node, std::vector<Node>, std::greater<Node>> openSet;
@@ -58,6 +147,8 @@ namespace Game
 
             if (current.y == targetRow)
             {
+                g_stats.astarCalls += 1;
+                g_stats.astarMs += msSince(start);
                 return current.gCost;
             }
 
@@ -100,13 +191,26 @@ namespace Game
             }
         }
 
+        g_stats.astarCalls += 1;
+        g_stats.astarMs += msSince(start);
         return -1;
     }
 
     bool PathFinder::doesPathExistBFS(const Board& board, int startX, int startY, int targetRow)
     {
-        if (!board.isValid(startX, startY)) return false;
-        if (startY == targetRow) return true;
+        auto start = std::chrono::high_resolution_clock::now();
+        if (!board.isValid(startX, startY))
+        {
+            g_stats.bfsCalls += 1;
+            g_stats.bfsMs += msSince(start);
+            return false;
+        }
+        if (startY == targetRow)
+        {
+            g_stats.bfsCalls += 1;
+            g_stats.bfsMs += msSince(start);
+            return true;
+        }
 
         std::array<bool, Board::SIZE * Board::SIZE> visited;
         visited.fill(false);
@@ -124,7 +228,11 @@ namespace Game
             queue.pop_front();
 
             if (y == targetRow)
+            {
+                g_stats.bfsCalls += 1;
+                g_stats.bfsMs += msSince(start);
                 return true;
+            }
 
             const Field& field = board.getField(x, y);
 
@@ -148,6 +256,18 @@ namespace Game
             }
         }
 
+        g_stats.bfsCalls += 1;
+        g_stats.bfsMs += msSince(start);
         return false;
+    }
+
+    void PathFinder::resetStats()
+    {
+        g_stats = PathStats{};
+    }
+
+    PathFinder::PathStats PathFinder::getStats()
+    {
+        return g_stats;
     }
 }
