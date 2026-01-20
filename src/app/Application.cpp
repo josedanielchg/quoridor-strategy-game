@@ -23,6 +23,21 @@ namespace App
                          m_gameState.wallsRemaining(2),
                          Game::GameState::MAX_WALLS_PER_PLAYER);
 
+        if (!m_pauseMenu.init())
+        {
+            std::cerr << "Warning: Pause menu failed\n";
+        }
+        else
+        {
+            m_pauseMenu.setOnResume([this]() { m_pauseMenu.setEnabled(false); });
+            m_pauseMenu.setOnRestart([this]()
+                                     {
+                                         resetGame();
+                                         m_pauseMenu.setEnabled(false);
+                                     });
+            m_pauseMenu.setOnQuit([this]() { m_window.close(); });
+        }
+
         m_renderer.handleResize(m_window, m_window.getSize());
     }
 
@@ -41,11 +56,28 @@ namespace App
             else if (const auto *key = event->getIf<sf::Event::KeyPressed>())
             {
                 if (key->scancode == sf::Keyboard::Scancode::Escape)
-                    m_window.close();
+                {
+                    togglePauseMenu();
+                    continue;
+                }
+                if (m_pauseMenu.isEnabled())
+                    continue;
                 if (key->scancode == sf::Keyboard::Scancode::W)
                     toggleWallMode();
                 if (key->scancode == sf::Keyboard::Scancode::R)
                     rotateWall();
+            }
+            else if (m_pauseMenu.isEnabled())
+            {
+                if (const auto *mouseMove = event->getIf<sf::Event::MouseMoved>())
+                {
+                    m_pauseMenu.updateHover(m_window, mouseMove->position);
+                }
+                else if (const auto *mouseBtn = event->getIf<sf::Event::MouseButtonPressed>())
+                {
+                    if (mouseBtn->button == sf::Mouse::Button::Left)
+                        m_pauseMenu.handleClick(m_window, mouseBtn->position);
+                }
             }
 
             // --- MOUSE MOVED (Hover Effect) ---
@@ -136,6 +168,9 @@ namespace App
         // 2. Draw HUD (On top)
         m_hud.render(m_window);
 
+        // 3. Draw Pause Menu (On top)
+        m_pauseMenu.render(m_window);
+
         m_window.display();
     }
 
@@ -204,6 +239,33 @@ namespace App
         if (m_gameState.winner() == playerId)
         {
             std::cout << "=== Player " << playerId << " has WON! ===" << std::endl;
+        }
+    }
+
+    void Application::resetGame()
+    {
+        m_board.init();
+        m_gameState = Game::GameState();
+        m_gameState.syncBoard(m_board);
+
+        m_isPlacingWall = false;
+        m_currentWallOri = Game::Orientation::Horizontal;
+
+        m_hud.update(m_gameState.currentPlayer(),
+                     m_gameState.wallsRemaining(1),
+                     m_gameState.wallsRemaining(2),
+                     Game::GameState::MAX_WALLS_PER_PLAYER);
+    }
+
+    void Application::togglePauseMenu()
+    {
+        const bool wasEnabled = m_pauseMenu.isEnabled();
+        m_pauseMenu.toggleEnabled();
+
+        if (!wasEnabled)
+        {
+            m_renderer.setHoveredTile({-1, -1});
+            m_renderer.setWallPreview(false, {0, 0}, m_currentWallOri);
         }
     }
 }
