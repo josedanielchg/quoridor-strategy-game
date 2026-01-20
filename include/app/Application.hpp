@@ -4,6 +4,7 @@
 #include "game/GameState.hpp"
 #include "ui/GameRenderer.hpp"
 #include "ui/Hud.hpp"
+#include "ui/PauseMenu.hpp"
 
 namespace App {
 
@@ -17,6 +18,8 @@ namespace App {
         void update();
         void render();
         void attemptMove(sf::Vector2i gridPos);
+        void resetGame();
+        void togglePauseMenu();
 
         void attemptPlaceWall(sf::Vector2i gridPos);
         void toggleWallMode();
@@ -30,6 +33,7 @@ namespace App {
         Game::GameState m_gameState;
         UI::GameRenderer m_renderer;
         UI::Hud m_hud;
+        UI::PauseMenu m_pauseMenu;
 
 
         bool m_isPlacingWall = false;
