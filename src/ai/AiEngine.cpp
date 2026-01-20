@@ -78,7 +78,7 @@ namespace Game
                           {
                               int da = std::abs(a.x() - opp.x) + std::abs(a.y() - opp.y);
                               int db = std::abs(b.x() - opp.x) + std::abs(b.y() - opp.y);
-                              return da < db;
+                              return da < db; 
                           });
                 wallMoves.erase(wallMoves.begin() + maxWalls, wallMoves.end());
             }
