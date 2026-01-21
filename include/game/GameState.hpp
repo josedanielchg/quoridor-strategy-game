@@ -1,7 +1,5 @@
 #pragma once
-#include "game/Move.hpp"
 #include <cstdint>
-#include <vector>
 
 namespace Game
 {
@@ -23,21 +21,5 @@ namespace Game
         uint8_t distDirty;
         uint8_t currentPlayerId;
         uint8_t winnerId;
-
-        int currentPlayer() const;
-        int winner() const;
-        bool isGameOver() const;
-
-        bool applyMove(const Move &move);
-        bool hasPlayerWon(int playerId) const;
-        std::vector<Move> generateLegalMoves() const;
     };
-
-    void initGameState(GameState &state);
-    bool isPawnMoveValid(const GameState &state, int playerId, int targetX, int targetY);
-    bool isWallPlacementValid(const GameState &state, int playerId, int x, int y, Orientation orientation);
-    bool hasPlayerWon(const GameState &state, int playerId);
-    void computeDistancesToGoal(const GameState &state, int playerId,
-                                int16_t dist[GameState::BOARD_SIZE][GameState::BOARD_SIZE]);
-    void updateDistanceCache(GameState &state);
 }
