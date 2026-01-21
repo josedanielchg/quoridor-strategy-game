@@ -1,9 +1,33 @@
 #include "game/Wall.hpp"
 #include "game/Board.hpp"
+#include "game/WallRules.hpp"
 #include <iostream>
+#include <cstring>
 
 namespace Game
 {
+    namespace
+    {
+        void buildWallGrids(const Board &board,
+                            uint8_t hWalls[WALL_GRID][WALL_GRID],
+                            uint8_t vWalls[WALL_GRID][WALL_GRID])
+        {
+            std::memset(hWalls, 0, sizeof(uint8_t) * WALL_GRID * WALL_GRID);
+            std::memset(vWalls, 0, sizeof(uint8_t) * WALL_GRID * WALL_GRID);
+
+            for (const auto &wall : board.getAllWalls())
+            {
+                int x = wall.x();
+                int y = wall.y();
+                if (x < 0 || x >= WALL_GRID || y < 0 || y >= WALL_GRID)
+                    continue;
+                if (wall.orientation() == Orientation::Horizontal)
+                    hWalls[x][y] = 1;
+                else
+                    vWalls[x][y] = 1;
+            }
+        }
+    }
 
     Wall::Wall(int x, int y, Orientation orientation)
         : VisualEntity(x, y),
@@ -81,38 +105,9 @@ namespace Game
 
     bool Wall::isValidMove(const Board &board, int targetX, int targetY) const
     {
-        // 1. Check Bounds
-        if (targetX < 0 || targetX >= Board::SIZE - 1 ||
-            targetY < 0 || targetY >= Board::SIZE - 1)
-        {
-            return false;
-        }
-
-        // 2. Check overlap with existing walls
-        for (const auto &w : board.getAllWalls())
-        {
-            // Reject perpendicular walls sharing the same anchor
-            if (w.x() == targetX && w.y() == targetY && w.orientation() != m_orientation)
-                return false;
-
-            if (w.orientation() == m_orientation)
-            {
-                int diffX = std::abs(w.x() - targetX);
-                int diffY = std::abs(w.y() - targetY);
-
-                if (m_orientation == Orientation::Vertical)
-                {
-                    // Vertical walls cannot overlap or share a segment
-                    if (diffX == 0 && diffY < 2) return false;
-                }
-                else // Horizontal
-                {
-                    // Horizontal walls cannot overlap or share a segment
-                    if (diffY == 0 && diffX < 2) return false;
-                }
-            }
-        }
-
-        return true;
+        uint8_t hWalls[WALL_GRID][WALL_GRID];
+        uint8_t vWalls[WALL_GRID][WALL_GRID];
+        buildWallGrids(board, hWalls, vWalls);
+        return isWallPlacementLegalLocal(hWalls, vWalls, targetX, targetY, m_orientation);
     }
 }

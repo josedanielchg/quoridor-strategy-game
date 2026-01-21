@@ -1,4 +1,6 @@
-#include "game/GameState.hpp"
+#include "game/GameRules.hpp"
+#include "game/WallRules.hpp"
+
 #include <cmath>
 #include <cstring>
 #include <queue>
@@ -6,6 +8,8 @@
 
 namespace Game
 {
+    static_assert(GameState::WALL_GRID == WALL_GRID, "Wall grid size mismatch.");
+
     void initGameState(GameState &state)
     {
         state.pawnX[0] = 4;
@@ -83,49 +87,11 @@ namespace Game
 
             return true;
         }
-
-        bool isWallPlacementLegalLocal(const GameState &state, int playerId, int x, int y, Orientation orientation)
-        {
-            if (playerId != 1 && playerId != 2)
-                return false;
-            if (!inBoundsWall(x, y))
-                return false;
-
-            int idx = playerId - 1;
-            if (state.wallsRemaining[idx] == 0)
-                return false;
-
-            if (orientation == Orientation::Horizontal)
-            {
-                if (state.hWalls[x][y])
-                    return false;
-                if (state.vWalls[x][y])
-                    return false;
-                if (x > 0 && state.hWalls[x - 1][y])
-                    return false;
-                if (x + 1 < GameState::WALL_GRID && state.hWalls[x + 1][y])
-                    return false;
-            }
-            else
-            {
-                if (state.vWalls[x][y])
-                    return false;
-                if (state.hWalls[x][y])
-                    return false;
-                if (y > 0 && state.vWalls[x][y - 1])
-                    return false;
-                if (y + 1 < GameState::WALL_GRID && state.vWalls[x][y + 1])
-                    return false;
-            }
-
-            return true;
-        }
-
     }
 
-    int GameState::currentPlayer() const { return currentPlayerId; }
-    int GameState::winner() const { return winnerId; }
-    bool GameState::isGameOver() const { return winnerId != 0; }
+    int currentPlayer(const GameState &state) { return state.currentPlayerId; }
+    int winner(const GameState &state) { return state.winnerId; }
+    bool isGameOver(const GameState &state) { return state.winnerId != 0; }
 
     void computeDistancesToGoal(const GameState &state, int playerId,
                                 int16_t dist[GameState::BOARD_SIZE][GameState::BOARD_SIZE])
@@ -242,7 +208,14 @@ namespace Game
 
     bool isWallPlacementValid(const GameState &state, int playerId, int x, int y, Orientation orientation)
     {
-        if (!isWallPlacementLegalLocal(state, playerId, x, y, orientation))
+        if (playerId != 1 && playerId != 2)
+            return false;
+
+        int idx = playerId - 1;
+        if (state.wallsRemaining[idx] == 0)
+            return false;
+
+        if (!isWallPlacementLegalLocal(state.hWalls, state.vWalls, x, y, orientation))
             return false;
 
         GameState temp = state;
@@ -271,85 +244,142 @@ namespace Game
         return false;
     }
 
-    bool GameState::applyMove(const Move &move)
+    bool applyMoveUnchecked(GameState &state, const Move &move, MoveUndoState &undoState)
     {
         int playerId = move.playerId();
         if (playerId == 0)
-        {
-            playerId = currentPlayerId;
-        }
-        else if (playerId != currentPlayerId)
-        {
+            playerId = state.currentPlayerId;
+        if (playerId != 1 && playerId != 2)
             return false;
-        }
 
-        bool success = false;
+        int idx = playerId - 1;
+        undoState.pawnX = state.pawnX[idx];
+        undoState.pawnY = state.pawnY[idx];
+        undoState.wallsRemaining = state.wallsRemaining[idx];
+        undoState.currentPlayerId = state.currentPlayerId;
+        undoState.winnerId = state.winnerId;
+        undoState.distDirty = state.distDirty;
 
         if (move.type() == MoveType::PawnMove)
         {
-            if (isPawnMoveValid(*this, playerId, move.x(), move.y()))
-            {
-                pawnX[playerId - 1] = static_cast<uint8_t>(move.x());
-                pawnY[playerId - 1] = static_cast<uint8_t>(move.y());
-                success = true;
-            }
+            int x = move.x();
+            int y = move.y();
+            if (!inBoundsCell(x, y))
+                return false;
+            state.pawnX[idx] = static_cast<uint8_t>(x);
+            state.pawnY[idx] = static_cast<uint8_t>(y);
         }
         else if (move.type() == MoveType::WallPlacement)
         {
             int x = move.x();
             int y = move.y();
+            if (!inBoundsWall(x, y))
+                return false;
 
-            if (isWallPlacementValid(*this, playerId, x, y, move.orientation()))
+            if (move.orientation() == Orientation::Horizontal)
+                state.hWalls[x][y] = 1;
+            else
+                state.vWalls[x][y] = 1;
+
+            state.wallsRemaining[idx] =
+                static_cast<uint8_t>(state.wallsRemaining[idx] - 1);
+            state.distDirty = 1;
+        }
+        else
+        {
+            return false;
+        }
+
+        if (hasPlayerWon(state, playerId))
+            state.winnerId = static_cast<uint8_t>(playerId);
+        state.currentPlayerId = (playerId == 1) ? 2 : 1;
+
+        return true;
+    }
+
+    void undoMove(GameState &state, const Move &move, const MoveUndoState &undoState)
+    {
+        int playerId = undoState.currentPlayerId;
+        if (playerId != 1 && playerId != 2)
+            return;
+
+        int idx = playerId - 1;
+        state.pawnX[idx] = undoState.pawnX;
+        state.pawnY[idx] = undoState.pawnY;
+        state.wallsRemaining[idx] = undoState.wallsRemaining;
+        state.currentPlayerId = undoState.currentPlayerId;
+        state.winnerId = undoState.winnerId;
+        state.distDirty = undoState.distDirty;
+
+        if (move.type() == MoveType::WallPlacement)
+        {
+            int x = move.x();
+            int y = move.y();
+            if (inBoundsWall(x, y))
             {
                 if (move.orientation() == Orientation::Horizontal)
-                    hWalls[x][y] = 1;
+                    state.hWalls[x][y] = 0;
                 else
-                    vWalls[x][y] = 1;
-
-                wallsRemaining[playerId - 1] = static_cast<uint8_t>(wallsRemaining[playerId - 1] - 1);
-                distDirty = 1;
-                success = true;
+                    state.vWalls[x][y] = 0;
             }
+            state.distDirty = 1;
         }
-
-        if (success)
-        {
-            if (hasPlayerWon(playerId))
-                winnerId = static_cast<uint8_t>(playerId);
-            currentPlayerId = (playerId == 1) ? 2 : 1;
-        }
-
-        return success;
     }
 
-    bool GameState::hasPlayerWon(int playerId) const
+    bool applyMove(GameState &state, const Move &move)
     {
-        return Game::hasPlayerWon(*this, playerId);
+        int playerId = move.playerId();
+        if (playerId == 0)
+        {
+            playerId = state.currentPlayerId;
+        }
+        else if (playerId != state.currentPlayerId)
+        {
+            return false;
+        }
+
+        if (move.type() == MoveType::PawnMove)
+        {
+            if (!isPawnMoveValid(state, playerId, move.x(), move.y()))
+                return false;
+        }
+        else if (move.type() == MoveType::WallPlacement)
+        {
+            if (!isWallPlacementValid(state, playerId, move.x(), move.y(), move.orientation()))
+                return false;
+        }
+        else
+        {
+            return false;
+        }
+
+        MoveUndoState undoState{};
+        return applyMoveUnchecked(state, move, undoState);
     }
 
-    std::vector<Move> GameState::generateLegalMoves() const
+    std::vector<Move> generateLegalMoves(const GameState &state)
     {
         std::vector<Move> moves;
-        int playerId = currentPlayerId;
+        int playerId = state.currentPlayerId;
 
-        for (int y = 0; y < BOARD_SIZE; ++y)
+        for (int y = 0; y < GameState::BOARD_SIZE; ++y)
         {
-            for (int x = 0; x < BOARD_SIZE; ++x)
+            for (int x = 0; x < GameState::BOARD_SIZE; ++x)
             {
-                if (isPawnMoveValid(*this, playerId, x, y))
+                if (isPawnMoveValid(state, playerId, x, y))
                     moves.push_back(Move::Pawn(x, y, playerId));
             }
         }
 
-        if (wallsRemaining[playerId - 1] > 0)
+        if (state.wallsRemaining[playerId - 1] > 0)
         {
-            for (int y = 0; y < WALL_GRID; ++y)
+            for (int y = 0; y < GameState::WALL_GRID; ++y)
             {
-                for (int x = 0; x < WALL_GRID; ++x)
+                for (int x = 0; x < GameState::WALL_GRID; ++x)
                 {
-                    if (isWallPlacementLegalLocal(*this, playerId, x, y, Orientation::Horizontal))
+                    if (isWallPlacementLegalLocal(state.hWalls, state.vWalls, x, y, Orientation::Horizontal))
                         moves.push_back(Move::Wall(x, y, Orientation::Horizontal, playerId));
-                    if (isWallPlacementLegalLocal(*this, playerId, x, y, Orientation::Vertical))
+                    if (isWallPlacementLegalLocal(state.hWalls, state.vWalls, x, y, Orientation::Vertical))
                         moves.push_back(Move::Wall(x, y, Orientation::Vertical, playerId));
                 }
             }
@@ -358,4 +388,28 @@ namespace Game
         return moves;
     }
 
+    int evaluateState(GameState &state, int perspectivePlayerId)
+    {
+        updateDistanceCache(state);
+
+        if (perspectivePlayerId != 1 && perspectivePlayerId != 2)
+            return 0;
+
+        int myIdx = perspectivePlayerId - 1;
+        int oppIdx = (myIdx == 0) ? 1 : 0;
+
+        int16_t myDist = state.distToGoal[myIdx][state.pawnY[myIdx]][state.pawnX[myIdx]];
+        int16_t oppDist = state.distToGoal[oppIdx][state.pawnY[oppIdx]][state.pawnX[oppIdx]];
+
+        if (myDist < 0)
+            return -100000;
+        if (oppDist < 0)
+            return 100000;
+
+        int distScore = static_cast<int>(oppDist - myDist);
+        int wallScore = static_cast<int>(state.wallsRemaining[myIdx]) -
+                        static_cast<int>(state.wallsRemaining[oppIdx]);
+
+        return distScore * 10 + wallScore * 2;
+    }
 }
