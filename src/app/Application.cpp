@@ -24,8 +24,8 @@ namespace App
             std::cerr << "Warning: HUD failed\n";
         else
             m_hud.update(m_gameState.currentPlayer(),
-                         m_gameState.wallsRemaining(1),
-                         m_gameState.wallsRemaining(2),
+                         m_gameState.wallsRemaining[0],
+                         m_gameState.wallsRemaining[1],
                          Game::GameState::MAX_WALLS_PER_PLAYER);
 
         if (!m_pauseMenu.init())
@@ -152,8 +152,8 @@ namespace App
             if (!m_gameState.isGameOver())
             {
                 m_hud.update(m_gameState.currentPlayer(),
-                             m_gameState.wallsRemaining(1),
-                             m_gameState.wallsRemaining(2),
+                             m_gameState.wallsRemaining[0],
+                             m_gameState.wallsRemaining[1],
                              Game::GameState::MAX_WALLS_PER_PLAYER);
             }
         }
@@ -228,8 +228,8 @@ namespace App
             }
             std::cout << "Wall placed at " << gridPos.x << ", " << gridPos.y << std::endl;
             m_hud.update(m_gameState.currentPlayer(),
-                         m_gameState.wallsRemaining(1),
-                         m_gameState.wallsRemaining(2),
+                         m_gameState.wallsRemaining[0],
+                         m_gameState.wallsRemaining[1],
                          Game::GameState::MAX_WALLS_PER_PLAYER);
             m_isPlacingWall = false;
         }
@@ -250,15 +250,15 @@ namespace App
     void Application::resetGame()
     {
         m_board.init();
-        m_gameState = Game::GameState();
-        m_gameState.syncBoard(m_board);
+        Game::initGameState(m_gameState);
+        m_board.loadFromState(m_gameState);
 
         m_isPlacingWall = false;
         m_currentWallOri = Game::Orientation::Horizontal;
 
         m_hud.update(m_gameState.currentPlayer(),
-                     m_gameState.wallsRemaining(1),
-                     m_gameState.wallsRemaining(2),
+                     m_gameState.wallsRemaining[0],
+                     m_gameState.wallsRemaining[1],
                      Game::GameState::MAX_WALLS_PER_PLAYER);
     }
 
