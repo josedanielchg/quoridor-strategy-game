@@ -1,5 +1,6 @@
 #include "app/TitleScreen.hpp"
 #include "ui/UiConstants.hpp"
+#include "ui/ViewUtils.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <cmath>
@@ -59,7 +60,7 @@ namespace App
 
     void TitleScreen::handleResize(sf::RenderWindow &window, sf::Vector2u /*size*/)
     {
-        updateLayout(window.getDefaultView());
+        updateLayout(UI::makeLetterboxView(window.getSize()));
     }
 
     void TitleScreen::update(float dt)
@@ -89,7 +90,7 @@ namespace App
     void TitleScreen::render(sf::RenderWindow &window)
     {
         sf::View oldView = window.getView();
-        sf::View uiView = window.getDefaultView();
+        sf::View uiView = UI::makeLetterboxView(window.getSize());
         window.setView(uiView);
 
         window.draw(m_backgroundSprite);

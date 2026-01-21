@@ -1,11 +1,12 @@
 #include "ui/GameRenderer.hpp"
+#include "ui/ViewUtils.hpp"
 #include <iostream>
 #include <cmath>
 
 namespace UI
 {
 
-    static const sf::Vector2f REFERENCE_SIZE = {2200.f, 1400.f};
+    static const sf::Vector2f REFERENCE_SIZE = UI_DESIGN_SIZE;
 
     static const float ISO_WIDTH = 112.f;
     static const float ISO_HEIGHT = 57.f;
@@ -174,31 +175,8 @@ namespace UI
 
     void GameRenderer::handleResize(sf::RenderWindow &window, sf::Vector2u size)
     {
-        m_view.setSize(REFERENCE_SIZE);
-        m_view.setCenter(REFERENCE_SIZE / 2.f);
-
-        float windowRatio = float(size.x) / float(size.y);
-        float refRatio = REFERENCE_SIZE.x / REFERENCE_SIZE.y;
-
-        // SFML 3.0 Rect Constructor: {{pos}, {size}}
-        sf::FloatRect viewport({0.f, 0.f}, {1.f, 1.f});
-
-        if (windowRatio > refRatio)
-        {
-            // Window is WIDER -> Black bars on sides
-            float scale = refRatio / windowRatio;
-            viewport.size.x = scale;
-            viewport.position.x = (1.f - scale) / 2.f;
-        }
-        else
-        {
-            // Window is TALLER -> Black bars on top/bottom
-            float scale = windowRatio / refRatio;
-            viewport.size.y = scale;
-            viewport.position.y = (1.f - scale) / 2.f;
-        }
-
-        m_view.setViewport(viewport);
+        (void)window;
+        m_view = UI::makeLetterboxView(size, REFERENCE_SIZE);
     }
 
     sf::Vector2i GameRenderer::getMouseGridPos(const sf::RenderWindow &window, sf::Vector2i mousePos) const

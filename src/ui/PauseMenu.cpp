@@ -1,5 +1,6 @@
 #include "ui/PauseMenu.hpp"
 #include "ui/UiConstants.hpp"
+#include "ui/ViewUtils.hpp"
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -80,7 +81,7 @@ namespace UI
 
     void PauseMenu::layout(const sf::RenderWindow &window)
     {
-        const sf::View view = window.getDefaultView();
+        const sf::View view = UI::makeLetterboxView(window.getSize());
         const sf::Vector2f viewSize = view.getSize();
         const sf::Vector2f viewCenter = view.getCenter();
 

@@ -1,5 +1,4 @@
 #include "app/Application.hpp"
-#include <cstdlib>
 #include <iostream>
 #include <optional>
 
@@ -11,15 +10,16 @@ namespace App
     {
         m_window.setFramerateLimit(60);
 
-        m_gameScreen = std::make_unique<GameScreen>();
-        m_gameScreen->setOnQuit([this]() { m_window.close(); });
-        if (!m_gameScreen->init())
-            std::exit(-1);
-
         m_titleScreen = std::make_unique<TitleScreen>();
         if (!m_titleScreen->init())
             std::cerr << "Warning: Title screen failed\n";
+
+        m_gameScreen = std::make_unique<GameScreen>();
+        if (!m_gameScreen->init())
+            std::cerr << "Warning: Game screen failed\n";
+
         m_titleScreen->setOnStart([this]() { setCurrentScreen(m_gameScreen.get()); });
+        m_gameScreen->setOnQuit([this]() { setCurrentScreen(m_titleScreen.get()); });
 
         setCurrentScreen(m_titleScreen.get());
     }
@@ -37,6 +37,7 @@ namespace App
             {
                 if (m_currentScreen)
                     m_currentScreen->handleResize(m_window, resized->size);
+                continue;
             }
 
             if (m_currentScreen)
@@ -44,21 +45,21 @@ namespace App
         }
     }
 
-    void Application::render()
-    {
-        m_window.clear(sf::Color(30, 30, 30));
-
-        if (m_currentScreen)
-            m_currentScreen->render(m_window);
-
-        m_window.display();
-    }
-
     void Application::update()
     {
         const float dt = m_clock.restart().asSeconds();
         if (m_currentScreen)
             m_currentScreen->update(dt);
+    }
+
+    void Application::render()
+    {
+        m_window.clear(sf::Color::Black);
+
+        if (m_currentScreen)
+            m_currentScreen->render(m_window);
+
+        m_window.display();
     }
 
     void Application::run()

@@ -1,13 +1,8 @@
 #pragma once
-#include "game/Wall.hpp"
+#include "game/MoveTypes.hpp"
 
 namespace Game
 {
-    enum class MoveType
-    {
-        PawnMove,
-        WallPlacement
-    };
 
     class Move
     {

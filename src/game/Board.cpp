@@ -1,4 +1,5 @@
 #include "game/Board.hpp"
+#include "game/GameState.hpp"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -69,27 +70,43 @@ namespace Game
         m_pawns.emplace_back(2, p2x, p2y);
     }
 
+    bool Board::loadFromState(const GameState &state)
+    {
+        init(false);
+        setPawns(state.pawnX[0], state.pawnY[0], state.pawnX[1], state.pawnY[1]);
+
+        for (int y = 0; y < GameState::WALL_GRID; ++y)
+        {
+            for (int x = 0; x < GameState::WALL_GRID; ++x)
+            {
+                if (state.hWalls[x][y])
+                {
+                    if (!placeWall(x, y, Orientation::Horizontal))
+                        return false;
+                }
+                if (state.vWalls[x][y])
+                {
+                    if (!placeWall(x, y, Orientation::Vertical))
+                        return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     void Board::drawBackground(sf::RenderWindow &window) const
     {
         if (!m_hasBackground)
             return;
 
         sf::Sprite sprite = m_backgroundSprite;
-        sf::View oldView = window.getView();
-        const sf::Vector2u windowSize = window.getSize();
-        sf::View backgroundView;
-        backgroundView.setSize({float(windowSize.x), float(windowSize.y)});
-        backgroundView.setCenter({float(windowSize.x) / 2.f, float(windowSize.y) / 2.f});
-        window.setView(backgroundView);
-
-        const sf::Vector2f viewSize = backgroundView.getSize();
-        const sf::Vector2f viewCenter = backgroundView.getCenter();
+        const sf::View view = window.getView();
+        const sf::Vector2f viewSize = view.getSize();
+        const sf::Vector2f viewCenter = view.getCenter();
         const sf::Vector2u texSize = m_backgroundTexture.getSize();
         if (texSize.x == 0 || texSize.y == 0)
-        {
-            window.setView(oldView);
             return;
-        }
 
         const float scale = std::max(viewSize.x / BACKGROUND_CANVAS_SIZE.x,
                                      viewSize.y / BACKGROUND_CANVAS_SIZE.y);
@@ -98,8 +115,6 @@ namespace Game
         sprite.setScale({uniformScale, uniformScale});
         sprite.setPosition(viewCenter);
         window.draw(sprite);
-
-        window.setView(oldView);
     }
 
     const Pawn *Board::getPawnAt(int x, int y) const
