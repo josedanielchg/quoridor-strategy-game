@@ -1,15 +1,9 @@
 #pragma once
+#include "game/MoveTypes.hpp"
 #include "game/VisualEntity.hpp"
 
 namespace Game
 {
-
-    enum class Orientation
-    {
-        Horizontal,
-        Vertical
-    };
-
     class Wall : public VisualEntity
     {
     private:

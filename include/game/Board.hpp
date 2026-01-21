@@ -9,6 +9,8 @@
 
 namespace Game
 {
+    struct GameState;
+
     class Board
     {
     public:
@@ -38,6 +40,7 @@ namespace Game
         const std::vector<Wall> &getAllWalls() const;
         const std::vector<Pawn> &getAllPawns() const;
         void setPawns(int p1x, int p1y, int p2x, int p2y);
+        bool loadFromState(const GameState &state);
 
         // Helper: Returns pointer to pawn at x,y or nullptr
         const Pawn *getPawnAt(int x, int y) const;

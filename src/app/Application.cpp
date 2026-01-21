@@ -10,8 +10,13 @@ namespace App
     {
         m_window.setFramerateLimit(60);
         m_board.init();
-        m_gameState = Game::GameState();
-        m_gameState.syncBoard(m_board);
+        Game::initGameState(m_gameState);
+        if (!m_board.loadFromState(m_gameState))
+        {
+            std::cerr << "Error: Failed to load initial game state into board.\n";
+            m_window.close();
+            return;
+        }
 
         if (!m_renderer.init())
             exit(-1);
@@ -98,7 +103,7 @@ namespace App
 
         if (m_gameState.applyMove(move))
         {
-            if (!m_gameState.syncBoard(m_board))
+            if (!m_board.loadFromState(m_gameState))
             {
                 std::cout << "Error: Failed to sync board state." << std::endl;
                 return;
@@ -173,7 +178,7 @@ namespace App
 
         if (success)
         {
-            if (!m_gameState.syncBoard(m_board))
+            if (!m_board.loadFromState(m_gameState))
             {
                 std::cout << "Error: Failed to sync board state." << std::endl;
                 return;

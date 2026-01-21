@@ -1,52 +1,43 @@
 #pragma once
-#include "game/Board.hpp"
 #include "game/Move.hpp"
-#include <array>
+#include <cstdint>
 #include <vector>
 
 namespace Game
 {
-    struct PawnState
+    struct GameState
     {
-        int x;
-        int y;
-    };
-
-    struct WallState
-    {
-        int x;
-        int y;
-        Orientation orientation;
-    };
-
-    class GameState
-    {
-    public:
+        static constexpr int BOARD_SIZE = 9;
+        static constexpr int WALL_GRID = 8;
         static constexpr int MAX_WALLS_PER_PLAYER = 10;
 
-    private:
-        std::array<PawnState, 2> m_pawns;
-        std::vector<WallState> m_walls;
-        std::array<int, 2> m_wallsRemaining;
-        int m_currentPlayer;
-        int m_winner;
-
-        bool buildBoard(Board &board) const;
-
-    public:
-        GameState();
-        GameState(const Board &board, int currentPlayer, int p1WallsRemaining, int p2WallsRemaining);
+        uint8_t pawnX[2];
+        uint8_t pawnY[2];
+        uint8_t wallsRemaining[2];
+        // Wall anchors (8x8). Horizontal blocks vertical edges, vertical blocks horizontal edges.
+        uint8_t hWalls[WALL_GRID][WALL_GRID];
+        uint8_t vWalls[WALL_GRID][WALL_GRID];
+        // Distance to target row for each player; -1 means unreachable.
+        int16_t distToGoal[2][BOARD_SIZE][BOARD_SIZE];
+        // 1 means distToGoal must be recomputed (only walls affect it).
+        uint8_t distDirty;
+        uint8_t currentPlayerId;
+        uint8_t winnerId;
 
         int currentPlayer() const;
-        int wallsRemaining(int playerId) const;
-        PawnState pawn(int playerId) const;
-        const std::vector<WallState> &walls() const;
         int winner() const;
         bool isGameOver() const;
 
         bool applyMove(const Move &move);
         bool hasPlayerWon(int playerId) const;
         std::vector<Move> generateLegalMoves() const;
-        bool syncBoard(Board &board) const;
     };
+
+    void initGameState(GameState &state);
+    bool isPawnMoveValid(const GameState &state, int playerId, int targetX, int targetY);
+    bool isWallPlacementValid(const GameState &state, int playerId, int x, int y, Orientation orientation);
+    bool hasPlayerWon(const GameState &state, int playerId);
+    void computeDistancesToGoal(const GameState &state, int playerId,
+                                int16_t dist[GameState::BOARD_SIZE][GameState::BOARD_SIZE]);
+    void updateDistanceCache(GameState &state);
 }
