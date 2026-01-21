@@ -1,4 +1,5 @@
 #include "game/Board.hpp"
+#include "game/GameState.hpp"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -67,6 +68,31 @@ namespace Game
         m_pawns.clear();
         m_pawns.emplace_back(1, p1x, p1y);
         m_pawns.emplace_back(2, p2x, p2y);
+    }
+
+    bool Board::loadFromState(const GameState &state)
+    {
+        init(false);
+        setPawns(state.pawnX[0], state.pawnY[0], state.pawnX[1], state.pawnY[1]);
+
+        for (int y = 0; y < GameState::WALL_GRID; ++y)
+        {
+            for (int x = 0; x < GameState::WALL_GRID; ++x)
+            {
+                if (state.hWalls[x][y])
+                {
+                    if (!placeWall(x, y, Orientation::Horizontal))
+                        return false;
+                }
+                if (state.vWalls[x][y])
+                {
+                    if (!placeWall(x, y, Orientation::Vertical))
+                        return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     void Board::drawBackground(sf::RenderWindow &window) const
