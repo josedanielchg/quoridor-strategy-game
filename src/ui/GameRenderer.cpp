@@ -8,8 +8,8 @@ namespace UI
 
     static const sf::Vector2f REFERENCE_SIZE = UI_DESIGN_SIZE;
 
-    static const float ISO_WIDTH = 112.f;
-    static const float ISO_HEIGHT = 57.f;
+    static const float ISO_WIDTH = UI::FIELD_SIZE.x * UI::BOARD_SCALE * 0.50f;
+    static const float ISO_HEIGHT = UI::FIELD_SIZE.y * UI::BOARD_SCALE * 0.36f;
 
     GameRenderer::GameRenderer()
         : m_spriteTile(m_texTile),
@@ -29,7 +29,7 @@ namespace UI
         float originX = REFERENCE_SIZE.x / 2.f;
 
         // 5. Visual Tweak: Move it slightly UP (-50.f) because Pawns stick up
-        m_boardOrigin = {originX, originY - 30.f};
+        m_boardOrigin = {originX, originY - 30.f * UI::BOARD_SCALE};
     }
 
     bool GameRenderer::init()
@@ -45,6 +45,11 @@ namespace UI
         m_spriteTile.setTexture(m_texTile, true);
         sf::Vector2u tSize = m_texTile.getSize();
         m_spriteTile.setOrigin({float(tSize.x) / 2.f, float(tSize.y) / 2.f});
+        if (tSize.x > 0 && tSize.y > 0)
+        {
+            m_spriteTile.setScale({(UI::FIELD_SIZE.x * UI::BOARD_SCALE) / float(tSize.x),
+                                   (UI::FIELD_SIZE.y * UI::BOARD_SCALE) / float(tSize.y)});
+        }
 
         return true;
     }
@@ -78,6 +83,17 @@ namespace UI
         sf::Sprite s = baseSprite;
         applyWallTransform(s, pos, orientation);
 
+        const sf::Texture &texture = s.getTexture();
+        const sf::Vector2u texSize = texture.getSize();
+        if (texSize.x > 0 && texSize.y > 0)
+        {
+            const sf::Vector2f currentScale = s.getScale();
+            const sf::Vector2f targetScale = {(UI::WALL_SIZE.x * UI::BOARD_SCALE) / float(texSize.x),
+                                              (UI::WALL_SIZE.y * UI::BOARD_SCALE) / float(texSize.y)};
+            s.setScale({currentScale.x * targetScale.x,
+                        currentScale.y * targetScale.y});
+        }
+
         s.setPosition(pos);
         s.setColor(isPreview ? sf::Color(255,255,255,128) : sf::Color(255,255,255));
         window.draw(s);
@@ -106,6 +122,15 @@ namespace UI
             sf::Vector2f pos = cartesianToIsometric(pawn.x(), pawn.y());
 
             sf::Sprite s = pawn.sprite();
+            const sf::Texture &texture = s.getTexture();
+            const sf::Vector2u texSize = texture.getSize();
+            if (texSize.x > 0 && texSize.y > 0)
+            {
+                const sf::Vector2f targetSize = pawn.id() == 1 ? UI::PAWN_P1_SIZE
+                                                               : UI::PAWN_P2_SIZE;
+                s.setScale({(targetSize.x * UI::BOARD_SCALE) / float(texSize.x),
+                            (targetSize.y * UI::BOARD_SCALE) / float(texSize.y)});
+            }
             s.setColor(sf::Color::White);
             s.setPosition(pos);
             window.draw(s);

@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
+#include "ui/UiConstants.hpp"
 
 namespace UI
 {
@@ -87,9 +88,10 @@ namespace UI
         }
 
         // Pawn uses a fixed origin (matching previous logic)
-        sf::Vector2f computeOrigin(const sf::Texture & /*tex*/) const override
+        sf::Vector2f computeOrigin(const sf::Texture &tex) const override
         {
-            return {112.f / 2.f, 165.f - 20.f};
+            sf::Vector2u size = tex.getSize();
+            return {float(size.x) / 2.f, float(size.y) - UI::PAWN_BASELINE_OFFSET};
         }
     };
 }
