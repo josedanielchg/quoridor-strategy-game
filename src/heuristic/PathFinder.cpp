@@ -1,4 +1,4 @@
-#include "ai/PathFinder.hpp"
+#include "heuristic/PathFinder.hpp"
 #include "game/Field.hpp"
 #include <queue>
 #include <cmath>
