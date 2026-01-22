@@ -16,6 +16,7 @@ namespace UI
             sf::Text m_player1WallsText;
             sf::Text m_player2WallsText;
             bool m_hasFont = false;
+            int m_currentPlayerId = 1;
             
         public:
             Hud();
