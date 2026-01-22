@@ -56,7 +56,7 @@ namespace UI
 
     void Hud::update(int currentPlayerId, int p1WallsRemaining, int p2WallsRemaining, int maxWallsPerPlayer)
     {
-        (void)currentPlayerId;
+        m_currentPlayerId = currentPlayerId;
         m_player1WallsText.setString(std::to_string(p1WallsRemaining) + "/" + std::to_string(maxWallsPerPlayer));
         m_player2WallsText.setString(std::to_string(p2WallsRemaining) + "/" + std::to_string(maxWallsPerPlayer));
     }
@@ -97,15 +97,26 @@ namespace UI
             m_player2IndicatorSprite.setPosition({topLeft.x + viewSize.x - margin.x - scaledIndicatorSize.x,
                                                   topLeft.y + margin.y});
 
+            const bool isPlayer1Turn = m_currentPlayerId == 1;
+            const sf::Color activeTint = sf::Color::White;
+            const sf::Color inactiveTint(90, 90, 90, 255);
+
+            m_player1IndicatorSprite.setColor(isPlayer1Turn ? activeTint : inactiveTint);
+            m_player2IndicatorSprite.setColor(isPlayer1Turn ? inactiveTint : activeTint);
+
             window.draw(m_player1IndicatorSprite);
             window.draw(m_player2IndicatorSprite);
 
             if (m_hasFont)
             {
                 const unsigned int fontSize = std::max(1u, static_cast<unsigned int>(
-                                                              std::round(WALLS_TEXT_FONT_SIZE * scale)));
+                    std::round(WALLS_TEXT_FONT_SIZE * scale))
+                );
+                
                 m_player1WallsText.setCharacterSize(fontSize);
                 m_player2WallsText.setCharacterSize(fontSize);
+                m_player1WallsText.setFillColor(isPlayer1Turn ? activeTint : inactiveTint);
+                m_player2WallsText.setFillColor(isPlayer1Turn ? inactiveTint : activeTint);
 
                 const float textRightPadding = WALLS_TEXT_RIGHT_PADDING * scale;
                 const float textCenterY = topLeft.y + margin.y + scaledIndicatorSize.y / 2.f;
