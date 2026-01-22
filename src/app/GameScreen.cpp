@@ -196,6 +196,8 @@ namespace App
                             m_gameState.wallsRemaining[1],
                             Game::GameState::MAX_WALLS_PER_PLAYER);
             }
+
+            runHeuristicTurn();
         }
         else
         {
@@ -239,10 +241,43 @@ namespace App
                         m_gameState.wallsRemaining[1],
                         Game::GameState::MAX_WALLS_PER_PLAYER);
             m_isPlacingWall = false;
+
+            runHeuristicTurn();
         }
         else
         {
             std::cout << "Invalid Wall Position!" << std::endl;
+        }
+    }
+
+    void GameScreen::runHeuristicTurn()
+    {
+        if (Game::isGameOver(m_gameState))
+            return;
+        if (Game::currentPlayer(m_gameState) != 2)
+            return;
+
+        Game::Move move = m_heuristicEngine.findBestMove(m_gameState);
+        if (!Game::applyMove(m_gameState, move))
+        {
+            std::cout << "Heuristic move failed.\n";
+            return;
+        }
+
+        if (!m_board.loadFromState(m_gameState))
+        {
+            std::cout << "Error: Failed to sync board state." << std::endl;
+            return;
+        }
+
+        checkWinCondition(2);
+
+        if (!Game::isGameOver(m_gameState))
+        {
+            m_hud.update(Game::currentPlayer(m_gameState),
+                        m_gameState.wallsRemaining[0],
+                        m_gameState.wallsRemaining[1],
+                        Game::GameState::MAX_WALLS_PER_PLAYER);
         }
     }
 

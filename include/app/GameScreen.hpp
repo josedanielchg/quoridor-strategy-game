@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <functional>
+#include "heuristic/HeuristicEngine.hpp"
 #include "app/Screen.hpp"
 #include "game/Board.hpp"
 #include "game/GameState.hpp"
@@ -33,12 +34,14 @@ namespace App
         void toggleWallMode();
         void rotateWall();
         void checkWinCondition(int playerId);
+        void runHeuristicTurn();
 
         Game::Board m_board;
         Game::GameState m_gameState;
         UI::GameRenderer m_renderer;
         UI::Hud m_hud;
         UI::PauseMenu m_pauseMenu;
+        Game::HeuristicEngine m_heuristicEngine;
         UI::WinnerMenu m_winnerMenu;
         std::function<void()> m_onQuit;
 
