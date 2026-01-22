@@ -9,7 +9,7 @@ namespace App
 
     Application::Application()
         : m_window(sf::VideoMode({1280, 720}), "Quoridor Isometric")
-    {
+{
         m_window.setFramerateLimit(60);
 
         m_titleScreen = std::make_unique<TitleScreen>();
@@ -34,6 +34,12 @@ namespace App
                                           {
                                               if (option == MenuScreen::Option::SinglePlayer)
                                               {
+                                                  m_gameScreen->setGameMode(GameScreen::GameMode::SinglePlayer);
+                                                  setCurrentScreen(m_gameScreen.get());
+                                              }
+                                              else if (option == MenuScreen::Option::Multiplayer)
+                                              {
+                                                  m_gameScreen->setGameMode(GameScreen::GameMode::Multiplayer);
                                                   setCurrentScreen(m_gameScreen.get());
                                               }
                                               else if (option == MenuScreen::Option::Credits)

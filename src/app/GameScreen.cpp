@@ -65,6 +65,12 @@ namespace App
         return true;
     }
 
+    void GameScreen::setGameMode(GameMode mode)
+    {
+        m_useHeuristic = (mode == GameMode::SinglePlayer);
+        resetGame();
+    }
+
     void GameScreen::setOnQuit(std::function<void()> onQuit)
     {
         m_onQuit = std::move(onQuit);

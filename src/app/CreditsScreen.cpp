@@ -7,8 +7,8 @@
 
 namespace App
 {
-    static constexpr unsigned int TITLE_FONT_SIZE = 46;
-    static constexpr unsigned int BODY_FONT_SIZE = 30;
+    static constexpr unsigned int TITLE_FONT_SIZE = 36;
+    static constexpr unsigned int BODY_FONT_SIZE = 26;
     static const sf::Color SHADOW_COLOR(0, 0, 0, 180);
     static const char *BACKGROUND_PATH = "assets/textures/credits-bg-spirte-sheet.png";
     static const char *FONT_PATH = "assets/fonts/pixelon.ttf";
@@ -44,9 +44,22 @@ namespace App
         m_titleText.setFillColor(sf::Color::White);
         m_bodyText.setString(
             "CHACON GOMEZ Jose Daniel\n"
-            "[ GitHub: https://github.com/josedanielchg ]\n\n\n"
+            "[ GitHub: https://github.com/josedanielchg ]\n\n"
             "MENESES GAMBOA Carlos Adrian\n"
-            "[ GitHub: https://github.com/MenesesCarlos29 ]");
+            "[ GitHub: https://github.com/MenesesCarlos29 ]\n\n"
+            "MUSIC\n"
+            "Suno (v4.5-all)\n"
+            "Tracks used:\n"
+            "- Castle Circuits (Version 1)\n"
+            "- Castle Circuits (Version 2)\n"
+            "[ Source: https://suno.com/ ]\n"
+            "[ No commercial use ]\n\n\n"
+            "ART / IMAGES\n"
+            "Gemini (Nano Banana Pro)\n"
+            "[ Source: https://gemini.google.com/ ]\n"
+            "[ No commercial use ]"
+        );
+
         m_bodyText.setFillColor(sf::Color::White);
 
         m_titleShadow.setString(m_titleText.getString());
@@ -156,7 +169,8 @@ namespace App
         const float bodyHeight = m_bodyText.getLocalBounds().size.y;
         const float gap = 18.f * textScale;
         const float totalHeight = titleHeight + gap + bodyHeight;
-        const float top = center.y - totalHeight / 2.f;
+        const float topOffset = UI::UI_DESIGN_SIZE.y * 0.045f * textScale;
+        const float top = center.y - totalHeight / 2.f + topOffset;
 
         const float leftOffset = UI::UI_DESIGN_SIZE.x * 0.04f * textScale;
         const sf::Vector2f titlePos(center.x - leftOffset, top + titleHeight / 2.f);

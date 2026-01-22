@@ -16,7 +16,14 @@ namespace App
     public:
         static constexpr const char *MUSIC_PATH = "assets/sound/game_theme.mp3";
 
+        enum class GameMode
+        {
+            SinglePlayer,
+            Multiplayer
+        };
+
         bool init() override;
+        void setGameMode(GameMode mode);
         void setOnQuit(std::function<void()> onQuit);
 
         void handleEvent(const sf::Event &event, sf::RenderWindow &window) override;
@@ -44,5 +51,6 @@ namespace App
 
         bool m_isPlacingWall = false;
         Game::Orientation m_currentWallOri = Game::Orientation::Horizontal;
+        bool m_useHeuristic = true;
     };
 }
