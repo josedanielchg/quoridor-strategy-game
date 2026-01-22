@@ -1,4 +1,6 @@
 #include "app/Application.hpp"
+#include "game/GameRules.hpp"
+#include "game/Move.hpp"
 #include <iostream>
 #include <optional>
 

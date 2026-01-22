@@ -1,5 +1,6 @@
 #include "app/GameScreen.hpp"
 #include "game/Move.hpp"
+#include "game/GameRules.hpp"
 #include <iostream>
 #include <utility>
 
@@ -19,7 +20,7 @@ namespace App
         if (!m_hud.init())
             std::cerr << "Warning: HUD failed\n";
         else
-            m_hud.update(m_gameState.currentPlayer(),
+            m_hud.update(Game::currentPlayer(m_gameState),
                          m_gameState.wallsRemaining[0],
                          m_gameState.wallsRemaining[1],
                          Game::GameState::MAX_WALLS_PER_PLAYER);
@@ -133,19 +134,19 @@ namespace App
 
     void GameScreen::attemptMove(sf::Vector2i gridPos)
     {
-        if (m_gameState.isGameOver())
+        if (Game::isGameOver(m_gameState))
         {
-            std::cout << "Game Over! Player " << m_gameState.winner() << " has won!" << std::endl;
+            std::cout << "Game Over! Player " << Game::winner(m_gameState) << " has won!" << std::endl;
             return;
         }
 
         if (gridPos.x == -1 || gridPos.y == -1)
             return;
 
-        int playerId = m_gameState.currentPlayer();
+        int playerId = Game::currentPlayer(m_gameState);
         Game::Move move = Game::Move::Pawn(gridPos.x, gridPos.y, playerId);
 
-        if (m_gameState.applyMove(move))
+        if (Game::applyMove(m_gameState, move))
         {
             if (!m_board.loadFromState(m_gameState))
             {
@@ -155,12 +156,12 @@ namespace App
 
             checkWinCondition(playerId);
 
-            if (!m_gameState.isGameOver())
+            if (!Game::isGameOver(m_gameState))
             {
-                m_hud.update(m_gameState.currentPlayer(),
-                             m_gameState.wallsRemaining[0],
-                             m_gameState.wallsRemaining[1],
-                             Game::GameState::MAX_WALLS_PER_PLAYER);
+                m_hud.update(Game::currentPlayer(m_gameState),
+                            m_gameState.wallsRemaining[0],
+                            m_gameState.wallsRemaining[1],
+                            Game::GameState::MAX_WALLS_PER_PLAYER);
             }
         }
         else
@@ -188,9 +189,9 @@ namespace App
         if (gridPos.x == -1)
             return;
 
-        int playerId = m_gameState.currentPlayer();
+        int playerId = Game::currentPlayer(m_gameState);
         Game::Move move = Game::Move::Wall(gridPos.x, gridPos.y, m_currentWallOri, playerId);
-        bool success = m_gameState.applyMove(move);
+        bool success = Game::applyMove(m_gameState, move);
 
         if (success)
         {
@@ -200,10 +201,10 @@ namespace App
                 return;
             }
             std::cout << "Wall placed at " << gridPos.x << ", " << gridPos.y << std::endl;
-            m_hud.update(m_gameState.currentPlayer(),
-                         m_gameState.wallsRemaining[0],
-                         m_gameState.wallsRemaining[1],
-                         Game::GameState::MAX_WALLS_PER_PLAYER);
+            m_hud.update(Game::currentPlayer(m_gameState),
+                        m_gameState.wallsRemaining[0],
+                        m_gameState.wallsRemaining[1],
+                        Game::GameState::MAX_WALLS_PER_PLAYER);
             m_isPlacingWall = false;
         }
         else
@@ -214,7 +215,7 @@ namespace App
 
     void GameScreen::checkWinCondition(int playerId)
     {
-        if (m_gameState.winner() == playerId)
+        if (Game::winner(m_gameState) == playerId)
         {
             std::cout << "=== Player " << playerId << " has WON! ===" << std::endl;
         }
@@ -229,10 +230,10 @@ namespace App
         m_isPlacingWall = false;
         m_currentWallOri = Game::Orientation::Horizontal;
 
-        m_hud.update(m_gameState.currentPlayer(),
-                     m_gameState.wallsRemaining[0],
-                     m_gameState.wallsRemaining[1],
-                     Game::GameState::MAX_WALLS_PER_PLAYER);
+        m_hud.update(Game::currentPlayer(m_gameState),
+                    m_gameState.wallsRemaining[0],
+                    m_gameState.wallsRemaining[1],
+                    Game::GameState::MAX_WALLS_PER_PLAYER);
     }
 
     void GameScreen::togglePauseMenu()
