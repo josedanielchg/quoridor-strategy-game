@@ -62,8 +62,6 @@ namespace App
                                    });
         }
 
-        m_winnerMenu.setEnabled(true);
-
         return true;
     }
 
