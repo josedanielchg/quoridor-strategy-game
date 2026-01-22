@@ -267,6 +267,7 @@ namespace App
         m_isPlacingWall = false;
         m_currentWallOri = Game::Orientation::Horizontal;
         m_winnerMenu.setEnabled(false);
+        restartMusic();
 
         m_hud.update(Game::currentPlayer(m_gameState),
                     m_gameState.wallsRemaining[0],

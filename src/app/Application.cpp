@@ -91,8 +91,17 @@ namespace App
 
     void Application::setCurrentScreen(Screen *screen)
     {
+        if (m_currentScreen == screen)
+            return;
+
+        if (m_currentScreen)
+            m_currentScreen->onExit();
+
         m_currentScreen = screen;
         if (m_currentScreen)
+        {
             m_currentScreen->handleResize(m_window, m_window.getSize());
+            m_currentScreen->onEnter();
+        }
     }
 }

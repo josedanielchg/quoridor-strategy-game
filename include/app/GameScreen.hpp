@@ -14,6 +14,8 @@ namespace App
     class GameScreen : public Screen
     {
     public:
+        static constexpr const char *MUSIC_PATH = "assets/sound/game_theme.mp3";
+
         bool init() override;
         void setOnQuit(std::function<void()> onQuit);
 
@@ -23,6 +25,7 @@ namespace App
         void render(sf::RenderWindow &window) override;
 
     private:
+        const char *getMusicPath() const override { return MUSIC_PATH; }
         void attemptMove(sf::Vector2i gridPos);
         void resetGame();
         void togglePauseMenu();

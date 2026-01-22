@@ -9,6 +9,8 @@ namespace App
     class MenuScreen : public Screen
     {
     public:
+        static constexpr const char *MUSIC_PATH = "assets/sound/main_theme.mp3";
+
         enum class Option
         {
             SinglePlayer,
@@ -27,6 +29,7 @@ namespace App
         void render(sf::RenderWindow &window) override;
 
     private:
+        const char *getMusicPath() const override { return MUSIC_PATH; }
         void updateLayout(const sf::View &view);
         void setSelectedIndex(std::size_t index);
         void applyOptionColors(std::uint8_t selectedAlpha);
