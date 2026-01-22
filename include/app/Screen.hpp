@@ -12,5 +12,14 @@ namespace App
         virtual void handleResize(sf::RenderWindow &window, sf::Vector2u size) = 0;
         virtual void update(float dt) = 0;
         virtual void render(sf::RenderWindow &window) = 0;
+
+        virtual void onEnter();
+        virtual void onExit();
+
+        static constexpr float DEFAULT_MUSIC_VOLUME = 60.f;
+
+    protected:
+        virtual const char *getMusicPath() const { return nullptr; }
+        void restartMusic();
     };
 }

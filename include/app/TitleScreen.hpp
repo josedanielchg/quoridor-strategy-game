@@ -8,6 +8,8 @@ namespace App
     class TitleScreen : public Screen
     {
     public:
+        static constexpr const char *MUSIC_PATH = "assets/sound/main_theme.mp3";
+
         TitleScreen();
         bool init() override;
         void setOnStart(std::function<void()> onStart);
@@ -18,6 +20,7 @@ namespace App
         void render(sf::RenderWindow &window) override;
 
     private:
+        const char *getMusicPath() const override { return MUSIC_PATH; }
         void updateLayout(const sf::View &view);
 
         static constexpr int SPRITE_COLUMNS = 12;
@@ -30,7 +33,9 @@ namespace App
         sf::Texture m_backgroundTexture;
         sf::Sprite m_backgroundSprite;
         sf::Font m_font;
-        sf::Text m_promptText;
+        sf::Text m_promptLine1;
+        sf::Text m_promptLine2;
+        sf::VertexArray m_promptGradient;
         std::function<void()> m_onStart;
         float m_blinkTimer = 0.f;
         float m_frameTimer = 0.f;

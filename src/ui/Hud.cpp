@@ -2,6 +2,7 @@
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
 #include <cmath>
+#include <filesystem>
 #include <iostream>
 #include <string>
 
@@ -11,7 +12,7 @@ namespace UI
     static const sf::Vector2f INDICATOR_DESIGN_SIZE = {397.f, 128.f};
     static constexpr float INDICATOR_MARGIN = 60.f;
     static constexpr float WALLS_TEXT_RIGHT_PADDING = 39.f;
-    static constexpr float WALLS_TEXT_FONT_SIZE = 45.f;
+    static constexpr float WALLS_TEXT_FONT_SIZE = 40.f;
 
     Hud::Hud()
         : m_player1IndicatorSprite(m_player1IndicatorTexture),
@@ -41,9 +42,10 @@ namespace UI
 
         m_hasIndicators = true;
 
-        if (!m_font.openFromFile("assets/fonts/roboto.ttf"))
+        if (!m_font.openFromFile("assets/fonts/pixelon.ttf"))
         {
-            std::cerr << "Failed to load font: assets/fonts/roboto.ttf" << std::endl;
+            std::cerr << "Failed to load font: assets/fonts/pixelon.ttf (cwd: "
+                      << std::filesystem::current_path().string() << ")\n";
             return false;
         }
 
@@ -57,8 +59,8 @@ namespace UI
     void Hud::update(int currentPlayerId, int p1WallsRemaining, int p2WallsRemaining, int maxWallsPerPlayer)
     {
         m_currentPlayerId = currentPlayerId;
-        m_player1WallsText.setString(std::to_string(p1WallsRemaining) + "/" + std::to_string(maxWallsPerPlayer));
-        m_player2WallsText.setString(std::to_string(p2WallsRemaining) + "/" + std::to_string(maxWallsPerPlayer));
+        m_player1WallsText.setString("Walls: " + std::to_string(p1WallsRemaining) + "/" + std::to_string(maxWallsPerPlayer));
+        m_player2WallsText.setString("Walls: " + std::to_string(p2WallsRemaining) + "/" + std::to_string(maxWallsPerPlayer));
     }
 
     void Hud::render(sf::RenderWindow &window)

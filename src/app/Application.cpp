@@ -16,11 +16,35 @@ namespace App
         if (!m_titleScreen->init())
             std::cerr << "Warning: Title screen failed\n";
 
+        m_menuScreen = std::make_unique<MenuScreen>();
+        if (!m_menuScreen->init())
+            std::cerr << "Warning: Menu screen failed\n";
+
+        m_creditsScreen = std::make_unique<CreditsScreen>();
+        if (!m_creditsScreen->init())
+            std::cerr << "Warning: Credits screen failed\n";
+
         m_gameScreen = std::make_unique<GameScreen>();
         if (!m_gameScreen->init())
             std::cerr << "Warning: Game screen failed\n";
 
-        m_titleScreen->setOnStart([this]() { setCurrentScreen(m_gameScreen.get()); });
+        m_titleScreen->setOnStart([this]() { setCurrentScreen(m_menuScreen.get()); });
+        m_creditsScreen->setOnBack([this]() { setCurrentScreen(m_menuScreen.get()); });
+        m_menuScreen->setOnOptionSelected([this](MenuScreen::Option option)
+                                          {
+                                              if (option == MenuScreen::Option::SinglePlayer)
+                                              {
+                                                  setCurrentScreen(m_gameScreen.get());
+                                              }
+                                              else if (option == MenuScreen::Option::Credits)
+                                              {
+                                                  setCurrentScreen(m_creditsScreen.get());
+                                              }
+                                              else
+                                              {
+                                                  std::cout << "Menu option not wired yet\n";
+                                              }
+                                          });
         m_gameScreen->setOnQuit([this]() { setCurrentScreen(m_titleScreen.get()); });
 
         setCurrentScreen(m_titleScreen.get());
@@ -76,8 +100,17 @@ namespace App
 
     void Application::setCurrentScreen(Screen *screen)
     {
+        if (m_currentScreen == screen)
+            return;
+
+        if (m_currentScreen)
+            m_currentScreen->onExit();
+
         m_currentScreen = screen;
         if (m_currentScreen)
+        {
             m_currentScreen->handleResize(m_window, m_window.getSize());
+            m_currentScreen->onEnter();
+        }
     }
 }

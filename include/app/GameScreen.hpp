@@ -8,12 +8,15 @@
 #include "ui/GameRenderer.hpp"
 #include "ui/Hud.hpp"
 #include "ui/PauseMenu.hpp"
+#include "ui/WinnerMenu.hpp"
 
 namespace App
 {
     class GameScreen : public Screen
     {
     public:
+        static constexpr const char *MUSIC_PATH = "assets/sound/game_theme.mp3";
+
         bool init() override;
         void setOnQuit(std::function<void()> onQuit);
 
@@ -23,6 +26,7 @@ namespace App
         void render(sf::RenderWindow &window) override;
 
     private:
+        const char *getMusicPath() const override { return MUSIC_PATH; }
         void attemptMove(sf::Vector2i gridPos);
         void resetGame();
         void togglePauseMenu();
@@ -38,6 +42,7 @@ namespace App
         UI::Hud m_hud;
         UI::PauseMenu m_pauseMenu;
         Game::AiEngine m_aiEngine;
+        UI::WinnerMenu m_winnerMenu;
         std::function<void()> m_onQuit;
 
         bool m_isPlacingWall = false;
