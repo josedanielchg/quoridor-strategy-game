@@ -7,6 +7,7 @@
 #include "ui/GameRenderer.hpp"
 #include "ui/Hud.hpp"
 #include "ui/PauseMenu.hpp"
+#include "ui/WinnerMenu.hpp"
 
 namespace App
 {
@@ -35,6 +36,7 @@ namespace App
         UI::GameRenderer m_renderer;
         UI::Hud m_hud;
         UI::PauseMenu m_pauseMenu;
+        UI::WinnerMenu m_winnerMenu;
         std::function<void()> m_onQuit;
 
         bool m_isPlacingWall = false;

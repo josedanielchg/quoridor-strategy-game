@@ -10,4 +10,7 @@ namespace UI
     inline constexpr sf::Vector2f WALL_SIZE{121.f, 135.f};
     inline constexpr float PAWN_BASELINE_OFFSET = 10.f;
     inline constexpr float BOARD_SCALE = 0.78f;
+    inline constexpr sf::Vector2f WIN_BANNER_SIZE{685.f, 843.f};
+    inline constexpr float WIN_BANNER_BUTTON_GAP = -8.f;
+    inline constexpr float WIN_BANNER_BUTTON_SPAN = 537.f;
 }

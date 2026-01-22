@@ -44,6 +44,26 @@ namespace App
                                   });
         }
 
+        if (!m_winnerMenu.init())
+        {
+            std::cerr << "Warning: Winner menu failed\n";
+        }
+        else
+        {
+            m_winnerMenu.setOnRestart([this]()
+                                      {
+                                          resetGame();
+                                          m_winnerMenu.setEnabled(false);
+                                      });
+            m_winnerMenu.setOnQuit([this]()
+                                   {
+                                       if (m_onQuit)
+                                           m_onQuit();
+                                   });
+        }
+
+        m_winnerMenu.setEnabled(true);
+
         return true;
     }
 
@@ -56,6 +76,20 @@ namespace App
     {
         if (event.is<sf::Event::Resized>())
             return;
+
+        if (m_winnerMenu.isEnabled())
+        {
+            if (const auto *mouseMove = event.getIf<sf::Event::MouseMoved>())
+            {
+                m_winnerMenu.updateHover(window, mouseMove->position);
+            }
+            else if (const auto *mouseBtn = event.getIf<sf::Event::MouseButtonPressed>())
+            {
+                if (mouseBtn->button == sf::Mouse::Button::Left)
+                    m_winnerMenu.handleClick(window, mouseBtn->position);
+            }
+            return;
+        }
 
         if (const auto *key = event.getIf<sf::Event::KeyPressed>())
         {
@@ -130,6 +164,7 @@ namespace App
         m_renderer.render(window, m_board);
         m_hud.render(window);
         m_pauseMenu.render(window);
+        m_winnerMenu.render(window);
     }
 
     void GameScreen::attemptMove(sf::Vector2i gridPos)
@@ -218,6 +253,10 @@ namespace App
         if (Game::winner(m_gameState) == playerId)
         {
             std::cout << "=== Player " << playerId << " has WON! ===" << std::endl;
+            m_winnerMenu.setWinner(playerId);
+            m_winnerMenu.setEnabled(true);
+            m_pauseMenu.setEnabled(false);
+            m_isPlacingWall = false;
         }
     }
 
@@ -229,6 +268,7 @@ namespace App
 
         m_isPlacingWall = false;
         m_currentWallOri = Game::Orientation::Horizontal;
+        m_winnerMenu.setEnabled(false);
 
         m_hud.update(Game::currentPlayer(m_gameState),
                     m_gameState.wallsRemaining[0],
