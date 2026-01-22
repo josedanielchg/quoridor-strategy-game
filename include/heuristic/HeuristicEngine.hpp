@@ -19,6 +19,9 @@ namespace Game
         int maxDepth = 3;
         int timeLimitMs = 4000;
         HeuristicDifficulty difficulty = HeuristicDifficulty::Medium;
+        int weightDistance = 10;
+        int weightWalls = 2;
+        int weightWidth = 1;
     };
 
     class HeuristicEngine
