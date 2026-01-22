@@ -1,4 +1,5 @@
 #include "ui/Hud.hpp"
+#include "ui/ViewUtils.hpp"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -66,13 +67,13 @@ namespace UI
         sf::View oldView = window.getView();
 
         // Switch to 2D Screen view for UI
-        sf::View defaultView = window.getDefaultView();
-        window.setView(defaultView);
+        sf::View uiView = UI::makeLetterboxView(window.getSize());
+        window.setView(uiView);
 
         if (m_hasIndicators)
         {
-            const sf::Vector2f viewSize = defaultView.getSize();
-            const sf::Vector2f viewCenter = defaultView.getCenter();
+            const sf::Vector2f viewSize = uiView.getSize();
+            const sf::Vector2f viewCenter = uiView.getCenter();
             const sf::Vector2f topLeft = {viewCenter.x - viewSize.x / 2.f,
                                           viewCenter.y - viewSize.y / 2.f};
 

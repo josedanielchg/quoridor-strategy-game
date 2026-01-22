@@ -1,5 +1,7 @@
 #include "game/Pawn.hpp"
 #include "game/Board.hpp"
+#include "ui/UiConstants.hpp"
+#include <cmath>
 #include "game/GameRules.hpp"
 #include <cstring>
 
@@ -63,8 +65,7 @@ namespace Game
 
     sf::Vector2f Pawn::getSpriteOrigin(const sf::Vector2u &texSize) const
     {
-        // Hardcoded values to preserve previous visual tweaks
-        return {112.f / 2.f, 165.f - 20.f};
+        return {float(texSize.x) / 2.f, float(texSize.y) - UI::PAWN_BASELINE_OFFSET};
     }
 
     bool Pawn::isValidMove(const Board &board, int targetX, int targetY) const

@@ -101,21 +101,12 @@ namespace Game
             return;
 
         sf::Sprite sprite = m_backgroundSprite;
-        sf::View oldView = window.getView();
-        const sf::Vector2u windowSize = window.getSize();
-        sf::View backgroundView;
-        backgroundView.setSize({float(windowSize.x), float(windowSize.y)});
-        backgroundView.setCenter({float(windowSize.x) / 2.f, float(windowSize.y) / 2.f});
-        window.setView(backgroundView);
-
-        const sf::Vector2f viewSize = backgroundView.getSize();
-        const sf::Vector2f viewCenter = backgroundView.getCenter();
+        const sf::View view = window.getView();
+        const sf::Vector2f viewSize = view.getSize();
+        const sf::Vector2f viewCenter = view.getCenter();
         const sf::Vector2u texSize = m_backgroundTexture.getSize();
         if (texSize.x == 0 || texSize.y == 0)
-        {
-            window.setView(oldView);
             return;
-        }
 
         const float scale = std::max(viewSize.x / BACKGROUND_CANVAS_SIZE.x,
                                      viewSize.y / BACKGROUND_CANVAS_SIZE.y);
@@ -124,8 +115,6 @@ namespace Game
         sprite.setScale({uniformScale, uniformScale});
         sprite.setPosition(viewCenter);
         window.draw(sprite);
-
-        window.setView(oldView);
     }
 
     const Pawn *Board::getPawnAt(int x, int y) const

@@ -1,5 +1,6 @@
 #include "ui/Menu.hpp"
 #include "ui/UiConstants.hpp"
+#include "ui/ViewUtils.hpp"
 #include <algorithm>
 
 namespace UI
@@ -48,9 +49,10 @@ namespace UI
         if (!m_enabled)
             return;
 
+        const sf::View uiView = UI::makeLetterboxView(window.getSize());
         layout(window);
 
-        const sf::Vector2f worldPos = window.mapPixelToCoords(mousePos, window.getDefaultView());
+        const sf::Vector2f worldPos = window.mapPixelToCoords(mousePos, uiView);
         for (const auto &button : m_buttons)
         {
             button->updateHover(worldPos);
@@ -62,9 +64,10 @@ namespace UI
         if (!m_enabled)
             return false;
 
+        const sf::View uiView = UI::makeLetterboxView(window.getSize());
         layout(window);
 
-        const sf::Vector2f worldPos = window.mapPixelToCoords(mousePos, window.getDefaultView());
+        const sf::Vector2f worldPos = window.mapPixelToCoords(mousePos, uiView);
         for (const auto &button : m_buttons)
         {
             if (button->handleClick(worldPos))
@@ -79,7 +82,7 @@ namespace UI
             return;
 
         sf::View oldView = window.getView();
-        sf::View uiView = window.getDefaultView();
+        sf::View uiView = UI::makeLetterboxView(window.getSize());
         window.setView(uiView);
 
         layout(window);
@@ -100,7 +103,7 @@ namespace UI
 
     void Menu::layout(const sf::RenderWindow &window)
     {
-        const sf::View view = window.getDefaultView();
+        const sf::View view = UI::makeLetterboxView(window.getSize());
         const sf::Vector2f viewSize = view.getSize();
         const sf::Vector2f viewCenter = view.getCenter();
 

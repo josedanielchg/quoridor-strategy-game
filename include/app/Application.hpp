@@ -1,14 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "game/Board.hpp"
-#include "game/GameState.hpp"
-#include "ui/GameRenderer.hpp"
-#include "ui/Hud.hpp"
-#include "ui/PauseMenu.hpp"
+#include <memory>
+#include "app/GameScreen.hpp"
+#include "app/Screen.hpp"
+#include "app/TitleScreen.hpp"
 
-namespace App {
+namespace App
+{
 
-    class Application {
+    class Application
+    {
     public:
         Application();
         void run();
@@ -17,27 +18,14 @@ namespace App {
         void processEvents();
         void update();
         void render();
-        void attemptMove(sf::Vector2i gridPos);
-        void resetGame();
-        void togglePauseMenu();
-
-        void attemptPlaceWall(sf::Vector2i gridPos);
-        void toggleWallMode();
-        void rotateWall();
-        void checkWinCondition(int playerId);
+        void setCurrentScreen(Screen *screen);
 
     private:
         sf::RenderWindow m_window;
-        sf::CircleShape m_testShape;
-        Game::Board m_board;
-        Game::GameState m_gameState;
-        UI::GameRenderer m_renderer;
-        UI::Hud m_hud;
-        UI::PauseMenu m_pauseMenu;
-
-
-        bool m_isPlacingWall = false;
-        Game::Orientation m_currentWallOri = Game::Orientation::Horizontal;
+        sf::Clock m_clock;
+        std::unique_ptr<TitleScreen> m_titleScreen;
+        std::unique_ptr<GameScreen> m_gameScreen;
+        Screen *m_currentScreen = nullptr;
     };
 
 }
