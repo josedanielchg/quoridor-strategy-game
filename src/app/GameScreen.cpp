@@ -39,6 +39,7 @@ namespace App
                                      });
             m_pauseMenu.setOnQuit([this]()
                                   {
+                                      resetUIState();
                                       if (m_onQuit)
                                           m_onQuit();
                                   });
@@ -57,6 +58,7 @@ namespace App
                                       });
             m_winnerMenu.setOnQuit([this]()
                                    {
+                                       resetUIState();
                                        if (m_onQuit)
                                            m_onQuit();
                                    });
@@ -74,6 +76,18 @@ namespace App
     void GameScreen::setOnQuit(std::function<void()> onQuit)
     {
         m_onQuit = std::move(onQuit);
+    }
+
+    void GameScreen::onEnter()
+    {
+        Screen::onEnter();
+        resetUIState();
+    }
+
+    void GameScreen::onExit()
+    {
+        resetUIState();
+        Screen::onExit();
     }
 
     void GameScreen::handleEvent(const sf::Event &event, sf::RenderWindow &window)
@@ -306,10 +320,7 @@ namespace App
         m_board.init();
         Game::initGameState(m_gameState);
         m_board.loadFromState(m_gameState);
-
-        m_isPlacingWall = false;
-        m_currentWallOri = Game::Orientation::Horizontal;
-        m_winnerMenu.setEnabled(false);
+        resetUIState();
         restartMusic();
 
         m_hud.update(Game::currentPlayer(m_gameState),
@@ -328,5 +339,15 @@ namespace App
             m_renderer.setHoveredTile({-1, -1});
             m_renderer.setWallPreview(false, {0, 0}, m_currentWallOri);
         }
+    }
+
+    void GameScreen::resetUIState()
+    {
+        m_pauseMenu.setEnabled(false);
+        m_winnerMenu.setEnabled(false);
+        m_isPlacingWall = false;
+        m_currentWallOri = Game::Orientation::Horizontal;
+        m_renderer.setHoveredTile({-1, -1});
+        m_renderer.setWallPreview(false, {0, 0}, m_currentWallOri);
     }
 }

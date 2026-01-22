@@ -31,6 +31,8 @@ namespace App
         void handleResize(sf::RenderWindow &window, sf::Vector2u size) override;
         void update(float dt) override;
         void render(sf::RenderWindow &window) override;
+        void onEnter() override;
+        void onExit() override;
 
     private:
         const char *getMusicPath() const override { return MUSIC_PATH; }
@@ -42,6 +44,7 @@ namespace App
         void rotateWall();
         void checkWinCondition(int playerId);
         void runHeuristicTurn();
+        void resetUIState();
 
         Game::Board m_board;
         Game::GameState m_gameState;
