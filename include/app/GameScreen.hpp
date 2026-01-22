@@ -52,8 +52,8 @@ namespace App
         UI::WinnerMenu m_winnerMenu;
         std::function<void()> m_onQuit;
 
+        GameMode m_gameMode = GameMode::SinglePlayer;
         bool m_isPlacingWall = false;
         Game::Orientation m_currentWallOri = Game::Orientation::Horizontal;
-        bool m_useHeuristic = true;
     };
 }

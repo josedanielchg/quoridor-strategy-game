@@ -67,7 +67,7 @@ namespace App
 
     void GameScreen::setGameMode(GameMode mode)
     {
-        m_useHeuristic = (mode == GameMode::SinglePlayer);
+        m_gameMode = mode;
         resetGame();
     }
 
@@ -258,6 +258,8 @@ namespace App
 
     void GameScreen::runHeuristicTurn()
     {
+        if (m_gameMode != GameMode::SinglePlayer)
+            return;
         if (Game::isGameOver(m_gameState))
             return;
         if (Game::currentPlayer(m_gameState) != 2)
