@@ -22,7 +22,7 @@ namespace UI
         auto resume = std::make_unique<Button>();
         if (!resume->init("assets/textures/button.png",
                           std::string(),
-                          "assets/fonts/roboto.ttf",
+                          "assets/fonts/pixelon.ttf",
                           "Resume"))
         {
             std::cerr << "Failed to load Resume button\n";
@@ -34,7 +34,7 @@ namespace UI
         auto restart = std::make_unique<Button>();
         if (!restart->init("assets/textures/button.png",
                            std::string(),
-                           "assets/fonts/roboto.ttf",
+                           "assets/fonts/pixelon.ttf",
                            "Restart"))
         {
             std::cerr << "Failed to load Restart button\n";
@@ -46,7 +46,7 @@ namespace UI
         auto quit = std::make_unique<Button>();
         if (!quit->init("assets/textures/button.png",
                         std::string(),
-                        "assets/fonts/roboto.ttf",
+                        "assets/fonts/pixelon.ttf",
                         "Quit"))
         {
             std::cerr << "Failed to load Quit button\n";

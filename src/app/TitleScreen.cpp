@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cmath>
+#include <filesystem>
 #include <iostream>
 #include <utility>
 
@@ -33,11 +34,14 @@ namespace App
             sf::IntRect({0, 0}, {FRAME_WIDTH, FRAME_HEIGHT}));
         m_backgroundSprite.setOrigin({FRAME_WIDTH / 2.f, FRAME_HEIGHT / 2.f});
 
-        if (!m_font.openFromFile("assets/fonts/roboto.ttf"))
+        if (!m_font.openFromFile("assets/fonts/pixelon.ttf"))
         {
-            std::cerr << "Failed to load font for title screen\n";
+            std::cerr << "Failed to load font for title screen (cwd: "
+                      << std::filesystem::current_path().string() << ")\n";
             return false;
         }
+        std::cout << "Loaded font: assets/fonts/pixelon.ttf (cwd: "
+                  << std::filesystem::current_path().string() << ")\n";
 
         m_promptLine1.setFont(m_font);
         m_promptLine1.setString("PLEASE PRESS ANY KEY");
