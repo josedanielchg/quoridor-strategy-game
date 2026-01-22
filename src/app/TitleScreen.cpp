@@ -40,8 +40,6 @@ namespace App
                       << std::filesystem::current_path().string() << ")\n";
             return false;
         }
-        std::cout << "Loaded font: assets/fonts/pixelon.ttf (cwd: "
-                  << std::filesystem::current_path().string() << ")\n";
 
         m_promptLine1.setFont(m_font);
         m_promptLine1.setString("PLEASE PRESS ANY KEY");

@@ -26,8 +26,6 @@ namespace UI
                       << std::filesystem::current_path().string() << ")\n";
             return false;
         }
-        std::cout << "Loaded font: " << fontPath << " (cwd: "
-                  << std::filesystem::current_path().string() << ")\n";
 
         m_baseFontSize = fontSize;
         m_label.setFont(m_font);

@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "app/MenuScreen.hpp"
 #include "app/GameScreen.hpp"
 #include "app/Screen.hpp"
 #include "app/TitleScreen.hpp"
@@ -24,6 +25,7 @@ namespace App
         sf::RenderWindow m_window;
         sf::Clock m_clock;
         std::unique_ptr<TitleScreen> m_titleScreen;
+        std::unique_ptr<MenuScreen> m_menuScreen;
         std::unique_ptr<GameScreen> m_gameScreen;
         Screen *m_currentScreen = nullptr;
     };

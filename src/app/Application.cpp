@@ -16,11 +16,26 @@ namespace App
         if (!m_titleScreen->init())
             std::cerr << "Warning: Title screen failed\n";
 
+        m_menuScreen = std::make_unique<MenuScreen>();
+        if (!m_menuScreen->init())
+            std::cerr << "Warning: Menu screen failed\n";
+
         m_gameScreen = std::make_unique<GameScreen>();
         if (!m_gameScreen->init())
             std::cerr << "Warning: Game screen failed\n";
 
-        m_titleScreen->setOnStart([this]() { setCurrentScreen(m_gameScreen.get()); });
+        m_titleScreen->setOnStart([this]() { setCurrentScreen(m_menuScreen.get()); });
+        m_menuScreen->setOnOptionSelected([this](MenuScreen::Option option)
+                                          {
+                                              if (option == MenuScreen::Option::SinglePlayer)
+                                              {
+                                                  setCurrentScreen(m_gameScreen.get());
+                                              }
+                                              else
+                                              {
+                                                  std::cout << "Menu option not wired yet\n";
+                                              }
+                                          });
         m_gameScreen->setOnQuit([this]() { setCurrentScreen(m_titleScreen.get()); });
 
         setCurrentScreen(m_titleScreen.get());

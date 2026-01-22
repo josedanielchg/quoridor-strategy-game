@@ -48,8 +48,6 @@ namespace UI
                       << std::filesystem::current_path().string() << ")\n";
             return false;
         }
-        std::cout << "Loaded font: assets/fonts/pixelon.ttf (cwd: "
-                  << std::filesystem::current_path().string() << ")\n";
 
         m_player1WallsText.setFillColor(sf::Color::White);
         m_player2WallsText.setFillColor(sf::Color::White);
