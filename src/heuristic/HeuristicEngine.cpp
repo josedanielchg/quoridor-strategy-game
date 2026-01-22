@@ -1,4 +1,4 @@
-#include "ai/AiEngine.hpp"
+#include "heuristic/HeuristicEngine.hpp"
 #include "game/GameRules.hpp"
 
 #include <chrono>
@@ -12,7 +12,7 @@ namespace Game
 
         struct SearchContext
         {
-            const AiSearchConfig *config = nullptr;
+            const HeuristicSearchConfig *config = nullptr;
             TranspositionTable *tt = nullptr;
             std::chrono::steady_clock::time_point deadline;
             int rootPlayerId = 1;
@@ -143,22 +143,22 @@ namespace Game
         }
     }
 
-    AiEngine::AiEngine(AiSearchConfig config)
+    HeuristicEngine::HeuristicEngine(HeuristicSearchConfig config)
         : m_config(config), m_tt(1 << 20)
     {
     }
 
-    void AiEngine::setConfig(const AiSearchConfig &config)
+    void HeuristicEngine::setConfig(const HeuristicSearchConfig &config)
     {
         m_config = config;
     }
 
-    const AiSearchConfig &AiEngine::config() const
+    const HeuristicSearchConfig &HeuristicEngine::config() const
     {
         return m_config;
     }
 
-    Move AiEngine::findBestMove(const GameState &state)
+    Move HeuristicEngine::findBestMove(const GameState &state)
     {
         GameState working = state;
         std::vector<Move> moves = generateLegalMoves(working);

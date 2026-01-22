@@ -164,7 +164,7 @@ namespace App
                             Game::GameState::MAX_WALLS_PER_PLAYER);
             }
 
-            runAiTurn();
+            runHeuristicTurn();
         }
         else
         {
@@ -209,7 +209,7 @@ namespace App
                         Game::GameState::MAX_WALLS_PER_PLAYER);
             m_isPlacingWall = false;
 
-            runAiTurn();
+            runHeuristicTurn();
         }
         else
         {
@@ -217,17 +217,17 @@ namespace App
         }
     }
 
-    void GameScreen::runAiTurn()
+    void GameScreen::runHeuristicTurn()
     {
         if (Game::isGameOver(m_gameState))
             return;
         if (Game::currentPlayer(m_gameState) != 2)
             return;
 
-        Game::Move move = m_aiEngine.findBestMove(m_gameState);
+        Game::Move move = m_heuristicEngine.findBestMove(m_gameState);
         if (!Game::applyMove(m_gameState, move))
         {
-            std::cout << "AI move failed.\n";
+            std::cout << "Heuristic move failed.\n";
             return;
         }
 

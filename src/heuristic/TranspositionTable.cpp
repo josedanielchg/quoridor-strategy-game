@@ -1,4 +1,4 @@
-#include "ai/TranspositionTable.hpp"
+#include "heuristic/TranspositionTable.hpp"
 #include <algorithm>
 #include <random>
 

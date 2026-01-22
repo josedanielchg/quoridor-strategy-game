@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <functional>
-#include "ai/AiEngine.hpp"
+#include "heuristic/HeuristicEngine.hpp"
 #include "app/Screen.hpp"
 #include "game/Board.hpp"
 #include "game/GameState.hpp"
@@ -30,14 +30,14 @@ namespace App
         void toggleWallMode();
         void rotateWall();
         void checkWinCondition(int playerId);
-        void runAiTurn();
+        void runHeuristicTurn();
 
         Game::Board m_board;
         Game::GameState m_gameState;
         UI::GameRenderer m_renderer;
         UI::Hud m_hud;
         UI::PauseMenu m_pauseMenu;
-        Game::AiEngine m_aiEngine;
+        Game::HeuristicEngine m_heuristicEngine;
         std::function<void()> m_onQuit;
 
         bool m_isPlacingWall = false;
