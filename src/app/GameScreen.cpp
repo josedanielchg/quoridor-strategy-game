@@ -1,6 +1,8 @@
 #include "app/GameScreen.hpp"
 #include "game/Move.hpp"
 #include "game/GameRules.hpp"
+#include <chrono>
+#include <future>
 #include <iostream>
 #include <utility>
 
@@ -11,6 +13,9 @@ namespace App
         m_board.init();
         Game::initGameState(m_gameState);
         m_board.loadFromState(m_gameState);
+        m_stateVersion = 0;
+        m_cpuPending = false;
+        m_cpuThinking = false;
 
         if (!m_renderer.init())
         {
@@ -155,6 +160,7 @@ namespace App
 
     void GameScreen::update(float /*dt*/)
     {
+        updateHeuristicTurn();
     }
 
     void GameScreen::render(sf::RenderWindow &window)
@@ -181,6 +187,7 @@ namespace App
 
         if (Game::applyMove(m_gameState, move))
         {
+            ++m_stateVersion;
             if (!m_board.loadFromState(m_gameState))
             {
                 std::cout << "Error: Failed to sync board state." << std::endl;
@@ -230,6 +237,7 @@ namespace App
 
         if (success)
         {
+            ++m_stateVersion;
             if (!m_board.loadFromState(m_gameState))
             {
                 std::cout << "Error: Failed to sync board state." << std::endl;
@@ -256,13 +264,56 @@ namespace App
             return;
         if (Game::currentPlayer(m_gameState) != 2)
             return;
+        if (m_cpuThinking)
+            return;
 
-        Game::Move move = m_heuristicEngine.findBestMove(m_gameState);
+        m_cpuPending = true;
+    }
+
+    void GameScreen::updateHeuristicTurn()
+    {
+        if (m_cpuPending && !m_cpuThinking)
+        {
+            if (Game::isGameOver(m_gameState) || Game::currentPlayer(m_gameState) != 2)
+            {
+                m_cpuPending = false;
+                return;
+            }
+
+            m_cpuPending = false;
+            m_cpuThinking = true;
+            m_cpuStateVersion = m_stateVersion;
+            Game::GameState snapshot = m_gameState;
+            m_cpuFuture = std::async(std::launch::async, [this, snapshot]() mutable
+                                     { return m_heuristicEngine.findBestMove(snapshot); });
+        }
+
+        if (!m_cpuThinking)
+            return;
+
+        if (!m_cpuFuture.valid())
+        {
+            m_cpuThinking = false;
+            return;
+        }
+
+        if (m_cpuFuture.wait_for(std::chrono::milliseconds(0)) != std::future_status::ready)
+            return;
+
+        Game::Move move = m_cpuFuture.get();
+        m_cpuThinking = false;
+
+        if (m_stateVersion != m_cpuStateVersion)
+            return;
+        if (Game::isGameOver(m_gameState) || Game::currentPlayer(m_gameState) != 2)
+            return;
+
         if (!Game::applyMove(m_gameState, move))
         {
             std::cout << "Heuristic move failed.\n";
             return;
         }
+        ++m_stateVersion;
 
         if (!m_board.loadFromState(m_gameState))
         {
@@ -275,9 +326,9 @@ namespace App
         if (!Game::isGameOver(m_gameState))
         {
             m_hud.update(Game::currentPlayer(m_gameState),
-                        m_gameState.wallsRemaining[0],
-                        m_gameState.wallsRemaining[1],
-                        Game::GameState::MAX_WALLS_PER_PLAYER);
+                         m_gameState.wallsRemaining[0],
+                         m_gameState.wallsRemaining[1],
+                         Game::GameState::MAX_WALLS_PER_PLAYER);
         }
     }
 
@@ -298,6 +349,9 @@ namespace App
         m_board.init();
         Game::initGameState(m_gameState);
         m_board.loadFromState(m_gameState);
+        m_stateVersion = 0;
+        m_cpuPending = false;
+        m_cpuThinking = false;
 
         m_isPlacingWall = false;
         m_currentWallOri = Game::Orientation::Horizontal;
