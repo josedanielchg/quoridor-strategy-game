@@ -43,6 +43,5 @@ namespace UI
 
         std::vector<std::unique_ptr<StateComponent>> m_buttons;
         float m_buttonGap = 26.f;
-
     };
 }

@@ -56,7 +56,8 @@ namespace UI
         addButton(std::move(quit));
 
         if (m_resumeButton)
-            m_resumeButton->setOnClick([this]() { setEnabled(false); });
+            m_resumeButton->setOnClick([this]()
+                                       { setEnabled(false); });
 
         return true;
     }

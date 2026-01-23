@@ -40,18 +40,17 @@ namespace App
         }
         else
         {
-            m_pauseMenu.setOnResume([this]() { m_pauseMenu.setEnabled(false); });
+            m_pauseMenu.setOnResume([this]()
+                                    { m_pauseMenu.setEnabled(false); });
             m_pauseMenu.setOnRestart([this]()
                                      {
                                          resetGame();
-                                         m_pauseMenu.setEnabled(false);
-                                     });
+                                         m_pauseMenu.setEnabled(false); });
             m_pauseMenu.setOnQuit([this]()
                                   {
                                       resetUIState();
                                       if (m_onQuit)
-                                          m_onQuit();
-                                  });
+                                          m_onQuit(); });
         }
 
         if (!m_winnerMenu.init())
@@ -63,23 +62,22 @@ namespace App
             m_winnerMenu.setOnRestart([this]()
                                       {
                                           resetGame();
-                                          m_winnerMenu.setEnabled(false);
-                                      });
+                                          m_winnerMenu.setEnabled(false); });
             m_winnerMenu.setOnQuit([this]()
                                    {
                                        resetUIState();
                                        if (m_onQuit)
-                                           m_onQuit();
-                                   });
+                                           m_onQuit(); });
         }
 
         m_bottomBar.setOnClick([this]()
                                {
                                    if (!m_pauseMenu.isEnabled() && !m_winnerMenu.isEnabled())
-                                       togglePauseMenu();
-                               });
-        m_bottomBar.setOnToggleWallMode([this]() { toggleWallMode(); });
-        m_bottomBar.setOnRotateWall([this]() { rotateWall(); });
+                                       togglePauseMenu(); });
+        m_bottomBar.setOnToggleWallMode([this]()
+                                        { toggleWallMode(); });
+        m_bottomBar.setOnRotateWall([this]()
+                                    { rotateWall(); });
 
         return true;
     }
@@ -238,9 +236,9 @@ namespace App
             if (!Game::isGameOver(m_gameState))
             {
                 m_hud.update(Game::currentPlayer(m_gameState),
-                            m_gameState.wallsRemaining[0],
-                            m_gameState.wallsRemaining[1],
-                            Game::GameState::MAX_WALLS_PER_PLAYER);
+                             m_gameState.wallsRemaining[0],
+                             m_gameState.wallsRemaining[1],
+                             Game::GameState::MAX_WALLS_PER_PLAYER);
             }
 
             runHeuristicTurn();
@@ -285,9 +283,9 @@ namespace App
             }
             std::cout << "Wall placed at " << gridPos.x << ", " << gridPos.y << std::endl;
             m_hud.update(Game::currentPlayer(m_gameState),
-                        m_gameState.wallsRemaining[0],
-                        m_gameState.wallsRemaining[1],
-                        Game::GameState::MAX_WALLS_PER_PLAYER);
+                         m_gameState.wallsRemaining[0],
+                         m_gameState.wallsRemaining[1],
+                         Game::GameState::MAX_WALLS_PER_PLAYER);
             m_isPlacingWall = false;
             m_bottomBar.setWallPlacementActive(m_isPlacingWall);
 
@@ -404,9 +402,9 @@ namespace App
         restartMusic();
 
         m_hud.update(Game::currentPlayer(m_gameState),
-                    m_gameState.wallsRemaining[0],
-                    m_gameState.wallsRemaining[1],
-                    Game::GameState::MAX_WALLS_PER_PLAYER);
+                     m_gameState.wallsRemaining[0],
+                     m_gameState.wallsRemaining[1],
+                     Game::GameState::MAX_WALLS_PER_PLAYER);
     }
 
     void GameScreen::togglePauseMenu()
