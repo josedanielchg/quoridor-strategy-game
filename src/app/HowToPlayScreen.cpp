@@ -220,10 +220,10 @@ namespace App
             const float textScale = std::min(viewSize.x / UI::UI_DESIGN_SIZE.x,
                                              viewSize.y / UI::UI_DESIGN_SIZE.y);
             const unsigned int textSize = std::max(1u, static_cast<unsigned int>(
-                std::round(DIALOGUE_FONT_SIZE * textScale)));
+                                                           std::round(DIALOGUE_FONT_SIZE * textScale)));
             m_dialogueText.setCharacterSize(textSize);
             const unsigned int nameSize = std::max(1u, static_cast<unsigned int>(
-                std::round(NAMEPLATE_FONT_SIZE * textScale)));
+                                                           std::round(NAMEPLATE_FONT_SIZE * textScale)));
             m_speakerNameText.setCharacterSize(nameSize);
             m_speakerNameShadow.setCharacterSize(nameSize);
             updateDialogueText();
@@ -249,9 +249,8 @@ namespace App
             m_continueIndicator.setPoint(1, {indicatorSize, 0.f});
             m_continueIndicator.setPoint(2, {indicatorSize * 0.5f, indicatorSize});
             const float indicatorPadding = INDICATOR_PADDING * textScale;
-            m_continueIndicator.setPosition({
-                m_dialogueRect.position.x + m_dialogueRect.size.x - indicatorSize - indicatorPadding,
-                m_dialogueRect.position.y + m_dialogueRect.size.y - indicatorSize - indicatorPadding});
+            m_continueIndicator.setPosition({m_dialogueRect.position.x + m_dialogueRect.size.x - indicatorSize - indicatorPadding,
+                                             m_dialogueRect.position.y + m_dialogueRect.size.y - indicatorSize - indicatorPadding});
         }
     }
 
