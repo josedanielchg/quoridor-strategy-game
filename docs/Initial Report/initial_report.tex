@@ -1,0 +1,265 @@
+\documentclass[11pt,a4paper]{article}
+
+% ----------------------------------------------------
+% PACKAGES ESSENTIELS
+% ----------------------------------------------------
+% Nota: inputenc se omite a menudo en compiladores modernos (LuaLaTeX/XeLaTeX),
+% pero se mantiene aquí por compatibilidad con el código original si usas PDFLaTeX.
+\usepackage[utf8]{inputenc}     % Encodage du texte (UTF-8)
+\usepackage[T1]{fontenc}        % Encodage des caractères
+\usepackage[french]{babel}      % Langue du document
+\usepackage{geometry}           % Gestion des marges
+\usepackage{graphicx}           % Insertion d’images
+\usepackage{amsmath, amssymb}   % Symboles et équations mathématiques
+\usepackage{siunitx}            % Unités du Système International (SI)
+\usepackage{caption}            % Amélioration des légendes
+\usepackage{subcaption}         % Sous-figures
+\usepackage{booktabs}           % Tableaux esthétiques
+\usepackage{float}              % Contrôle de la position des figures
+\usepackage{xcolor}             % Gestion des couleurs
+\usepackage{fancyhdr}           % En-têtes et pieds de page personnalisés
+\usepackage{enumitem}           % Listes personnalisées
+\usepackage{physics}            % Notation physique (contraintes, etc.)
+\usepackage{titlesec}           % Style des sections
+\usepackage[strict]{changepage} % Ajustement des marges locales
+\usepackage{framed}             % Cadres et encadrés
+
+% Hyperref doit être chargé en dernier (généralement)
+\usepackage{hyperref}           % Liens cliquables dans le PDF
+\usepackage{listings}           % Blocs monospace
+
+% ----------------------------------------------------
+% PARAMÈTRES DE MISE EN PAGE
+% ----------------------------------------------------
+\geometry{margin=2.5cm}            % Marges du document
+\setlength{\parskip}{0.5em}        % Espacement entre paragraphes
+\setlength{\parindent}{0pt}        % Pas d’indentation au début des paragraphes
+\setlength{\headheight}{13.6pt}    % Fix fancyhdr warning
+\addtolength{\topmargin}{-1.6pt}
+\setlength{\emergencystretch}{2em} % Reduce overfull hbox warnings
+
+% ----------------------------------------------------
+% COULEURS ENSTA
+% ----------------------------------------------------
+\definecolor{enstaBleuFonce}{HTML}{003366}    % Bleu marine (sections)
+\definecolor{enstaBleuClair}{HTML}{0073CF}    % Bleu moyen (sous-sections)
+\definecolor{formalshade}{rgb}{0.95,0.95,1}   % Fond clair pour encadrés
+
+% ----------------------------------------------------
+% CONFIGURATION DES LIENS
+% ----------------------------------------------------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=enstaBleuFonce,
+    urlcolor=blue,
+    citecolor=gray
+}
+
+% ----------------------------------------------------
+% STYLE DES SECTIONS
+% ----------------------------------------------------
+% Section (bleu marine, majuscule, gras, ligne horizontale)
+\titleformat{\section}[block]
+  {\normalfont\Large\bfseries\color{enstaBleuFonce}}
+  {\thesection}{1em}{}
+  [\vspace{0.3em}\titlerule\color{enstaBleuFonce}\vspace{0.3em}]
+
+% Sous-section (bleu clair)
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{enstaBleuClair}}
+  {\thesubsection}{1em}{}
+
+% Sous-sous-section (gris)
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black!70}}
+  {\thesubsubsection}{1em}{}
+
+% ----------------------------------------------------
+% EN-TÊTES ET PIEDS DE PAGE
+% ----------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{École Nationale des techniques avancées}
+\fancyhead[R]{IN204}
+\fancyfoot[C]{\thepage}
+
+% ----------------------------------------------------
+% ENVIRONNEMENT FORMAL (ENCADRÉ)
+% ----------------------------------------------------
+\newenvironment{formal}{%
+\def\FrameCommand{%
+  \hspace{1pt}%
+  {\color{enstaBleuFonce}\vrule width 2pt}%
+  {\color{formalshade}\vrule width 4pt}%
+  \colorbox{formalshade}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}%
+\begin{adjustwidth}{}{7pt}%
+\vspace{4pt}%
+}{%
+\vspace{4pt}\end{adjustwidth}\endMakeFramed%
+}
+
+% ----------------------------------------------------
+% DÉBUT DU DOCUMENT
+% ----------------------------------------------------
+\begin{document}
+
+% ====================================================
+% PAGE DE COUVERTURE
+% ====================================================
+\begin{titlepage}
+    \centering
+    \vspace*{3.5cm}
+
+    % Remplacer ce bloc par \includegraphics[width=0.6\textwidth]{imgs/logo_ensta_2025.jpg}
+    \includegraphics[width=0.6\textwidth]{imgs/logo_ensta_2025.png}
+    % \framebox{\parbox{0.6\textwidth}{\centering
+    %     \vspace{1cm}
+    %     \textbf{<INSTITUTION> LOGO} \\
+    %     (Image placeholder)
+    %     \vspace{1cm}
+    % }}\par\vspace{0.6cm}
+
+    {\Large  IN204 \par}
+    \vspace{0.2cm}
+    {\huge\bfseries Quoridor (C++/SFML) avec IA
+Heuristique et Architecture POO
+Moderne \par}
+    \vspace{2.8cm}
+    {\Large CHACÓN José Daniel \par}
+    {\Large MENESES Carlos Adrián \par}
+    \vfill
+    École Nationale des techniques avancées\\
+    Janvier 2026\par
+\end{titlepage}
+
+% ====================================================
+% TABLE DES MATIÈRES (ÍNDICE)
+% ====================================================
+\newpage
+\tableofcontents
+\newpage
+
+% ====================================================
+% PROJECT OVERVIEW
+% ====================================================
+\section{Aperçu du projet}
+Le projet implémente un jeu de plateau C++/SFML visant à démontrer la conception orientée objet, le rendu interactif et un adversaire CPU basé sur la recherche. Le jeu met l’accent sur la prise de décision au tour par tour, la validation des règles et une séparation claire entre la logique de jeu, le rendu et la gestion de l’interface utilisateur. La pile technologique est C++ avec SFML pour les graphismes, l’entrée et l’audio.
+
+\subsection*{Objectifs principaux}
+\begin{itemize}[leftmargin=1.2em]
+    \item Implémenter un jeu de plateau complet au tour par tour avec une condition de victoire claire.
+    \item Imposer la légalité des déplacements et des placements de murs à l’exécution.
+    \item Fournir une interface graphique réactive avec une navigation par écrans.
+    \item Intégrer un joueur CPU heuristique basé sur la recherche et l’évaluation.
+    \item Maintenir une base de code modulaire avec des responsabilités bien définies.
+\end{itemize}
+
+% ====================================================
+% GAME OVERVIEW
+% ====================================================
+\section{Présentation du jeu : qu’est-ce que ``Corridor'' ?}
+Le jeu est un jeu de stratégie à deux joueurs joué sur une grille. Chaque joueur contrôle un pion et tente d’atteindre le bord opposé du plateau. À chaque tour, un joueur déplace son pion ou place un mur pour modifier les chemins disponibles. L’objectif est d’atteindre la rangée cible avant l’adversaire. Le placement des murs doit préserver au moins un chemin valide vers l’objectif pour chaque joueur.
+
+% ====================================================
+% SYSTEM-LEVEL FLOW
+% ====================================================
+\section{Fonctionnement du jeu (niveau système)}
+À l’exécution, l’application initialise les ressources de la fenêtre, charge les assets et construit l’état initial du jeu. La boucle principale suit un cycle standard entrée–mise à jour–rendu. Les entrées sont capturées via les événements SFML, puis routées vers l’écran actif. L’étape de mise à jour fait avancer les animations, gère la logique de tour et déclenche le calcul CPU lorsque nécessaire. L’étape de rendu dessine le plateau, les éléments d’interface et les composants propres à chaque écran.
+
+Un système d’écrans gère différents contextes tels que le titre, le menu, le gameplay et les crédits. L’écran de jeu coordonne les règles, le plateau visuel et le moteur heuristique. Un HUD en bas d’écran peut afficher le tour en cours et les murs restants. Un menu pause est accessible via un raccourci clavier et permet de reprendre ou de redémarrer la partie.
+
+% ====================================================
+% TECHNICAL STACK
+% ====================================================
+\section{Pile technique}
+\subsection*{Langage et bibliothèques}
+Le projet utilise C++20 et la bibliothèque SFML pour les graphismes, les entrées et l’audio. SFML fournit la fenêtre de rendu, la gestion des sprites et la collecte d’événements nécessaires à la boucle de jeu.
+
+\subsection*{Système de build}
+Le processus de compilation est géré avec CMake (version minimale \textbf{3.16}). Le projet cible SFML version \textbf{3.0}. La configuration de build peut être adaptée pour Windows (MSVC) ou Linux (g++/clang).
+
+% ====================================================
+% PROJECT STRUCTURE
+% ====================================================
+\section{Structure du projet}
+\subsection*{Arborescence}
+\begin{verbatim}
+<PROJECT_NAME>/
+|-- CMakeLists.txt
+|-- README.md
+|-- LICENSE
+|-- docs/
+|   `-- Initial Report/
+|-- include/
+|   |-- app/
+|   |-- game/
+|   |-- heuristic/
+|   `-- ui/
+|-- src/
+|   |-- app/
+|   |-- game/
+|   |-- heuristic/
+|   |-- ui/
+|   `-- main.cpp
+`-- assets/
+    |-- fonts/
+    |-- sound/
+    `-- textures/
+\end{verbatim}
+
+\subsection*{Rôle des dossiers}
+\begin{itemize}[leftmargin=1.2em]
+    \item \texttt{src/} : fichiers d’implémentation pour le flux applicatif, le gameplay, l’IA et l’UI.
+    \item \texttt{include/} : en-têtes publics définissant les interfaces et structures principales.
+    \item \texttt{assets/} : textures, polices et audio utilisés à l’exécution.
+    \item \texttt{Docs/} : documentation et rapports du projet.
+\end{itemize}
+
+\subsection*{Classes/modules principaux}
+L’architecture inclut une classe de base d’écran et des écrans dérivés tels que \texttt{<ScreenTitle>}, \texttt{<ScreenGame>} et \texttt{<ScreenCredits>}. La logique de jeu est encapsulée dans un module de règles dédié, tandis qu’un module UI gère le rendu, les éléments de HUD et les menus. Le moteur heuristique évalue les positions et sélectionne les coups CPU via une recherche bornée.
+
+% ====================================================
+% INSTALLATION AND EXECUTION
+% ====================================================
+\vspace{0.5cm}
+\section{Installation et exécution}
+\subsection*{Prérequis}
+\begin{itemize}[leftmargin=1.2em]
+    \item Compilateur C++20 (MSVC, g++ ou clang)
+    \item CMake \textbf{3.16} ou plus récent
+    \item SFML \textbf{3.0}
+    \item Git
+\end{itemize}
+
+\subsection*{Cloner le dépôt}
+\begin{verbatim}
+git clone https://github.com/josedanielchg/quoridor-strategy-game.git
+cd quoridor-strategy-game
+\end{verbatim}
+
+\subsection*{Compilation (Windows)}
+\begin{verbatim}
+cmake -S . -B build
+cmake --build build
+\end{verbatim}
+
+\subsection*{Compilation (Linux)}
+\begin{verbatim}
+cmake -S . -B build
+cmake --build build
+\end{verbatim}
+
+\subsection*{Exécution (Windows)}
+\begin{verbatim}
+.\build\Debug\QuoridorGame.exe
+\end{verbatim}
+
+\subsection*{Exécution (Linux)}
+\begin{verbatim}
+./build/QuoridorGame
+\end{verbatim}
+
+\end{document}
