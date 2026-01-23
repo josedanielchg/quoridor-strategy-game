@@ -1,200 +1,268 @@
-# Quoridor (C++/SFML) – Heuristic AI & Modern OOP
+## Fill these placeholders
 
-University project for the **IN204 – Object-Oriented Programming** course.  
-Goal: build a **2D Quoridor board game** in **C++ + SFML** with a **clean OOP architecture** and a **configurable AI** based on search and heuristics.
+Before publishing this README, replace:
 
-> Authors: **MENESES Carlos** & **CHACÓN José**
-
----
-
-## 1. Game Overview
-
-**Quoridor** is a 2-player strategy game played on a **9×9 grid**.
-
-- Each player starts on opposite sides of the board.
-- On your turn, you can either:
-  - **Move your pawn** by one square (up / down / left / right, sometimes diagonals depending on rules), or  
-  - **Place a wall** between two squares to slow down your opponent.
-- **Objective:** be the first to reach the **opposite row**.
-- **Key rule:** it is **forbidden** to completely block the opponent – there must always remain **at least one path** to the goal.
-
-This project focuses on:
-
-- A **playable 2D game** (Human vs Human, Human vs AI).
-- A **simple but effective AI** based on graph search (Minimax + A* / BFS).
-- A **modern OOP design** with clear separation of responsibilities.
+- `<PROJECT_NAME>`: repository/project display name  
+- `<EXECUTABLE_NAME>`: built binary name (e.g., `QuoridorGame`)  
+- `<BUILD_FOLDER_NAME>`: build directory name (commonly `build`)  
+- `<CMAKE_MIN_VERSION>`: minimum required CMake version  
+- `<SFML_VERSION>`: SFML version used by the project  
+- `<LINK>`: repository clone URL  
+- `<LICENSE_NAME>`: license identifier  
+- Credits: developer names and asset/tool notes  
+- Add demo media under `docs/media/<...>`
 
 ---
 
-## 2. Main Features
+# <PROJECT_NAME>
 
-- 🎮 **Game modes**
-  - Human vs Human (local)
-  - Human vs AI (CPU)
-
-- 🧠 **Heuristic AI**
-  - **Minimax / Négamax** search with **α–β pruning**.
-  - Bounded search depth (time/complexity control).
-  - Evaluation based on:
-    - Estimated distance to goal (shortest path),
-    - Opponent’s distance,
-    - Wall stock / wall placement impact.
-
-- 🗺️ **Pathfinding**
-  - **A\*** and/or **BFS** to compute shortest paths on the evolving board.
-  - Recomputed after each move or wall placement.
-  - Used both by the AI and for rule validation (check that at least one path remains).
-
-- 🧩 **Modern OOP architecture (MVC-like)**
-  - **Model:** game rules & board state.
-  - **View:** 2D rendering with SFML (board, pawns, walls, HUD).
-  - **Controller:** input handling (mouse/keyboard), game loop, state transitions.
-
-- ⚙️ **Configurable CPU difficulty**
-  - Levels: **Easy / Normal / Hard**.
-  - Difficulty affects:
-    - Minimax depth / branching control,
-    - Types of moves considered (e.g. aggressive walls on higher levels),
-    - **Light randomization** between moves with similar score to avoid fully deterministic behavior.
-
-- ✅ **Code quality & tooling**
-  - C++17/20, RAII, smart pointers where needed.
-  - Encapsulated classes & clear interfaces.
-  - **Unit tests** for core rules and pathfinding.
-  - Basic **logging / replay** support via overloaded operators.
+A Quoridor-style strategy game with an isometric SFML UI and a heuristic CPU opponent.  
+Built in C++ (C++20) using SFML for graphics/audio/windowing.
 
 ---
 
-## 3. Architecture & Design
+## Overview
 
-### 3.1 Core Model
+This project implements a 2‑player **Quoridor** board game on a **9×9 grid**. Players race to reach the opposite side while placing walls to slow the opponent—under the constraint that a path to the goal must always remain.
 
-Planned main classes (names may evolve):
+The game is built in **C++ + SFML**, featuring a screen-based UI, isometric rendering, and a CPU player based on heuristic search.
 
-- `Board`  
-  - Stores cells, walls, pawn positions.
-  - Validates wall placement (no overlap, inside bounds).
-  - Provides a graph view for pathfinding.
+### Key Features
 
-- `Rules`  
-  - Checks move legality.
-  - Enforces the “at least one path” rule using A*/BFS.
-  - Handles turn switching and victory detection.
-
-- `State`  
-  - Represents a snapshot of the game (for AI / undo / replay).
-  - Contains board, players, remaining walls, current player, etc.
-
-- `Game`  
-  - High-level orchestration of a match.
-  - Manages the main loop, game phases (menu, playing, end screen).
-
-- `Player` / `HumanPlayer` / `AIPlayer`  
-  - Common interface to “play a turn”.
-  - `HumanPlayer` uses input events.
-  - `AIPlayer` delegates decision making to the AI engine.
-
-### 3.2 AI & Search
-
-- `AI` / `AiEngine`
-  - Implements **Minimax (or Négamax)** with α–β pruning.
-  - Uses a configurable depth (per difficulty level).
-  - Uses a **heuristic evaluator** based on:
-    - Shortest path length (A* / BFS) for each player,
-    - Difference between paths,
-    - Wall stock & structure of the maze.
-
-- `Pathfinder`
-  - A* and/or BFS implementation on the board graph.
-  - Reusable by both rules and AI.
-
-### 3.3 Rendering & Input (SFML)
-
-- Uses **SFML** components:
-  - `sf::RenderWindow` for the main window,
-  - `sf::Event` for input events,
-  - `sf::RectangleShape`, `sf::Sprite`, `sf::Text` for board, walls, pawns and UI.
-- Basic **MVC** separation:
-  - Model: `Board`, `Rules`, `State`.
-  - View: small rendering helpers (draw grid, pawns, walls, HUD).
-  - Controller: main loop & event handling.
-
-### 3.4 OOP / C++ Topics Covered (for the course)
-
-The project is designed to showcase:
-
-- **Encapsulation & classes:** `Board`, `Game`, `AI`, `State`, etc.
-- **Composition & (where relevant) inheritance / polymorphism:**
-  - Different player types implementing a common interface.
-- **STL containers:** `std::vector`, `std::array`, `std::unordered_map`, etc.
-- **Operator overloading:** e.g. `operator<<` for logging / replay.
-- **Exceptions & error handling:** invalid moves, inconsistent states.
-- **Unit tests:** small test suite for rules and pathfinding.
-- Optionally: **concurrency** (e.g. async AI search) if time allows.
+- Quoridor ruleset with legal wall placement enforcement
+- Isometric board rendering with mouse hover + wall preview
+- Human vs CPU gameplay (CPU computed asynchronously)
+- Heuristic AI: alpha–beta search + move ordering + transposition table
+- Fast distance cache (BFS) for legality checks and evaluation
+- HUD showing turn and remaining walls
+- Pause and winner menus
+- CMake-based build with FetchContent SFML
 
 ---
 
-## 4. Building & Running
+## Demo / Screenshots
 
-### 4.1 Dependencies
+Place media files in `docs/media/` and reference them here:
 
-- **C++17/20** compatible compiler (g++/clang/MSVC).
-- **CMake** ≥ 3.16 (or similar).
-- **SFML** 2.5+ (graphics, window, system).
+- `docs/media/gameplay.gif`
+- `docs/media/menu.png`
+- `docs/media/wall_placement.png`
+- `docs/media/win_screen.png`
 
-On Debian/Ubuntu, SFML can typically be installed via:
+---
+
+## Installation & Build Instructions
+
+### Prerequisites
+
+- C++20 compiler:
+  - Windows: MSVC (Visual Studio 2022 recommended)
+  - Linux: `g++` or `clang++`
+- CMake `>= <CMAKE_MIN_VERSION>`
+- Git
+- SFML `<SFML_VERSION>`  
+  - This repo is configured to **fetch and build SFML automatically** via CMake.
+
+### Clone
 
 ```bash
-sudo apt-get install libsfml-dev
-````
-
-### 4.2 Build Instructions
-
-```bash
-git clone https://github.com/<your-user>/<your-repo>.git
-cd <your-repo>
-
-mkdir build
-cd build
-cmake ..
-cmake --build .
+git clone <LINK>
+cd <PROJECT_NAME>
 ```
 
-This should produce an executable, for example:
+### Build with CMake
 
-```bash
-./quoridor
+> Replace `<BUILD_FOLDER_NAME>` with your preferred build directory (commonly `build`).
+
+#### Windows (MSVC / Visual Studio)
+
+```powershell
+cmake -S . -B <BUILD_FOLDER_NAME> -G "Visual Studio 17 2022" -A x64
+cmake --build <BUILD_FOLDER_NAME> --config Release
 ```
 
-(adjust the name if needed according to the final `CMakeLists.txt`).
+Debug build:
+
+```powershell
+cmake --build <BUILD_FOLDER_NAME> --config Debug
+```
+
+#### Linux (g++ / clang)
+
+Release build:
+
+```bash
+cmake -S . -B <BUILD_FOLDER_NAME> -DCMAKE_BUILD_TYPE=Release
+cmake --build <BUILD_FOLDER_NAME> -j
+```
+
+Debug build:
+
+```bash
+cmake -S . -B <BUILD_FOLDER_NAME> -DCMAKE_BUILD_TYPE=Debug
+cmake --build <BUILD_FOLDER_NAME> -j
+```
+
+### Run
+
+- Windows (multi-config):
+  - `<BUILD_FOLDER_NAME>/Release/<EXECUTABLE_NAME>.exe`
+  - `<BUILD_FOLDER_NAME>/Debug/<EXECUTABLE_NAME>.exe`
+- Linux (single-config):
+  - `./<BUILD_FOLDER_NAME>/<EXECUTABLE_NAME>`
+
+```bash
+./<BUILD_FOLDER_NAME>/<EXECUTABLE_NAME>
+```
+
+### Troubleshooting
+
+**Assets not found / textures missing**  
+Assets are loaded via relative paths (`assets/...`). Ensure your **working directory** is the repo root, or copy `assets/` next to the executable.
+
+**SFML DLLs missing (Windows)**  
+This project is configured for static SFML by default. If you switch to shared libraries, copy the SFML DLLs next to `<EXECUTABLE_NAME>.exe`.
+
+**FetchContent fails to download SFML**  
+Verify Git is installed and in PATH, then delete `<BUILD_FOLDER_NAME>/` and reconfigure:
+```bash
+cmake -S . -B <BUILD_FOLDER_NAME>
+```
 
 ---
 
-## 5. How to Play
+## Controls
 
-* Launch the executable.
-* Choose game mode: **Human vs Human** or **Human vs AI**.
-* Choose **CPU difficulty** if playing against the AI.
-* On your turn, either:
-
-  * Select your pawn and move it to a valid adjacent cell, or
-  * Select and place a wall at a valid position.
-* The game ends when one player reaches the opposite side of the board.
-
-Controls & UI details will be documented once the first prototype is ready.
+| Action | Default Control |
+|---|---|
+| Open/close pause menu | `ESC` |
+| Toggle wall placement mode | `W` |
+| Rotate wall orientation | `R` |
+| Select target / place move | Left mouse click |
 
 ---
 
-## 6. Project Status
+## Project Structure
 
-* ✅ Project proposal & high-level design.
-* 🚧 Implementation in progress:
+```text
+<PROJECT_NAME>/
+├─ CMakeLists.txt
+├─ README.md
+├─ LICENSE
+├─ cmake/
+│  └─ FindSFML.cmake
+├─ docs/
+│  ├─ instructions.md
+│  ├─ structure.md
+│  └─ media/
+│     └─ <place screenshots/gifs here>
+├─ include/
+│  ├─ app/
+│  ├─ game/
+│  ├─ heuristic/
+│  └─ ui/
+├─ src/
+│  ├─ app/
+│  ├─ game/
+│  ├─ heuristic/
+│  ├─ ui/
+│  └─ main.cpp
+└─ assets/
+   ├─ fonts/
+   ├─ sound/
+   └─ textures/
+```
 
-  * Board & rules,
-  * Pathfinding (A*/BFS),
-  * First AI prototype.
-* 📌 Next steps:
+---
 
-  * Refine AI heuristics,
-  * Add menus / in-game UI,
-  * Extend unit tests and logging.
+## Architecture Overview
+
+High-level relationships:
+
+```
+main
+  -> Application (window + loop + screen routing)
+      -> Screen (base)
+          -> TitleScreen / MenuScreen / GameScreen / CreditsScreen
+      -> GameScreen
+          -> GameState (logical state)
+          -> GameRules (validate/apply/generate/undo)
+          -> Board (visual state rebuilt from GameState)
+          -> GameRenderer + HUD + Menus
+          -> HeuristicEngine (async CPU move)
+```
+
+**Game loop responsibilities**
+- `processEvents()` polls SFML events and forwards them to the active screen.
+- `update(dt)` advances animations and CPU turns.
+- `render()` draws the active screen.
+
+**Resource loading**
+- Textures, fonts, and audio are loaded from `assets/...` paths.  
+- The runtime expects the working directory to be the repo root (or `assets/` next to the executable).
+
+---
+
+## File Responsibility Table (ALL .hpp)
+
+| File | Responsibility | Key classes/structs | Notes/Dependencies |
+|---|---|---|---|
+| `include/app/Application.hpp` | Window setup, main loop, screen routing | `App::Application` | Owns SFML window and switches screens |
+| `include/app/Screen.hpp` | Base screen interface + shared music | `App::Screen` | Parent of all screens |
+| `include/app/TitleScreen.hpp` | Title screen visuals + start trigger | `App::TitleScreen` | Uses SFML sprites/text |
+| `include/app/MenuScreen.hpp` | Main menu + input handling | `App::MenuScreen` | Selects game/credits |
+| `include/app/GameScreen.hpp` | Gameplay orchestration + CPU turn | `App::GameScreen` | Owns `GameState`, `Board`, `HeuristicEngine` |
+| `include/app/CreditsScreen.hpp` | Credits view | `App::CreditsScreen` | Returns to menu |
+| `include/game/GameState.hpp` | Logical state container | `Game::GameState` | Source of truth for rules/AI |
+| `include/game/MoveTypes.hpp` | Move and wall enums | `Game::MoveType`, `Game::Orientation` | Used across game/UI/AI |
+| `include/game/Move.hpp` | Move value object | `Game::Move` | Produced by UI/AI |
+| `include/game/GameRules.hpp` | Rules engine + distance cache | free functions, `Game::MoveUndoState` | Used by UI and AI |
+| `include/game/WallRules.hpp` | Local wall legality | `isWallPlacementLegalLocal(...)` | Used by rules + wall entity |
+| `include/game/Board.hpp` | Visual board model + entities | `Game::Board` | Rebuilt from `GameState` |
+| `include/game/Field.hpp` | Board cell connectivity | `Game::Field`, `Game::Direction` | Graph edges for paths |
+| `include/game/Entity.hpp` | Base entity interface | `Game::Entity` | Position + validation contract |
+| `include/game/VisualEntity.hpp` | Entity + SFML sprite/texture | `Game::VisualEntity` | Base for Pawn/Wall |
+| `include/game/Pawn.hpp` | Pawn entity | `Game::Pawn` | Delegates move legality to rules |
+| `include/game/Wall.hpp` | Wall entity + preview sprites | `Game::Wall` | Validates locally via `WallRules` |
+| `include/heuristic/HeuristicEngine.hpp` | CPU search engine | `Game::HeuristicEngine`, `Game::HeuristicSearchConfig` | Alpha–beta + heuristics |
+| `include/heuristic/TranspositionTable.hpp` | TT + Zobrist hashing | `Game::TranspositionTable`, `Game::TTEntry`, `computeZobrist(...)` | Speeds up search |
+| `include/heuristic/PathFinder.hpp` | A* path existence helper | `Game::PathFinder` | Not in main rule flow |
+| `include/ui/UiConstants.hpp` | UI sizing/scaling constants | constants | Shared by renderer/menus |
+| `include/ui/ViewUtils.hpp` | Letterbox view utility | `makeLetterboxView(...)` | Consistent scaling |
+| `include/ui/GameRenderer.hpp` | Isometric renderer + mouse grid | `UI::GameRenderer` | Draws board/entities |
+| `include/ui/Hud.hpp` | HUD UI | `UI::Hud` | Turn indicator + walls |
+| `include/ui/Menu.hpp` | Generic menu container | `UI::Menu` | Base for pause/winner menus |
+| `include/ui/StateComponent.hpp` | Hover/clickable sprite base | `UI::StateComponent` | Used by buttons |
+| `include/ui/Button.hpp` | Labeled button widget | `UI::Button` | Click callbacks |
+| `include/ui/PauseMenu.hpp` | Pause menu | `UI::PauseMenu` | Resume/Restart/Quit |
+| `include/ui/WinnerMenu.hpp` | Winner menu | `UI::WinnerMenu` | Banner + actions |
+| `include/ui/SpriteEntity.hpp` | Sprite helper variants | `UI::SpriteEntity`, `TileSprite`, `WallSprite`, `PawnSprite` | Utility / alternative approach |
+| `include/ui/InputHandler.hpp` | Input module placeholder | — | Stub |
+| `include/ui/Renderer.hpp` | Renderer module placeholder | — | Stub |
+
+---
+
+## Credits
+
+- Developers:
+  - `<DEVELOPER_1>`
+  - `<DEVELOPER_2>`
+- Music tool:
+  - Suno (`<NOTES_ABOUT_TRACKS/USAGE>`)
+- Image tool:
+  - Gemini (`<NOTES_ABOUT_ASSETS/USAGE>`)
+
+---
+
+## License
+
+This project is licensed under `<LICENSE_NAME>`. See `LICENSE` for details.
+
+---
+
+## Contributing
+
+1. Fork the repository  
+2. Create a feature branch: `git checkout -b feature/my-change`  
+3. Commit your changes  
+4. Push to your fork and open a Pull Request

@@ -16,7 +16,7 @@ namespace Game
 
     struct HeuristicSearchConfig
     {
-        int maxDepth = 3;
+        int maxDepth = 4;
         int timeLimitMs = 4000;
         HeuristicDifficulty difficulty = HeuristicDifficulty::Medium;
         int weightDistance = 10;

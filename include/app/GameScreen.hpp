@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <cstdint>
 #include <functional>
+#include <future>
 #include "heuristic/HeuristicEngine.hpp"
 #include "app/Screen.hpp"
 #include "game/Board.hpp"
@@ -46,6 +48,7 @@ namespace App
         void checkWinCondition(int playerId);
         void runHeuristicTurn();
         void resetUIState();
+        void updateHeuristicTurn();
 
         Game::Board m_board;
         Game::GameState m_gameState;
@@ -60,5 +63,10 @@ namespace App
         GameMode m_gameMode = GameMode::SinglePlayer;
         bool m_isPlacingWall = false;
         Game::Orientation m_currentWallOri = Game::Orientation::Horizontal;
+        bool m_cpuPending = false;
+        bool m_cpuThinking = false;
+        uint64_t m_stateVersion = 0;
+        uint64_t m_cpuStateVersion = 0;
+        std::future<Game::Move> m_cpuFuture;
     };
 }
