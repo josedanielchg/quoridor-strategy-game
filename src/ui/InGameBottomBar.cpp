@@ -1,4 +1,5 @@
 #include "ui/InGameBottomBar.hpp"
+#include "audio/SfxManager.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
@@ -125,18 +126,21 @@ namespace UI
             const sf::Vector2f worldPos = window.mapPixelToCoords(mouseBtn->position, m_view);
             if (m_wControlBounds.contains(worldPos))
             {
+                Audio::SfxManager::instance().play(Audio::SfxId::Click);
                 if (m_onToggleWallMode)
                     m_onToggleWallMode();
                 return true;
             }
             if (m_wallModeActive && m_rControlBounds.contains(worldPos))
             {
+                Audio::SfxManager::instance().play(Audio::SfxId::Click);
                 if (m_onRotateWall)
                     m_onRotateWall();
                 return true;
             }
             if (m_hamburgerBounds.contains(worldPos))
             {
+                Audio::SfxManager::instance().play(Audio::SfxId::Click);
                 if (m_onClick)
                     m_onClick();
                 return true;
@@ -223,6 +227,13 @@ namespace UI
         const bool rHovered = m_wallModeActive && m_rControlBounds.contains(worldPos);
         if (hovered == m_hovered && wHovered == m_wHovered && rHovered == m_rHovered)
             return;
+
+        if (hovered && !m_hovered)
+            Audio::SfxManager::instance().play(Audio::SfxId::Hover);
+        if (wHovered && !m_wHovered)
+            Audio::SfxManager::instance().play(Audio::SfxId::Hover);
+        if (rHovered && !m_rHovered)
+            Audio::SfxManager::instance().play(Audio::SfxId::Hover);
 
         m_hovered = hovered;
         m_wHovered = wHovered;

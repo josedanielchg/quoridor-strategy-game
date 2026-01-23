@@ -1,6 +1,7 @@
 #include "app/GameScreen.hpp"
 #include "game/Move.hpp"
 #include "game/GameRules.hpp"
+#include "audio/SfxManager.hpp"
 #include <chrono>
 #include <future>
 #include <iostream>
@@ -159,6 +160,18 @@ namespace App
         else if (const auto *mouseMove = event.getIf<sf::Event::MouseMoved>())
         {
             sf::Vector2i gridPos = m_renderer.getMouseGridPos(window, mouseMove->position);
+            if (gridPos.x >= 0 && gridPos.y >= 0)
+            {
+                if (gridPos != m_lastHoverGrid)
+                {
+                    Audio::SfxManager::instance().play(Audio::SfxId::Hover);
+                    m_lastHoverGrid = gridPos;
+                }
+            }
+            else
+            {
+                m_lastHoverGrid = {-2, -2};
+            }
 
             if (m_isPlacingWall)
             {
@@ -224,6 +237,8 @@ namespace App
 
         if (Game::applyMove(m_gameState, move))
         {
+            Audio::SfxManager::instance().play(Audio::SfxId::Click);
+            Audio::SfxManager::instance().play(Audio::SfxId::Move);
             ++m_stateVersion;
             if (!m_board.loadFromState(m_gameState))
             {
@@ -275,6 +290,8 @@ namespace App
 
         if (success)
         {
+            Audio::SfxManager::instance().play(Audio::SfxId::Click);
+            Audio::SfxManager::instance().play(Audio::SfxId::Wall);
             ++m_stateVersion;
             if (!m_board.loadFromState(m_gameState))
             {
@@ -354,6 +371,10 @@ namespace App
             std::cout << "Heuristic move failed.\n";
             return;
         }
+        if (move.type() == Game::MoveType::PawnMove)
+            Audio::SfxManager::instance().play(Audio::SfxId::Move);
+        else
+            Audio::SfxManager::instance().play(Audio::SfxId::Wall);
         ++m_stateVersion;
 
         if (!m_board.loadFromState(m_gameState))
@@ -377,6 +398,11 @@ namespace App
     {
         if (Game::winner(m_gameState) == playerId)
         {
+            if (!m_winSfxPlayed)
+            {
+                Audio::SfxManager::instance().play(Audio::SfxId::Win);
+                m_winSfxPlayed = true;
+            }
             std::cout << "=== Player " << playerId << " has WON! ===" << std::endl;
             m_winnerMenu.setWinner(playerId);
             m_winnerMenu.setEnabled(true);
@@ -414,6 +440,7 @@ namespace App
 
         if (!wasEnabled)
         {
+            Audio::SfxManager::instance().play(Audio::SfxId::MenuOpen);
             m_renderer.setHoveredTile({-1, -1});
             m_renderer.setWallPreview(false, {0, 0}, m_currentWallOri);
         }
@@ -425,6 +452,8 @@ namespace App
         m_winnerMenu.setEnabled(false);
         m_isPlacingWall = false;
         m_currentWallOri = Game::Orientation::Horizontal;
+        m_lastHoverGrid = {-2, -2};
+        m_winSfxPlayed = false;
         m_renderer.setHoveredTile({-1, -1});
         m_renderer.setWallPreview(false, {0, 0}, m_currentWallOri);
         m_bottomBar.resetHover();

@@ -1,4 +1,5 @@
 #include "app/MenuScreen.hpp"
+#include "audio/SfxManager.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
@@ -81,7 +82,33 @@ namespace App
                 selectNext(1);
             else if (key->scancode == sf::Keyboard::Scancode::Enter ||
                      key->scancode == sf::Keyboard::Scancode::Space)
+            {
+                Audio::SfxManager::instance().play(Audio::SfxId::Click);
                 activateSelected();
+            }
+            return;
+        }
+
+        if (const auto *mouseMove = event.getIf<sf::Event::MouseMoved>())
+        {
+            const sf::View view = UI::makeLetterboxView(window.getSize());
+            const sf::Vector2f worldPos = window.mapPixelToCoords(mouseMove->position, view);
+            std::size_t newHovered = static_cast<std::size_t>(-1);
+            for (std::size_t i = 0; i < m_optionTexts.size(); ++i)
+            {
+                if (m_optionTexts[i].getGlobalBounds().contains(worldPos))
+                {
+                    newHovered = i;
+                    break;
+                }
+            }
+
+            if (newHovered != m_hoveredIndex)
+            {
+                if (newHovered < m_optionTexts.size())
+                    Audio::SfxManager::instance().play(Audio::SfxId::Hover);
+                m_hoveredIndex = newHovered;
+            }
             return;
         }
 
@@ -96,6 +123,7 @@ namespace App
             {
                 if (m_optionTexts[i].getGlobalBounds().contains(worldPos))
                 {
+                    Audio::SfxManager::instance().play(Audio::SfxId::Click);
                     setSelectedIndex(i);
                     activateSelected();
                     break;

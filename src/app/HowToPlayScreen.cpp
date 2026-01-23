@@ -1,4 +1,5 @@
 #include "app/HowToPlayScreen.hpp"
+#include "audio/SfxManager.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
@@ -299,7 +300,10 @@ namespace App
             return;
         }
 
+        const std::size_t previousStep = m_currentStep;
         applyStep(m_currentStep + 1);
+        if (m_currentStep != previousStep)
+            Audio::SfxManager::instance().play(Audio::SfxId::TutorialNextDialog);
     }
 
     bool HowToPlayScreen::loadBoardImage(const std::string &path)

@@ -51,6 +51,7 @@ namespace App
         sf::VertexArray m_menuGradient;
         std::function<void(Option)> m_onOptionSelected;
         std::size_t m_selectedIndex = 0;
+        std::size_t m_hoveredIndex = static_cast<std::size_t>(-1);
         float m_blinkTimer = 0.f;
         float m_frameTimer = 0.f;
         int m_frameIndex = 0;

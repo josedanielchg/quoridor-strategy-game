@@ -63,6 +63,8 @@ namespace App
         GameMode m_gameMode = GameMode::SinglePlayer;
         bool m_isPlacingWall = false;
         Game::Orientation m_currentWallOri = Game::Orientation::Horizontal;
+        sf::Vector2i m_lastHoverGrid{-2, -2};
+        bool m_winSfxPlayed = false;
         bool m_cpuPending = false;
         bool m_cpuThinking = false;
         uint64_t m_stateVersion = 0;

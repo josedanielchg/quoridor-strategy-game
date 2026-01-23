@@ -1,4 +1,5 @@
 #include "ui/StateComponent.hpp"
+#include "audio/SfxManager.hpp"
 
 namespace UI
 {
@@ -60,7 +61,10 @@ namespace UI
     void StateComponent::updateHover(const sf::Vector2f &mousePos)
     {
         const bool isHovered = bounds().contains(mousePos);
-        m_state = isHovered ? ComponentState::Hovered : ComponentState::Normal;
+        const ComponentState nextState = isHovered ? ComponentState::Hovered : ComponentState::Normal;
+        if (nextState != m_state && nextState == ComponentState::Hovered)
+            Audio::SfxManager::instance().play(Audio::SfxId::Hover);
+        m_state = nextState;
     }
 
     bool StateComponent::handleClick(const sf::Vector2f &mousePos)
@@ -68,6 +72,7 @@ namespace UI
         if (!bounds().contains(mousePos))
             return false;
 
+        Audio::SfxManager::instance().play(Audio::SfxId::Click);
         onClick();
         return true;
     }

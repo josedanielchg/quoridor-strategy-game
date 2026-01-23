@@ -1,0 +1,32 @@
+# Format: speaker|board_image|text
+# Use \n for line breaks and \| to include a literal pipe.
+
+wizard|assets/tutorial/board_step_01.png|Welcome, traveler. This is Quoridor: a game of calm thinking and clever blocking.
+knight|assets/tutorial/board_step_01.png|I win by reaching the other side first... but walls can change everything.
+
+wizard|assets/tutorial/board_step_02.png|Your mission is simple: reach the opposite edge of the board.
+knight|assets/tutorial/board_step_02.png|First pawn to touch the enemy home row wins.
+
+wizard|assets/tutorial/board_step_03.png|On your turn, you choose one action.
+knight|assets/tutorial/board_step_03.png|Move your pawn... or place a wall. Not both.
+
+wizard|assets/tutorial/board_step_04.png|A normal move is one square: up, down, left, or right.
+knight|assets/tutorial/board_step_04.png|No diagonals. Move 1 tile (orthogonal only) You cannot cross walls.\nClick your pawn, then click a highlighted adjacent square.
+
+wizard|assets/tutorial/board_step_05.png|If the opponent is directly next to you, you may jump over them.
+knight|assets/tutorial/board_step_05.png|But only if no wall blocks the jump.
+
+wizard|assets/tutorial/board_step_06.png|Walls do not sit inside squares. They sit between squares.
+knight|assets/tutorial/board_step_06.png|A wall blocks movement through two edges at once.
+
+wizard|assets/tutorial/board_step_07.png|Walls must be fair. You may slow your rival, but never trap them completely.
+knight|assets/tutorial/board_step_07.png|Every player must always have at least one path to their goal.
+
+wizard|assets/tutorial/board_step_08.png|The game ends the moment a pawn reaches its target row.
+knight|assets/tutorial/board_step_08.png|No extra turns. No final wall. Just victory.
+
+wizard|assets/tutorial/board_step_09.png|Two plans exist: go faster, or slow the other.
+knight|assets/tutorial/board_step_09.png|The trick is choosing the right one at the right time.
+
+wizard|assets/tutorial/board_step_10.png|Let us summarize in one glance.
+knight|assets/tutorial/board_step_10.png|Then you are ready to play.

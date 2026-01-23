@@ -16,7 +16,7 @@ namespace App
         virtual void onEnter();
         virtual void onExit();
 
-        static constexpr float DEFAULT_MUSIC_VOLUME = 60.f;
+        static constexpr float DEFAULT_MUSIC_VOLUME = 40.f;
 
     protected:
         virtual const char *getMusicPath() const { return nullptr; }
