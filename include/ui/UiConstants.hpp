@@ -16,4 +16,15 @@ namespace UI
     inline constexpr float INGAME_BOTTOM_BAR_HEIGHT = 96.f;
     inline constexpr sf::Vector2f INGAME_MENU_ICON_SIZE{56.f, 56.f};
     inline constexpr float INGAME_MENU_ICON_PADDING = 24.f;
+
+    inline constexpr float HOWTO_LAYOUT_REF_WIDTH = 1920.f;
+    inline constexpr float HOWTO_LAYOUT_REF_HEIGHT = 1200.f;
+    inline constexpr float HOWTO_BOARD_LEFT_RATIO = 326.f / HOWTO_LAYOUT_REF_WIDTH;
+    inline constexpr float HOWTO_BOARD_TOP_RATIO = 210.f / HOWTO_LAYOUT_REF_HEIGHT;
+    inline constexpr float HOWTO_BOARD_WIDTH_RATIO = (1830.f - 326.f) / HOWTO_LAYOUT_REF_WIDTH;
+    inline constexpr float HOWTO_BOARD_HEIGHT_RATIO = (725.f - 210.f) / HOWTO_LAYOUT_REF_HEIGHT;
+    inline constexpr float HOWTO_DIALOGUE_LEFT_RATIO = 60.f / HOWTO_LAYOUT_REF_WIDTH;
+    inline constexpr float HOWTO_DIALOGUE_TOP_RATIO = 990.f / HOWTO_LAYOUT_REF_HEIGHT;
+    inline constexpr float HOWTO_DIALOGUE_WIDTH_RATIO = (1870.f - 60.f) / HOWTO_LAYOUT_REF_WIDTH;
+    inline constexpr float HOWTO_DIALOGUE_HEIGHT_RATIO = (1190.f - 990.f) / HOWTO_LAYOUT_REF_HEIGHT;
 }

@@ -24,12 +24,17 @@ namespace App
         if (!m_creditsScreen->init())
             std::cerr << "Warning: Credits screen failed\n";
 
+        m_howToPlayScreen = std::make_unique<HowToPlayScreen>();
+        if (!m_howToPlayScreen->init())
+            std::cerr << "Warning: How-to-play screen failed\n";
+
         m_gameScreen = std::make_unique<GameScreen>();
         if (!m_gameScreen->init())
             std::cerr << "Warning: Game screen failed\n";
 
         m_titleScreen->setOnStart([this]() { setCurrentScreen(m_menuScreen.get()); });
         m_creditsScreen->setOnBack([this]() { setCurrentScreen(m_menuScreen.get()); });
+        m_howToPlayScreen->setOnBack([this]() { setCurrentScreen(m_menuScreen.get()); });
         m_menuScreen->setOnOptionSelected([this](MenuScreen::Option option)
                                           {
                                               if (option == MenuScreen::Option::SinglePlayer)
@@ -41,6 +46,10 @@ namespace App
                                               {
                                                   m_gameScreen->setGameMode(GameScreen::GameMode::Multiplayer);
                                                   setCurrentScreen(m_gameScreen.get());
+                                              }
+                                              else if (option == MenuScreen::Option::HowToPlay)
+                                              {
+                                                  setCurrentScreen(m_howToPlayScreen.get());
                                               }
                                               else if (option == MenuScreen::Option::Credits)
                                               {

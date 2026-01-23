@@ -3,6 +3,7 @@
 #include <memory>
 #include "app/MenuScreen.hpp"
 #include "app/CreditsScreen.hpp"
+#include "app/HowToPlayScreen.hpp"
 #include "app/GameScreen.hpp"
 #include "app/Screen.hpp"
 #include "app/TitleScreen.hpp"
@@ -28,6 +29,7 @@ namespace App
         std::unique_ptr<TitleScreen> m_titleScreen;
         std::unique_ptr<MenuScreen> m_menuScreen;
         std::unique_ptr<CreditsScreen> m_creditsScreen;
+        std::unique_ptr<HowToPlayScreen> m_howToPlayScreen;
         std::unique_ptr<GameScreen> m_gameScreen;
         Screen *m_currentScreen = nullptr;
     };
