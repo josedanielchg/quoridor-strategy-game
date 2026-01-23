@@ -13,4 +13,7 @@ namespace UI
     inline constexpr sf::Vector2f WIN_BANNER_SIZE{685.f, 843.f};
     inline constexpr float WIN_BANNER_BUTTON_GAP = -8.f;
     inline constexpr float WIN_BANNER_BUTTON_SPAN = 537.f;
+    inline constexpr float INGAME_BOTTOM_BAR_HEIGHT = 96.f;
+    inline constexpr sf::Vector2f INGAME_MENU_ICON_SIZE{56.f, 56.f};
+    inline constexpr float INGAME_MENU_ICON_PADDING = 24.f;
 }

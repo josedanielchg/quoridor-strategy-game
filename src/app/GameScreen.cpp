@@ -25,6 +25,10 @@ namespace App
                          m_gameState.wallsRemaining[1],
                          Game::GameState::MAX_WALLS_PER_PLAYER);
 
+        if (!m_bottomBar.init())
+            std::cerr << "Warning: Bottom bar failed\n";
+        m_bottomBar.setWallPlacementActive(m_isPlacingWall);
+
         if (!m_pauseMenu.init())
         {
             std::cerr << "Warning: Pause menu failed\n";
@@ -63,6 +67,14 @@ namespace App
                                            m_onQuit();
                                    });
         }
+
+        m_bottomBar.setOnClick([this]()
+                               {
+                                   if (!m_pauseMenu.isEnabled() && !m_winnerMenu.isEnabled())
+                                       togglePauseMenu();
+                               });
+        m_bottomBar.setOnToggleWallMode([this]() { toggleWallMode(); });
+        m_bottomBar.setOnRotateWall([this]() { rotateWall(); });
 
         return true;
     }
@@ -107,6 +119,12 @@ namespace App
                     m_winnerMenu.handleClick(window, mouseBtn->position);
             }
             return;
+        }
+
+        if (!m_pauseMenu.isEnabled())
+        {
+            if (m_bottomBar.handleEvent(event, window))
+                return;
         }
 
         if (const auto *key = event.getIf<sf::Event::KeyPressed>())
@@ -180,6 +198,7 @@ namespace App
     void GameScreen::render(sf::RenderWindow &window)
     {
         m_renderer.render(window, m_board);
+        m_bottomBar.render(window);
         m_hud.render(window);
         m_pauseMenu.render(window);
         m_winnerMenu.render(window);
@@ -228,6 +247,7 @@ namespace App
     void GameScreen::toggleWallMode()
     {
         m_isPlacingWall = !m_isPlacingWall;
+        m_bottomBar.setWallPlacementActive(m_isPlacingWall);
         std::cout << "Wall Mode: " << (m_isPlacingWall ? "ON" : "OFF") << std::endl;
     }
 
@@ -261,6 +281,7 @@ namespace App
                         m_gameState.wallsRemaining[1],
                         Game::GameState::MAX_WALLS_PER_PLAYER);
             m_isPlacingWall = false;
+            m_bottomBar.setWallPlacementActive(m_isPlacingWall);
 
             runHeuristicTurn();
         }
@@ -312,6 +333,7 @@ namespace App
             m_winnerMenu.setEnabled(true);
             m_pauseMenu.setEnabled(false);
             m_isPlacingWall = false;
+            m_bottomBar.setWallPlacementActive(m_isPlacingWall);
         }
     }
 
@@ -349,5 +371,7 @@ namespace App
         m_currentWallOri = Game::Orientation::Horizontal;
         m_renderer.setHoveredTile({-1, -1});
         m_renderer.setWallPreview(false, {0, 0}, m_currentWallOri);
+        m_bottomBar.resetHover();
+        m_bottomBar.setWallPlacementActive(false);
     }
 }

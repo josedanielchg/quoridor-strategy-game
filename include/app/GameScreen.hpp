@@ -7,6 +7,7 @@
 #include "game/GameState.hpp"
 #include "ui/GameRenderer.hpp"
 #include "ui/Hud.hpp"
+#include "ui/InGameBottomBar.hpp"
 #include "ui/PauseMenu.hpp"
 #include "ui/WinnerMenu.hpp"
 
@@ -50,6 +51,7 @@ namespace App
         Game::GameState m_gameState;
         UI::GameRenderer m_renderer;
         UI::Hud m_hud;
+        UI::InGameBottomBar m_bottomBar;
         UI::PauseMenu m_pauseMenu;
         Game::HeuristicEngine m_heuristicEngine;
         UI::WinnerMenu m_winnerMenu;
