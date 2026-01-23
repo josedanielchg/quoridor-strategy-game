@@ -191,7 +191,7 @@ namespace UI
                                  m_viewSize.y / UI_DESIGN_SIZE.y);
         m_barHeight = UI::INGAME_BOTTOM_BAR_HEIGHT * m_layoutScale;
         m_barPadding = UI::INGAME_MENU_ICON_PADDING * m_layoutScale; // <BAR_PADDING_PX>
-        
+
         const sf::Vector2f iconSize = {m_viewSize.x * CONTROL_ICON_W_RATIO,
                                        m_viewSize.y * CONTROL_ICON_H_RATIO};
 
@@ -273,7 +273,7 @@ namespace UI
         if (m_hasFont)
         {
             fontSize = std::max(1u, static_cast<unsigned int>(
-                std::round(CONTROL_LABEL_FONT_SIZE * m_layoutScale)));
+                                        std::round(CONTROL_LABEL_FONT_SIZE * m_layoutScale)));
             m_wLabel.setCharacterSize(fontSize);
             m_rLabel.setCharacterSize(fontSize);
         }
@@ -317,7 +317,7 @@ namespace UI
             if (m_hasFont)
             {
                 fontSize = std::max(1u, static_cast<unsigned int>(
-                    std::round(CONTROL_LABEL_FONT_SIZE * m_layoutScale * fitScale)));
+                                            std::round(CONTROL_LABEL_FONT_SIZE * m_layoutScale * fitScale)));
                 m_wLabel.setCharacterSize(fontSize);
                 m_rLabel.setCharacterSize(fontSize);
                 wLabelWidth = measureWidth(m_wLabel);

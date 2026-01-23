@@ -9,7 +9,7 @@ namespace App
 
     Application::Application()
         : m_window(sf::VideoMode({1280, 720}), "Quoridor Isometric")
-{
+    {
         m_window.setFramerateLimit(60);
 
         m_titleScreen = std::make_unique<TitleScreen>();
@@ -32,9 +32,12 @@ namespace App
         if (!m_gameScreen->init())
             std::cerr << "Warning: Game screen failed\n";
 
-        m_titleScreen->setOnStart([this]() { setCurrentScreen(m_menuScreen.get()); });
-        m_creditsScreen->setOnBack([this]() { setCurrentScreen(m_menuScreen.get()); });
-        m_howToPlayScreen->setOnBack([this]() { setCurrentScreen(m_menuScreen.get()); });
+        m_titleScreen->setOnStart([this]()
+                                  { setCurrentScreen(m_menuScreen.get()); });
+        m_creditsScreen->setOnBack([this]()
+                                   { setCurrentScreen(m_menuScreen.get()); });
+        m_howToPlayScreen->setOnBack([this]()
+                                     { setCurrentScreen(m_menuScreen.get()); });
         m_menuScreen->setOnOptionSelected([this](MenuScreen::Option option)
                                           {
                                               if (option == MenuScreen::Option::SinglePlayer)
@@ -58,9 +61,9 @@ namespace App
                                               else
                                               {
                                                   std::cout << "Menu option not wired yet\n";
-                                              }
-                                          });
-        m_gameScreen->setOnQuit([this]() { setCurrentScreen(m_titleScreen.get()); });
+                                              } });
+        m_gameScreen->setOnQuit([this]()
+                                { setCurrentScreen(m_titleScreen.get()); });
 
         setCurrentScreen(m_titleScreen.get());
     }

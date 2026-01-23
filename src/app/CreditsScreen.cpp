@@ -57,8 +57,7 @@ namespace App
             "ART / IMAGES\n"
             "Gemini (Nano Banana Pro)\n"
             "[ Source: https://gemini.google.com/ ]\n"
-            "[ No commercial use ]"
-        );
+            "[ No commercial use ]");
 
         m_bodyText.setFillColor(sf::Color::White);
 

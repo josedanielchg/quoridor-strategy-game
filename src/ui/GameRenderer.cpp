@@ -95,7 +95,7 @@ namespace UI
         }
 
         s.setPosition(pos);
-        s.setColor(isPreview ? sf::Color(255,255,255,128) : sf::Color(255,255,255));
+        s.setColor(isPreview ? sf::Color(255, 255, 255, 128) : sf::Color(255, 255, 255));
         window.draw(s);
     }
 

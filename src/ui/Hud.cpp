@@ -112,9 +112,8 @@ namespace UI
             if (m_hasFont)
             {
                 const unsigned int fontSize = std::max(1u, static_cast<unsigned int>(
-                    std::round(WALLS_TEXT_FONT_SIZE * scale))
-                );
-                
+                                                               std::round(WALLS_TEXT_FONT_SIZE * scale)));
+
                 m_player1WallsText.setCharacterSize(fontSize);
                 m_player2WallsText.setCharacterSize(fontSize);
                 m_player1WallsText.setFillColor(isPlayer1Turn ? activeTint : inactiveTint);

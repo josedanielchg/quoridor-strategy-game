@@ -37,7 +37,8 @@ namespace Game
             {
                 ZobristTables t{};
                 std::mt19937_64 rng(0xC0FFEEULL);
-                auto next = [&rng]() { return rng(); };
+                auto next = [&rng]()
+                { return rng(); };
 
                 for (int p = 0; p < 2; ++p)
                 {

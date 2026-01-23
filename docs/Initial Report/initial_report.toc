@@ -1,0 +1,7 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Aperçu du projet}{2}{section.1}%
+\contentsline {section}{\numberline {2}Présentation du jeu : qu’est-ce que ``Corridor'' ?}{2}{section.2}%
+\contentsline {section}{\numberline {3}Fonctionnement du jeu (niveau système)}{2}{section.3}%
+\contentsline {section}{\numberline {4}Pile technique}{2}{section.4}%
+\contentsline {section}{\numberline {5}Structure du projet}{3}{section.5}%
+\contentsline {section}{\numberline {6}Installation et exécution}{4}{section.6}%

@@ -159,7 +159,8 @@ namespace Game
         m_walls.emplace_back(x, y, orientation);
         return true;
     }
-    void Board::toggleWall(int x, int y, Orientation ori, bool blocking){
+    void Board::toggleWall(int x, int y, Orientation ori, bool blocking)
+    {
         if (ori == Orientation::Horizontal)
         {
             if (blocking)
