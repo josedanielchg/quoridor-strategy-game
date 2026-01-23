@@ -44,6 +44,7 @@ namespace App
         void updateDialogueText();
         sf::FloatRect computeBoardRect(const sf::View &view) const;
         sf::FloatRect computeDialogueRect(const sf::View &view) const;
+        sf::FloatRect computeNameplateRect(const sf::View &view) const;
         static std::string wrapText(const std::string &input,
                                     const sf::Font &font,
                                     unsigned int characterSize,
@@ -57,6 +58,8 @@ namespace App
         sf::Sprite m_boardSprite;
         sf::Font m_font;
         sf::Text m_dialogueText;
+        sf::Text m_speakerNameText;
+        sf::Text m_speakerNameShadow;
         sf::ConvexShape m_continueIndicator;
         std::vector<TutorialStep> m_steps;
         std::size_t m_currentStep = 0;
@@ -67,5 +70,6 @@ namespace App
         float m_blinkTimer = 0.f;
         sf::FloatRect m_boardRect;
         sf::FloatRect m_dialogueRect;
+        sf::FloatRect m_nameplateRect;
     };
 }

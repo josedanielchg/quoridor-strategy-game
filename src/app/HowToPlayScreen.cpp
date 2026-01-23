@@ -12,8 +12,10 @@
 
 namespace App
 {
-    static constexpr unsigned int DIALOGUE_FONT_SIZE = 30;
+    static constexpr unsigned int DIALOGUE_FONT_SIZE = 48;
+    static constexpr unsigned int NAMEPLATE_FONT_SIZE = 32;
     static constexpr float DIALOGUE_PADDING = 24.f;
+    static constexpr float NAMEPLATE_PADDING = 10.f;
     static constexpr float INDICATOR_SIZE = 14.f;
     static constexpr float INDICATOR_PADDING = 18.f;
     static constexpr float INDICATOR_BLINK_SPEED = 4.2f;
@@ -26,7 +28,9 @@ namespace App
     HowToPlayScreen::HowToPlayScreen()
         : m_backgroundSprite(m_knightBackgroundTexture),
           m_boardSprite(m_boardTexture),
-          m_dialogueText(m_font)
+          m_dialogueText(m_font),
+          m_speakerNameText(m_font),
+          m_speakerNameShadow(m_font)
     {
     }
 
@@ -53,6 +57,8 @@ namespace App
         {
             m_hasFont = true;
             m_dialogueText.setFillColor(sf::Color::White);
+            m_speakerNameText.setFillColor(sf::Color::White);
+            m_speakerNameShadow.setFillColor(sf::Color(0, 0, 0, 180));
         }
         else
         {
@@ -167,6 +173,8 @@ namespace App
         if (m_hasFont)
         {
             window.draw(m_dialogueText);
+            window.draw(m_speakerNameShadow);
+            window.draw(m_speakerNameText);
             window.draw(m_continueIndicator);
         }
 
@@ -191,6 +199,7 @@ namespace App
 
         m_boardRect = computeBoardRect(view);
         m_dialogueRect = computeDialogueRect(view);
+        m_nameplateRect = computeNameplateRect(view);
 
         if (m_hasBoardImage)
         {
@@ -213,11 +222,27 @@ namespace App
             const unsigned int textSize = std::max(1u, static_cast<unsigned int>(
                 std::round(DIALOGUE_FONT_SIZE * textScale)));
             m_dialogueText.setCharacterSize(textSize);
+            const unsigned int nameSize = std::max(1u, static_cast<unsigned int>(
+                std::round(NAMEPLATE_FONT_SIZE * textScale)));
+            m_speakerNameText.setCharacterSize(nameSize);
+            m_speakerNameShadow.setCharacterSize(nameSize);
             updateDialogueText();
 
             const float padding = DIALOGUE_PADDING * textScale;
             m_dialogueText.setPosition({m_dialogueRect.position.x + padding,
                                         m_dialogueRect.position.y + padding});
+
+            const float namePadding = NAMEPLATE_PADDING * textScale;
+            const sf::Vector2f namePos{
+                m_nameplateRect.position.x + namePadding,
+                m_nameplateRect.position.y + m_nameplateRect.size.y / 2.f};
+            const sf::FloatRect nameBounds = m_speakerNameText.getLocalBounds();
+            m_speakerNameText.setOrigin({nameBounds.position.x,
+                                         nameBounds.position.y + nameBounds.size.y / 2.f});
+            m_speakerNameText.setPosition(namePos);
+            m_speakerNameShadow.setOrigin(m_speakerNameText.getOrigin());
+            m_speakerNameShadow.setPosition({namePos.x + 2.f * textScale,
+                                             namePos.y + 2.f * textScale});
 
             const float indicatorSize = INDICATOR_SIZE * textScale;
             m_continueIndicator.setPoint(0, {0.f, 0.f});
@@ -242,6 +267,13 @@ namespace App
             m_backgroundSprite.setTexture(m_wizardBackgroundTexture, true);
         else
             m_backgroundSprite.setTexture(m_knightBackgroundTexture, true);
+
+        if (m_hasFont)
+        {
+            const char *label = (step.speaker == TutorialStep::Speaker::Wizard) ? "WIZARD" : "KNIGHT";
+            m_speakerNameText.setString(label);
+            m_speakerNameShadow.setString(label);
+        }
 
         const sf::Texture &bgTexture = m_backgroundSprite.getTexture();
         const sf::Vector2u size = bgTexture.getSize();
@@ -323,6 +355,16 @@ namespace App
         const float top = size.y * UI::HOWTO_DIALOGUE_TOP_RATIO;
         const float width = size.x * UI::HOWTO_DIALOGUE_WIDTH_RATIO;
         const float height = size.y * UI::HOWTO_DIALOGUE_HEIGHT_RATIO;
+        return sf::FloatRect({left, top}, {width, height});
+    }
+
+    sf::FloatRect HowToPlayScreen::computeNameplateRect(const sf::View &view) const
+    {
+        const sf::Vector2f size = view.getSize();
+        const float left = size.x * UI::HOWTO_NAMEPLATE_LEFT_RATIO;
+        const float top = size.y * UI::HOWTO_NAMEPLATE_TOP_RATIO;
+        const float width = size.x * UI::HOWTO_NAMEPLATE_WIDTH_RATIO;
+        const float height = size.y * UI::HOWTO_NAMEPLATE_HEIGHT_RATIO;
         return sf::FloatRect({left, top}, {width, height});
     }
 

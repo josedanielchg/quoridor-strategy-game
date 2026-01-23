@@ -27,4 +27,8 @@ namespace UI
     inline constexpr float HOWTO_DIALOGUE_TOP_RATIO = 990.f / HOWTO_LAYOUT_REF_HEIGHT;
     inline constexpr float HOWTO_DIALOGUE_WIDTH_RATIO = (1870.f - 60.f) / HOWTO_LAYOUT_REF_WIDTH;
     inline constexpr float HOWTO_DIALOGUE_HEIGHT_RATIO = (1190.f - 990.f) / HOWTO_LAYOUT_REF_HEIGHT;
+    inline constexpr float HOWTO_NAMEPLATE_LEFT_RATIO = 53.f / HOWTO_LAYOUT_REF_WIDTH;
+    inline constexpr float HOWTO_NAMEPLATE_TOP_RATIO = 960.f / HOWTO_LAYOUT_REF_HEIGHT;
+    inline constexpr float HOWTO_NAMEPLATE_WIDTH_RATIO = 191.f / HOWTO_LAYOUT_REF_WIDTH;
+    inline constexpr float HOWTO_NAMEPLATE_HEIGHT_RATIO = 28.f / HOWTO_LAYOUT_REF_HEIGHT;
 }
