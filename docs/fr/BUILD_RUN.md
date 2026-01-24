@@ -31,7 +31,13 @@
 ### Dependances Linux
 Installez les bibliotheques de developpement requises:
 ```bash
-sudo apt-get install libvorbis-dev
+sudo apt install -y \
+  build-essential git \
+  libx11-dev libxrandr-dev libxcursor-dev libxi-dev \
+  libudev-dev \
+  libgl1-mesa-dev \
+  libfreetype-dev \
+  libvorbis-dev libflac-dev
 ```
 
 ## Cloner
