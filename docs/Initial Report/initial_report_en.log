@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.11.11)  24 JAN 2026 17:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.11.11)  24 JAN 2026 18:43
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -581,7 +581,7 @@ l.133 \newpage
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 179.
  (C:\Users\jdani\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
 File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-) [3] [4] (initial_report_en.aux)
+) [3] [4] [5] (initial_report_en.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -590,17 +590,17 @@ Package rerunfilecheck Info: File `initial_report_en.out' has not changed.
 (rerunfilecheck)             Checksum: 421DED53981E42AB0D202E76CDFF25AE;995.
  ) 
 Here is how much of TeX's memory you used:
- 20348 strings out of 474486
- 381509 string characters out of 5743754
+ 20349 strings out of 474486
+ 381515 string characters out of 5743754
  1934542 words of memory out of 5000000
  42409 multiletter control sequences out of 15000+600000
  565209 words of font info for 47 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,12n,93p,536b,1161s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 79i,12n,93p,536b,1201s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\jdani\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1095.pk> <C:\Users\jdani\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk> <C:\Users\jdani\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\jdani\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\jdani\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\jdani\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\jdani\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2074.pk> <C:\Users\jdani\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1440.pk>
-Output written on initial_report_en.pdf (5 pages, 132975 bytes).
+Output written on initial_report_en.pdf (6 pages, 136991 bytes).
 PDF statistics:
- 389 PDF objects out of 1000 (max. 8388607)
- 11 named destinations out of 1000 (max. 500000)
+ 402 PDF objects out of 1000 (max. 8388607)
+ 12 named destinations out of 1000 (max. 500000)
  54 words of extra memory for PDF output out of 10000 (max. 10000000)
 

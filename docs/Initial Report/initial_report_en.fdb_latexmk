@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1769271996.47577 "z:/Proyectos/Juegos/quoridor-strategy-game/docs/Initial Report/initial_report_en.tex" "initial_report_en.pdf" "initial_report_en" 1769271997.83691 0
+["pdflatex"] 1769276632.4342 "z:/Proyectos/Juegos/quoridor-strategy-game/docs/Initial Report/initial_report_en.tex" "initial_report_en.pdf" "initial_report_en" 1769276633.91113 0
   "C:/Users/jdani/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1769261254.151 82507 a9eef8696c92627b87e9975edea03b2a ""
   "C:/Users/jdani/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1095.pk" 1769261261.54553 28976 a7b720cc568ace3c422dffffd37e7fb6 ""
   "C:/Users/jdani/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1200.pk" 1769261259.97569 31952 15b3f1b5853155492c1bfb27b40e3555 ""
@@ -106,10 +106,10 @@
   "C:/Users/jdani/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/jdani/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1700127522 55487 80a65caedd3722f4c20a14a69e785d8f ""
   "imgs/logo_ensta_2025.png" 1769141274.73047 20595 14758e8df55682366e80df99368f24a3 ""
-  "initial_report_en.aux" 1769271997.59495 963 50f7763059e7777c5c66af6c5c36ccdf "pdflatex"
-  "initial_report_en.out" 1769271997.59797 995 421ded53981e42ab0d202e76cdff25ae "pdflatex"
-  "initial_report_en.toc" 1769271997.60098 505 7bb388bbc28606bb01e5b290913a8993 "pdflatex"
-  "z:/Proyectos/Juegos/quoridor-strategy-game/docs/Initial Report/initial_report_en.tex" 1769271989.87226 10488 25f712bd50cc74e40e6d4b71aec23669 ""
+  "initial_report_en.aux" 1769276633.63732 963 085f34e4d111d28d340ac9983ee9c80c "pdflatex"
+  "initial_report_en.out" 1769276633.63857 995 421ded53981e42ab0d202e76cdff25ae "pdflatex"
+  "initial_report_en.toc" 1769276633.64251 505 7bb388bbc28606bb01e5b290913a8993 "pdflatex"
+  "z:/Proyectos/Juegos/quoridor-strategy-game/docs/Initial Report/initial_report_en.tex" 1769276631.75026 11015 64d7bd3c334fe0bb542be0bf1847b641 ""
   (generated)
   "initial_report_en.aux"
   "initial_report_en.log"
