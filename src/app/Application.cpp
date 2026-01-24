@@ -10,6 +10,7 @@
 namespace App
 {
 
+    // Build window, initialize screens, and wire navigation callbacks. #
     Application::Application()
         : m_window(sf::VideoMode({1280, 720}), "Quoridor Isometric")
     {
@@ -82,6 +83,7 @@ namespace App
         setCurrentScreen(m_titleScreen.get());
     }
 
+    // Poll window events and forward them to the active screen. #
     void Application::processEvents()
     {
         while (const std::optional event = m_window.pollEvent())
@@ -103,6 +105,7 @@ namespace App
         }
     }
 
+    // Compute delta time and update the active screen. #
     void Application::update()
     {
         const float dt = m_clock.restart().asSeconds();
@@ -110,6 +113,7 @@ namespace App
             m_currentScreen->update(dt);
     }
 
+    // Clear the frame, draw the active screen, and present. #
     void Application::render()
     {
         m_window.clear(sf::Color::Black);
@@ -120,6 +124,7 @@ namespace App
         m_window.display();
     }
 
+    // Main loop: process events, update state, then render. #
     void Application::run()
     {
         while (m_window.isOpen())
@@ -130,6 +135,7 @@ namespace App
         }
     }
 
+    // Switch active screen and run enter/exit hooks. #
     void Application::setCurrentScreen(Screen *screen)
     {
         if (m_currentScreen == screen)

@@ -14,13 +14,19 @@ namespace App
     class Application
     {
     public:
+        // Build window, initialize screens, and wire navigation callbacks.
         Application();
+        // Run the main loop until the window closes.
         void run();
 
     private:
+        // Pump OS/window events and forward to the active screen.
         void processEvents();
+        // Advance the active screen simulation for the current frame.
         void update();
+        // Draw the active screen to the window.
         void render();
+        // Switch active screen and run enter/exit hooks.
         void setCurrentScreen(Screen *screen);
 
     private:
