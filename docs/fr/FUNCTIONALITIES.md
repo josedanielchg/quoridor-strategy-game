@@ -32,6 +32,3 @@ Le jeu utilise une interface basee sur des ecrans avec rendu isometrique et incl
 ## Comment utiliser
 Les interactions a la souris sont utilisees pour le survol/apercu du plateau, et les commandes clavier sont documentees separement.
 Voir [Jouabilite et commandes](../fr/CONTROLS.md) pour le mapping complet.
-
-## Limitations / contraintes connues
-- TODO: Les limitations ou contraintes connues ne sont pas documentees dans le README pour le moment.

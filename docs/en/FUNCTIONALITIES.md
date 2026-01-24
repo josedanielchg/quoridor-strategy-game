@@ -32,6 +32,3 @@ The game uses a screen-based UI with isometric rendering and includes a heuristi
 ## How to Use
 Mouse interaction is used for board hover/preview, and keyboard controls are documented separately.
 See [Gameplay & Controls](CONTROLS.md) for the complete mapping.
-
-## Limitations / Known Constraints
-- TODO: Limitations or known constraints are not documented in README yet.
