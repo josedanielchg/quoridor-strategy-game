@@ -52,7 +52,7 @@ Step-by-step:
 2) Clone
 
 ```bash
-git clone <LINK>
+git clone https://github.com/josedanielchg/quoridor-strategy-game.git
 cd QuoridorGame
 ```
 
@@ -113,7 +113,7 @@ This project is configured for static SFML by default. If you switch to shared l
 SFML DLLs next to `QuoridorGame.exe`.
 
 **FetchContent fails to download SFML**
-Verify Git is installed and in PATH, then delete `<BUILD_FOLDER_NAME>/` and reconfigure:
+Verify Git is installed and in PATH, then delete `build/` and reconfigure:
 
 ```bash
 cmake -S . -B build
@@ -141,11 +141,11 @@ Files:
 - `docs/media/win_screen.png`
 
 ## Documentation
-- [Project Structure](Docs/EN/PROJECT_STRUCTURE.md)
-- [OOP Concepts Used](Docs/EN/OOP_CONCEPTS_USED.md)
-- [Code Quality](Docs/EN/CODE_QUALITY.md)
-- [Heuristic AI](Docs/EN/HEURISTIC_AI.md)
-- [Project Management](Docs/EN/PROJECT_MANAGEMENT.md)
+- [Project Structure](docs/EN/PROJECT_STRUCTURE.md)
+- [OOP Concepts Used](docs/EN/OOP_CONCEPTS_USED.md)
+- [Code Quality](docs/EN/CODE_QUALITY.md)
+- [Heuristic AI](docs/EN/HEURISTIC_AI.md)
+- [Project Management](docs/EN/PROJECT_MANAGEMENT.md)
 
 ## Controls
 
@@ -289,20 +289,3 @@ This project is licensed under `<LICENSE_NAME>`. See `LICENSE` for details.
 2. Create a feature branch: `git checkout -b feature/my-change`
 3. Commit your changes
 4. Push to your fork and open a Pull Request
-
-## Additional Notes
-
-### Placeholders to replace (from previous README)
-Before publishing this README, replace:
-- `<PROJECT_NAME>`: repository/project display name
-- `<EXECUTABLE_NAME>`: built binary name (e.g., `QuoridorGame`)
-- `<BUILD_FOLDER_NAME>`: build directory name (commonly `build`)
-- `<CMAKE_MIN_VERSION>`: minimum required CMake version
-- `<SFML_VERSION>`: SFML version used by the project
-- `<LINK>`: repository clone URL
-- `<LICENSE_NAME>`: license identifier
-- Credits: developer names and asset/tool notes
-- Add or replace demo media under `docs/media/`
-
-### Legacy notes
-- The previous README referenced placeholder headers (`PathFinder.hpp`, `InputHandler.hpp`, `Renderer.hpp`). These files are not present in the current repository.
