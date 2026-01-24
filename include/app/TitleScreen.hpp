@@ -10,18 +10,18 @@ namespace App
     public:
         static constexpr const char *MUSIC_PATH = "assets/sound/main_theme.mp3";
 
-        TitleScreen();
-        bool init() override;
-        void setOnStart(std::function<void()> onStart);
+        TitleScreen(); // Build title screen #
+        bool init() override; // Load assets #
+        void setOnStart(std::function<void()> onStart); // Register start callback #
 
-        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override;
-        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override;
-        void update(float dt) override;
-        void render(sf::RenderWindow &window) override;
+        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override; // Handle input #
+        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override; // Reflow layout #
+        void update(float dt) override; // Update timers #
+        void render(sf::RenderWindow &window) override; // Draw screen #
 
     private:
-        const char *getMusicPath() const override { return MUSIC_PATH; }
-        void updateLayout(const sf::View &view);
+        const char *getMusicPath() const override { return MUSIC_PATH; } // Music path #
+        void updateLayout(const sf::View &view); // Scale/position elements #
 
         static constexpr int SPRITE_COLUMNS = 12;
         static constexpr int SPRITE_ROWS = 11;

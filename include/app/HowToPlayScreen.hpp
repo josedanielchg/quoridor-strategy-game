@@ -25,31 +25,31 @@ namespace App
             std::string boardImagePath;
         };
 
-        HowToPlayScreen();
-        bool init() override;
-        void setOnBack(std::function<void()> onBack);
+        HowToPlayScreen(); // Build tutorial screen #
+        bool init() override; // Load tutorial assets #
+        void setOnBack(std::function<void()> onBack); // Register back callback #
 
-        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override;
-        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override;
-        void update(float dt) override;
-        void render(sf::RenderWindow &window) override;
-        void onEnter() override;
+        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override; // Handle input #
+        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override; // Reflow layout #
+        void update(float dt) override; // Update timers #
+        void render(sf::RenderWindow &window) override; // Draw screen #
+        void onEnter() override; // Enter screen #
 
     private:
-        const char *getMusicPath() const override { return MUSIC_PATH; }
-        void updateLayout(const sf::View &view);
-        void applyStep(std::size_t index);
-        void advanceStep();
-        bool loadBoardImage(const std::string &path);
-        void updateDialogueText();
-        sf::FloatRect computeBoardRect(const sf::View &view) const;
-        sf::FloatRect computeDialogueRect(const sf::View &view) const;
-        sf::FloatRect computeNameplateRect(const sf::View &view) const;
+        const char *getMusicPath() const override { return MUSIC_PATH; } // Music path #
+        void updateLayout(const sf::View &view); // Scale/position elements #
+        void applyStep(std::size_t index); // Apply step #
+        void advanceStep(); // Next step #
+        bool loadBoardImage(const std::string &path); // Load board image #
+        void updateDialogueText(); // Update dialogue text #
+        sf::FloatRect computeBoardRect(const sf::View &view) const; // Board rect #
+        sf::FloatRect computeDialogueRect(const sf::View &view) const; // Dialogue rect #
+        sf::FloatRect computeNameplateRect(const sf::View &view) const; // Nameplate rect #
         static std::string wrapText(const std::string &input,
                                     const sf::Font &font,
                                     unsigned int characterSize,
-                                    float maxWidth);
-        static std::vector<TutorialStep> loadTutorialStepsFromFile(const std::string &path);
+                                    float maxWidth); // Wrap text #
+        static std::vector<TutorialStep> loadTutorialStepsFromFile(const std::string &path); // Load steps #
 
         sf::Texture m_knightBackgroundTexture;
         sf::Texture m_wizardBackgroundTexture;

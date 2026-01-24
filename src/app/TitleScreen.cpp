@@ -13,6 +13,7 @@ namespace App
     static constexpr unsigned int PROMPT_FONT_SIZE = 38;
     static const sf::Color PROMPT_ACCENT_COLOR(0xFD, 0x41, 0x04);
 
+    // Build title screen sprites and gradient geometry. #
     TitleScreen::TitleScreen()
         : m_backgroundSprite(m_backgroundTexture),
           m_promptLine1(m_font),
@@ -21,6 +22,7 @@ namespace App
     {
     }
 
+    // Load background, font, and prompt text. #
     bool TitleScreen::init()
     {
         if (!m_backgroundTexture.loadFromFile("assets/textures/quoridor-bg-sprite-sheet.png"))
@@ -54,11 +56,13 @@ namespace App
         return true;
     }
 
+    // Register callback to start the game. #
     void TitleScreen::setOnStart(std::function<void()> onStart)
     {
         m_onStart = std::move(onStart);
     }
 
+    // Handle key press to start the game. #
     void TitleScreen::handleEvent(const sf::Event &event, sf::RenderWindow & /*window*/)
     {
         if (event.is<sf::Event::KeyPressed>())
@@ -68,11 +72,13 @@ namespace App
         }
     }
 
+    // Reflow layout on resize. #
     void TitleScreen::handleResize(sf::RenderWindow &window, sf::Vector2u /*size*/)
     {
         updateLayout(UI::makeLetterboxView(window.getSize()));
     }
 
+    // Animate prompt blink and background frames. #
     void TitleScreen::update(float dt)
     {
         m_blinkTimer += dt;
@@ -101,6 +107,7 @@ namespace App
         }
     }
 
+    // Draw background and blinking prompt. #
     void TitleScreen::render(sf::RenderWindow &window)
     {
         sf::View oldView = window.getView();
@@ -115,6 +122,7 @@ namespace App
         window.setView(oldView);
     }
 
+    // Compute positions, sizes, and gradient for current view. #
     void TitleScreen::updateLayout(const sf::View &view)
     {
         const sf::Vector2f viewSize = view.getSize();

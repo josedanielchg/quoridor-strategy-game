@@ -19,22 +19,22 @@ namespace App
             Credits
         };
 
-        MenuScreen();
-        bool init() override;
-        void setOnOptionSelected(std::function<void(Option)> onSelect);
+        MenuScreen(); // Build menu screen #
+        bool init() override; // Load assets #
+        void setOnOptionSelected(std::function<void(Option)> onSelect); // Register selection callback #
 
-        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override;
-        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override;
-        void update(float dt) override;
-        void render(sf::RenderWindow &window) override;
+        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override; // Handle input #
+        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override; // Reflow layout #
+        void update(float dt) override; // Update timers #
+        void render(sf::RenderWindow &window) override; // Draw screen #
 
     private:
-        const char *getMusicPath() const override { return MUSIC_PATH; }
-        void updateLayout(const sf::View &view);
-        void setSelectedIndex(std::size_t index);
-        void applyOptionColors(std::uint8_t selectedAlpha);
-        void selectNext(int direction);
-        void activateSelected();
+        const char *getMusicPath() const override { return MUSIC_PATH; } // Music path #
+        void updateLayout(const sf::View &view); // Scale/position elements #
+        void setSelectedIndex(std::size_t index); // Set selection #
+        void applyOptionColors(std::uint8_t selectedAlpha); // Apply colors #
+        void selectNext(int direction); // Step selection #
+        void activateSelected(); // Run selection #
 
         static constexpr int SPRITE_COLUMNS = 12;
         static constexpr int SPRITE_ROWS = 11;

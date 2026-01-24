@@ -10,20 +10,20 @@ namespace App
     public:
         static constexpr const char *MUSIC_PATH = "assets/sound/main_theme.mp3";
 
-        CreditsScreen();
-        bool init() override;
-        void setOnBack(std::function<void()> onBack);
+        CreditsScreen(); // Build screen state #
+        bool init() override; // Load assets and text #
+        void setOnBack(std::function<void()> onBack); // Register back callback #
 
-        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override;
-        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override;
-        void update(float dt) override;
-        void render(sf::RenderWindow &window) override;
+        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override; // Handle input #
+        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override; // Reflow layout #
+        void update(float dt) override; // Advance animation #
+        void render(sf::RenderWindow &window) override; // Draw screen #
 
     private:
-        const char *getMusicPath() const override { return MUSIC_PATH; }
-        void updateLayout(const sf::View &view);
-        void layoutText(const sf::Vector2f &center, float textScale);
-        void updateTextOrigins(sf::Text &text);
+        const char *getMusicPath() const override { return MUSIC_PATH; } // Music path #
+        void updateLayout(const sf::View &view); // Scale/position elements #
+        void layoutText(const sf::Vector2f &center, float textScale); // Place text blocks #
+        void updateTextOrigins(sf::Text &text); // Center text origin #
 
         static constexpr int SPRITE_COLUMNS = 7;
         static constexpr int SPRITE_ROWS = 5;

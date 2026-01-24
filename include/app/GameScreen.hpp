@@ -26,29 +26,30 @@ namespace App
             Multiplayer
         };
 
-        bool init() override;
-        void setGameMode(GameMode mode);
-        void setOnQuit(std::function<void()> onQuit);
+        bool init() override; // Init gameplay and UI #
+        void setGameMode(GameMode mode); // Set game mode #
+        void setOnQuit(std::function<void()> onQuit); // Register quit callback #
 
-        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override;
-        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override;
-        void update(float dt) override;
-        void render(sf::RenderWindow &window) override;
-        void onEnter() override;
-        void onExit() override;
+        void handleEvent(const sf::Event &event, sf::RenderWindow &window) override; // Handle input #
+        void handleResize(sf::RenderWindow &window, sf::Vector2u size) override; // Reflow views #
+        void update(float dt) override; // Update game loop #
+        void render(sf::RenderWindow &window) override; // Draw gameplay #
+        void onEnter() override; // Enter screen #
+        void onExit() override; // Exit screen #
 
     private:
-        const char *getMusicPath() const override { return MUSIC_PATH; }
-        void attemptMove(sf::Vector2i gridPos);
-        void resetGame();
-        void togglePauseMenu();
-        void attemptPlaceWall(sf::Vector2i gridPos);
-        void toggleWallMode();
-        void rotateWall();
-        void checkWinCondition(int playerId);
-        void runHeuristicTurn();
-        void resetUIState();
-        void updateHeuristicTurn();
+        const char *getMusicPath() const override { return MUSIC_PATH; } // Music path #
+        void attemptMove(sf::Vector2i gridPos); // Try pawn move #
+        void resetGame(); // Reset gameplay state #
+        // Toggle pause menu visibility.
+        void togglePauseMenu(); // Toggle pause menu #
+        void attemptPlaceWall(sf::Vector2i gridPos); // Try wall placement #
+        void toggleWallMode(); // Toggle wall mode #
+        void rotateWall(); // Rotate wall orientation #
+        void checkWinCondition(int playerId); // Check winner #
+        void runHeuristicTurn(); // Schedule CPU turn #
+        void resetUIState(); // Reset UI flags #
+        void updateHeuristicTurn(); // Update CPU turn #
 
         Game::Board m_board;
         Game::GameState m_gameState;

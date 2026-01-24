@@ -13,6 +13,7 @@ namespace App
     static const char *BACKGROUND_PATH = "assets/textures/credits-bg-spirte-sheet.png";
     static const char *FONT_PATH = "assets/fonts/pixelon.ttf";
 
+    // Build SFML text/sprite members with the shared font/texture. #
     CreditsScreen::CreditsScreen()
         : m_backgroundSprite(m_backgroundTexture),
           m_titleText(m_font),
@@ -22,6 +23,7 @@ namespace App
     {
     }
 
+    // Load background, font, and initialize credit text/shadows. #
     bool CreditsScreen::init()
     {
         if (!m_backgroundTexture.loadFromFile(BACKGROUND_PATH))
@@ -69,11 +71,13 @@ namespace App
         return true;
     }
 
+    // Register a callback for leaving the credits screen. #
     void CreditsScreen::setOnBack(std::function<void()> onBack)
     {
         m_onBack = std::move(onBack);
     }
 
+    // Handle input: ESC or left click triggers the back callback. #
     void CreditsScreen::handleEvent(const sf::Event &event, sf::RenderWindow &window)
     {
         if (event.is<sf::Event::Resized>())
@@ -99,11 +103,13 @@ namespace App
         }
     }
 
+    // Update layout based on the letterboxed UI view. #
     void CreditsScreen::handleResize(sf::RenderWindow &window, sf::Vector2u /*size*/)
     {
         updateLayout(UI::makeLetterboxView(window.getSize()));
     }
 
+    // Advance the background sprite-sheet animation. #
     void CreditsScreen::update(float dt)
     {
         m_frameTimer += dt;
@@ -121,6 +127,7 @@ namespace App
         }
     }
 
+    // Draw the animated background and credit text in UI view space. #
     void CreditsScreen::render(sf::RenderWindow &window)
     {
         sf::View oldView = window.getView();
@@ -136,6 +143,7 @@ namespace App
         window.setView(oldView);
     }
 
+    // Scale background and text sizes to match the current view. #
     void CreditsScreen::updateLayout(const sf::View &view)
     {
         const sf::Vector2f viewSize = view.getSize();
@@ -157,6 +165,7 @@ namespace App
         layoutText(viewCenter, textScale);
     }
 
+    // Position title/body text and shadows with offsets for readability. #
     void CreditsScreen::layoutText(const sf::Vector2f &center, float textScale)
     {
         updateTextOrigins(m_titleText);
@@ -182,6 +191,7 @@ namespace App
         m_bodyShadow.setPosition(bodyPos + shadowOffset);
     }
 
+    // Center the origin of an SFML text object for alignment. #
     void CreditsScreen::updateTextOrigins(sf::Text &text)
     {
         const sf::FloatRect bounds = text.getLocalBounds();

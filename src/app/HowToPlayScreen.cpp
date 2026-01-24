@@ -26,6 +26,7 @@ namespace App
     static const char *FONT_PATH = "assets/fonts/pixelon.ttf";
     static const char *SCRIPT_PATH = "assets/tutorial/how-to-play-tutorial.txt";
 
+    // Build sprites and texts bound to their textures/fonts. #
     HowToPlayScreen::HowToPlayScreen()
         : m_backgroundSprite(m_knightBackgroundTexture),
           m_boardSprite(m_boardTexture),
@@ -35,6 +36,7 @@ namespace App
     {
     }
 
+    // Load background assets, font, and tutorial steps. #
     bool HowToPlayScreen::init()
     {
         if (!m_knightBackgroundTexture.loadFromFile(KNIGHT_BACKGROUND_PATH))
@@ -86,11 +88,13 @@ namespace App
         return true;
     }
 
+    // Register callback to return to the menu. #
     void HowToPlayScreen::setOnBack(std::function<void()> onBack)
     {
         m_onBack = std::move(onBack);
     }
 
+    // Handle advance input (enter/space/click). #
     void HowToPlayScreen::handleEvent(const sf::Event &event, sf::RenderWindow &window)
     {
         (void)window;
@@ -114,17 +118,20 @@ namespace App
         }
     }
 
+    // Reflow layout on resize. #
     void HowToPlayScreen::handleResize(sf::RenderWindow &window, sf::Vector2u /*size*/)
     {
         updateLayout(UI::makeLetterboxView(window.getSize()));
     }
 
+    // Reset tutorial to the first step when entering. #
     void HowToPlayScreen::onEnter()
     {
         Screen::onEnter();
         applyStep(0);
     }
 
+    // Animate the continue indicator blink. #
     void HowToPlayScreen::update(float dt)
     {
         m_blinkTimer += dt;
@@ -135,6 +142,7 @@ namespace App
         m_continueIndicator.setFillColor(color);
     }
 
+    // Draw background, board image, dialogue, and indicator. #
     void HowToPlayScreen::render(sf::RenderWindow &window)
     {
         sf::View uiView = UI::makeLetterboxView(window.getSize());
@@ -182,6 +190,7 @@ namespace App
         window.setView(oldView);
     }
 
+    // Compute rectangles and update text/sprite layout. #
     void HowToPlayScreen::updateLayout(const sf::View &view)
     {
         const sf::Vector2f viewSize = view.getSize();
@@ -255,6 +264,7 @@ namespace App
         }
     }
 
+    // Apply the requested tutorial step and update assets. #
     void HowToPlayScreen::applyStep(std::size_t index)
     {
         if (index >= m_steps.size())
@@ -288,6 +298,7 @@ namespace App
         updateDialogueText();
     }
 
+    // Advance to the next tutorial step or exit. #
     void HowToPlayScreen::advanceStep()
     {
         if (m_steps.empty())
@@ -306,6 +317,7 @@ namespace App
             Audio::SfxManager::instance().play(Audio::SfxId::TutorialNextDialog);
     }
 
+    // Load the board screenshot for the current step. #
     bool HowToPlayScreen::loadBoardImage(const std::string &path)
     {
         if (path == m_loadedBoardPath && m_hasBoardImage)
@@ -328,6 +340,7 @@ namespace App
         return true;
     }
 
+    // Rewrap and update dialogue text for the layout. #
     void HowToPlayScreen::updateDialogueText()
     {
         if (!m_hasFont || m_steps.empty())
@@ -341,6 +354,7 @@ namespace App
         m_dialogueText.setString(wrapped);
     }
 
+    // Compute the board image rectangle in view space. #
     sf::FloatRect HowToPlayScreen::computeBoardRect(const sf::View &view) const
     {
         const sf::Vector2f size = view.getSize();
@@ -351,6 +365,7 @@ namespace App
         return sf::FloatRect({left, top}, {width, height});
     }
 
+    // Compute the dialogue text rectangle in view space. #
     sf::FloatRect HowToPlayScreen::computeDialogueRect(const sf::View &view) const
     {
         const sf::Vector2f size = view.getSize();
@@ -361,6 +376,7 @@ namespace App
         return sf::FloatRect({left, top}, {width, height});
     }
 
+    // Compute the speaker nameplate rectangle in view space. #
     sf::FloatRect HowToPlayScreen::computeNameplateRect(const sf::View &view) const
     {
         const sf::Vector2f size = view.getSize();
@@ -371,6 +387,7 @@ namespace App
         return sf::FloatRect({left, top}, {width, height});
     }
 
+    // Wrap text to fit within a maximum width. #
     std::string HowToPlayScreen::wrapText(const std::string &input,
                                           const sf::Font &font,
                                           unsigned int characterSize,
@@ -423,6 +440,7 @@ namespace App
         return output;
     }
 
+    // Load tutorial steps from a delimited text file. #
     std::vector<HowToPlayScreen::TutorialStep> HowToPlayScreen::loadTutorialStepsFromFile(const std::string &path)
     {
         std::vector<TutorialStep> steps;

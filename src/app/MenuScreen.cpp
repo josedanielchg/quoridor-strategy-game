@@ -13,12 +13,14 @@ namespace App
     static constexpr unsigned int MENU_FONT_SIZE = 34;
     static const sf::Color MENU_ACCENT_COLOR(0xFD, 0x41, 0x04);
 
+    // Build menu sprites and gradient geometry. #
     MenuScreen::MenuScreen()
         : m_backgroundSprite(m_backgroundTexture),
           m_menuGradient(sf::PrimitiveType::TriangleStrip, 8)
     {
     }
 
+    // Load background, font, and menu options. #
     bool MenuScreen::init()
     {
         if (!m_backgroundTexture.loadFromFile("assets/textures/quoridor-bg-sprite-sheet.png"))
@@ -64,11 +66,13 @@ namespace App
         return true;
     }
 
+    // Register callback for menu selection. #
     void MenuScreen::setOnOptionSelected(std::function<void(Option)> onSelect)
     {
         m_onOptionSelected = std::move(onSelect);
     }
 
+    // Handle keyboard/mouse input for menu navigation. #
     void MenuScreen::handleEvent(const sf::Event &event, sf::RenderWindow &window)
     {
         if (event.is<sf::Event::Resized>())
@@ -132,11 +136,13 @@ namespace App
         }
     }
 
+    // Reflow layout on resize. #
     void MenuScreen::handleResize(sf::RenderWindow &window, sf::Vector2u /*size*/)
     {
         updateLayout(UI::makeLetterboxView(window.getSize()));
     }
 
+    // Animate selection blink and background frames. #
     void MenuScreen::update(float dt)
     {
         m_blinkTimer += dt;
@@ -159,6 +165,7 @@ namespace App
         }
     }
 
+    // Draw background, gradient, and menu options. #
     void MenuScreen::render(sf::RenderWindow &window)
     {
         sf::View oldView = window.getView();
@@ -173,6 +180,7 @@ namespace App
         window.setView(oldView);
     }
 
+    // Compute positions, sizes, and gradient for current view. #
     void MenuScreen::updateLayout(const sf::View &view)
     {
         const sf::Vector2f viewSize = view.getSize();
@@ -240,6 +248,7 @@ namespace App
         m_menuGradient[7].color = transparent;
     }
 
+    // Set the active option index. #
     void MenuScreen::setSelectedIndex(std::size_t index)
     {
         if (m_optionTexts.empty())
@@ -249,6 +258,7 @@ namespace App
         applyOptionColors(255);
     }
 
+    // Apply colors to reflect selection and blink state. #
     void MenuScreen::applyOptionColors(std::uint8_t selectedAlpha)
     {
         for (std::size_t i = 0; i < m_optionTexts.size(); ++i)
@@ -266,6 +276,7 @@ namespace App
         }
     }
 
+    // Move selection up or down with wrap-around. #
     void MenuScreen::selectNext(int direction)
     {
         if (m_optionTexts.empty())
@@ -280,6 +291,7 @@ namespace App
         setSelectedIndex(static_cast<std::size_t>(next));
     }
 
+    // Invoke the callback for the active option. #
     void MenuScreen::activateSelected()
     {
         if (!m_onOptionSelected || m_selectedIndex >= m_options.size())

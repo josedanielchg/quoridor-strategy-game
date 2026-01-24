@@ -11,6 +11,7 @@
 
 namespace App
 {
+    // Initialize game state, UI, and menu callbacks. #
     bool GameScreen::init()
     {
         m_board.init();
@@ -131,29 +132,34 @@ namespace App
         return true;
     }
 
+    // Set the game mode and reset state for a new session. #
     void GameScreen::setGameMode(GameMode mode)
     {
         m_gameMode = mode;
         resetGame();
     }
 
+    // Register the quit callback to return to menus. #
     void GameScreen::setOnQuit(std::function<void()> onQuit)
     {
         m_onQuit = std::move(onQuit);
     }
 
+    // Activate the screen and reset transient UI state. #
     void GameScreen::onEnter()
     {
         Screen::onEnter();
         resetUIState();
     }
 
+    // Deactivate the screen and clear UI overlays. #
     void GameScreen::onExit()
     {
         resetUIState();
         Screen::onExit();
     }
 
+    // Handle gameplay input, menus, and hover interactions. #
     void GameScreen::handleEvent(const sf::Event &event, sf::RenderWindow &window)
     {
         if (event.is<sf::Event::Resized>())
@@ -251,16 +257,19 @@ namespace App
         }
     }
 
+    // Propagate resize to the renderer/view. #
     void GameScreen::handleResize(sf::RenderWindow &window, sf::Vector2u size)
     {
         m_renderer.handleResize(window, size);
     }
 
+    // Drive CPU turn processing each frame. #
     void GameScreen::update(float /*dt*/)
     {
         updateHeuristicTurn();
     }
 
+    // Render gameplay scene, UI bar, HUD, and menus. #
     void GameScreen::render(sf::RenderWindow &window)
     {
         m_renderer.render(window, m_board);
@@ -270,6 +279,7 @@ namespace App
         m_winnerMenu.render(window);
     }
 
+    // Try to move a pawn to the selected grid cell. #
     void GameScreen::attemptMove(sf::Vector2i gridPos)
     {
         if (Game::isGameOver(m_gameState))
@@ -313,12 +323,14 @@ namespace App
         }
     }
 
+    // Toggle wall placement mode and update the bottom bar. #
     void GameScreen::toggleWallMode()
     {
         m_isPlacingWall = !m_isPlacingWall;
         m_bottomBar.setWallPlacementActive(m_isPlacingWall);
     }
 
+    // Rotate the wall orientation between horizontal/vertical. #
     void GameScreen::rotateWall()
     {
         if (m_currentWallOri == Game::Orientation::Horizontal)
@@ -327,6 +339,7 @@ namespace App
             m_currentWallOri = Game::Orientation::Horizontal;
     }
 
+    // Try to place a wall at the selected grid cell. #
     void GameScreen::attemptPlaceWall(sf::Vector2i gridPos)
     {
         if (gridPos.x == -1)
@@ -361,6 +374,7 @@ namespace App
         }
     }
 
+    // Schedule the CPU move when in single-player mode. #
     void GameScreen::runHeuristicTurn()
     {
         if (m_gameMode != GameMode::SinglePlayer)
@@ -375,6 +389,7 @@ namespace App
         m_cpuPending = true;
     }
 
+    // Launch and collect the CPU move asynchronously. #
     void GameScreen::updateHeuristicTurn()
     {
         if (m_cpuPending && !m_cpuThinking)
@@ -441,6 +456,7 @@ namespace App
         }
     }
 
+    // Check for a winner and show the winner menu. #
     void GameScreen::checkWinCondition(int playerId)
     {
         if (Game::winner(m_gameState) == playerId)
@@ -459,6 +475,7 @@ namespace App
         }
     }
 
+    // Reset board/game state and refresh UI. #
     void GameScreen::resetGame()
     {
         m_board.init();
@@ -480,6 +497,7 @@ namespace App
                      Game::GameState::MAX_WALLS_PER_PLAYER);
     }
 
+    // Toggle the pause menu and clear hover previews. #
     void GameScreen::togglePauseMenu()
     {
         const bool wasEnabled = m_pauseMenu.isEnabled();
@@ -493,6 +511,7 @@ namespace App
         }
     }
 
+    // Clear menu states, hover state, and placement mode. #
     void GameScreen::resetUIState()
     {
         m_pauseMenu.setEnabled(false);
