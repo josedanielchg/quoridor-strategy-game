@@ -23,7 +23,7 @@
 - C++20 compiler
   - Windows: MSVC (Visual Studio 2022 recommended)
   - Linux: g++ or clang++
-- CMake >= 3.16
+- CMake >= 3.22
 - Git
 - SFML 3.0
   - This repo is configured to fetch and build SFML automatically via CMake FetchContent.

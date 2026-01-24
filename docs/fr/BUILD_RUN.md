@@ -23,7 +23,7 @@
 - Compilateur C++20
   - Windows: MSVC (Visual Studio 2022 recommended)
   - Linux: g++ or clang++
-- CMake >= 3.16
+- CMake >= 3.22
 - Git
 - SFML 3.0
   - Ce depot est configure pour recuperer et construire SFML automatiquement via CMake FetchContent.
