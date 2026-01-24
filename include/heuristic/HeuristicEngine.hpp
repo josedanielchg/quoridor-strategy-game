@@ -6,7 +6,7 @@
 
 namespace Game
 {
-    enum class HeuristicDifficulty : uint8_t
+    enum class HeuristicDifficulty : uint8_t // Difficulty levels #
     {
         Easy,
         Medium,
@@ -14,14 +14,14 @@ namespace Game
         Expert
     };
 
-    struct HeuristicSearchConfig
+    struct HeuristicSearchConfig // Search tuning parameters #
     {
-        int maxDepth = 4;
-        int timeLimitMs = 4000;
-        HeuristicDifficulty difficulty = HeuristicDifficulty::Medium;
-        int weightDistance = 10;
-        int weightWalls = 2;
-        int weightWidth = 1;
+        int maxDepth = 4; // Max search depth #
+        int timeLimitMs = 4000; // Time budget in ms #
+        HeuristicDifficulty difficulty = HeuristicDifficulty::Medium; // Difficulty #
+        int weightDistance = 10; // Distance weight #
+        int weightWalls = 2; // Walls weight #
+        int weightWidth = 1; // Width weight #
     };
 
     class HeuristicEngine

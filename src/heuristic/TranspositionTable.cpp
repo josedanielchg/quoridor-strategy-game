@@ -6,6 +6,7 @@ namespace Game
 {
     namespace
     {
+        // Round up to the next power of two for table sizing. #
         size_t nextPow2(size_t value)
         {
             if (value == 0)
@@ -21,6 +22,7 @@ namespace Game
             return v + 1;
         }
 
+        // Random tables for Zobrist hashing. #
         struct ZobristTables
         {
             uint64_t pawn[2][GameState::BOARD_SIZE][GameState::BOARD_SIZE];
@@ -31,6 +33,7 @@ namespace Game
             uint64_t winner[3];
         };
 
+        // Initialize and return shared Zobrist tables. #
         ZobristTables &tables()
         {
             static ZobristTables table = []()
@@ -82,6 +85,7 @@ namespace Game
         }
     }
 
+    // Compute a Zobrist hash for the logical game state. #
     uint64_t computeZobrist(const GameState &state)
     {
         const ZobristTables &t = tables();
@@ -123,6 +127,7 @@ namespace Game
         return hash;
     }
 
+    // Create a table with size rounded to power-of-two. #
     TranspositionTable::TranspositionTable(size_t sizePowerOfTwo)
     {
         size_t size = nextPow2(sizePowerOfTwo);
@@ -130,6 +135,7 @@ namespace Game
         m_mask = size - 1;
     }
 
+    // Clear all cached entries and best-move hints. #
     void TranspositionTable::clear()
     {
         for (auto &entry : m_entries)
@@ -139,6 +145,7 @@ namespace Game
         }
     }
 
+    // Store an entry if it is deeper or replaces an empty slot. #
     void TranspositionTable::store(uint64_t key, int depth, int value, TTFlag flag, const Move &bestMove)
     {
         size_t idx = key & m_mask;
@@ -155,6 +162,7 @@ namespace Game
         }
     }
 
+    // Probe the table for a key and return a valid entry if found. #
     const TTEntry *TranspositionTable::probe(uint64_t key) const
     {
         const TTEntry &entry = m_entries[key & m_mask];

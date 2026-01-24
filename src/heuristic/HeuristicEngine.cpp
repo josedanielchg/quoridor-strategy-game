@@ -31,6 +31,7 @@ namespace Game
         constexpr int kWallCloseRadiusSelf = 1;
         constexpr size_t kMaxWallMoves = 32;
 
+        // Compare two moves for equivalence. #
         bool sameMove(const Move &a, const Move &b)
         {
             if (a.type() != b.type())
@@ -44,11 +45,13 @@ namespace Game
             return true;
         }
 
+        // Compute Manhattan distance between two grid points. #
         int manhattan(int ax, int ay, int bx, int by)
         {
             return std::abs(ax - bx) + std::abs(ay - by);
         }
 
+        // Compute min distance from a wall anchor to a pawn. #
         int wallMinDistanceToPawn(int wallX, int wallY, int pawnX, int pawnY)
         {
             int best = std::numeric_limits<int>::max();
@@ -59,26 +62,31 @@ namespace Game
             return best;
         }
 
+        // Check if a board cell is inside bounds. #
         bool inBoundsCell(int x, int y)
         {
             return x >= 0 && x < GameState::BOARD_SIZE && y >= 0 && y < GameState::BOARD_SIZE;
         }
 
+        // Check if a wall anchor is inside bounds. #
         bool inBoundsWall(int x, int y)
         {
             return x >= 0 && x < GameState::WALL_GRID && y >= 0 && y < GameState::WALL_GRID;
         }
 
+        // Check for a horizontal wall at anchor. #
         bool hasHorizontalWall(const GameState &state, int x, int y)
         {
             return inBoundsWall(x, y) && state.hWalls[x][y] != 0;
         }
 
+        // Check for a vertical wall at anchor. #
         bool hasVerticalWall(const GameState &state, int x, int y)
         {
             return inBoundsWall(x, y) && state.vWalls[x][y] != 0;
         }
 
+        // Check if movement between two cells is blocked. #
         bool isBlockedBetween(const GameState &state, int x, int y, int nx, int ny)
         {
             int dx = nx - x;
@@ -104,6 +112,7 @@ namespace Game
             return true;
         }
 
+        // Check if an edge reduces distance to goal for a player. #
         bool isReducingEdgeForPlayer(const GameState &state, int playerIdx,
                                      int ax, int ay, int bx, int by)
         {
@@ -114,6 +123,7 @@ namespace Game
             return (distA == distB + 1) || (distB == distA + 1);
         }
 
+        // Count edges a wall would block that reduce distance. #
         int countBlockedReducingEdgesByWall(const GameState &state, int playerIdx,
                                             int wallX, int wallY, Orientation orientation)
         {
@@ -146,6 +156,7 @@ namespace Game
             return blocked;
         }
 
+        // Count adjacent moves that reduce distance to goal. #
         int countReducingNeighbors(const GameState &state, int playerIdx)
         {
             int x = state.pawnX[playerIdx];
@@ -176,6 +187,7 @@ namespace Game
             return count;
         }
 
+        // Score a position using heuristic weights. #
         int evaluateHeuristic(GameState &state, const HeuristicSearchConfig &config, int perspectivePlayerId)
         {
             updateDistanceCache(state);
@@ -205,6 +217,7 @@ namespace Game
                    widthScore * config.weightWidth;
         }
 
+        // Generate and order moves using heuristic scoring. #
         std::vector<Move> generateOrderedMoves(GameState &state, SearchContext &ctx,
                                                const std::optional<Move> &ttBestMove)
         {
@@ -342,6 +355,7 @@ namespace Game
             return ordered;
         }
 
+        // Validate a move against current state and rules. #
         bool isMoveValidForState(const GameState &state, const Move &move)
         {
             int playerId = move.playerId();
@@ -356,6 +370,7 @@ namespace Game
             return false;
         }
 
+        // Evaluate terminal positions or fall back to heuristic. #
         int evaluateTerminal(GameState &state, const HeuristicSearchConfig &config,
                              int rootPlayerId, int depth)
         {
@@ -367,6 +382,7 @@ namespace Game
             return -kWinScore - depth;
         }
 
+        // Alpha-beta search with time cutoff and transposition table. #
         int alphaBeta(GameState &state, int depth, int alpha, int beta, SearchContext &ctx)
         {
             if (ctx.timeUp)
@@ -472,21 +488,25 @@ namespace Game
         }
     }
 
+    // Initialize engine with config and TT size. #
     HeuristicEngine::HeuristicEngine(HeuristicSearchConfig config)
         : m_config(config), m_tt(1 << 20)
     {
     }
 
+    // Replace current search config. #
     void HeuristicEngine::setConfig(const HeuristicSearchConfig &config)
     {
         m_config = config;
     }
 
+    // Access current search config. #
     const HeuristicSearchConfig &HeuristicEngine::config() const
     {
         return m_config;
     }
 
+    // Search for the best move from the given state. #
     Move HeuristicEngine::findBestMove(const GameState &state)
     {
         GameState working = state;
