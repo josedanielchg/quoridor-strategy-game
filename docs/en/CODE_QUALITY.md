@@ -1,6 +1,29 @@
+﻿English | [Français](../fr/CODE_QUALITY.md)
+
 # Code Quality Notes
 
-Purpose: Explain the coding conventions and quality practices used in this repository.
+## Table of Contents
+- [Purpose](#purpose)
+- [Naming conventions](#naming-conventions)
+- [File naming](#file-naming)
+- [Includes and forward declarations](#includes-and-forward-declarations)
+- [Separation of concerns](#separation-of-concerns)
+- [Ownership and lifetime](#ownership-and-lifetime)
+- [Error handling](#error-handling)
+- [Formatting and tooling](#formatting-and-tooling)
+- Docs
+  - [README](../../README.md)
+  - [Build & Run](BUILD_RUN.md)
+  - [Gameplay & Controls](CONTROLS.md)
+  - [Project Structure](PROJECT_STRUCTURE.md)
+  - [File Responsibilities](FILE_RESPONSIBILITIES.md)
+  - [Heuristic AI](HEURISTIC_AI.md)
+  - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
+  - [Code Quality](CODE_QUALITY.md)
+  - [Project Management](PROJECT_MANAGEMENT.md)
+
+## Purpose
+Explain the coding conventions and quality practices used in this repository.
 
 [Back to README](../../README.md)
 
@@ -40,3 +63,4 @@ Purpose: Explain the coding conventions and quality practices used in this repos
 ## Formatting and tooling
 - No `.clang-format` or automated formatter is present in the repo.
 - Style is consistent: 4-space indentation, braces on new lines, and clear spacing.
+

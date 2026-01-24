@@ -268,7 +268,6 @@ namespace App
     {
         m_isPlacingWall = !m_isPlacingWall;
         m_bottomBar.setWallPlacementActive(m_isPlacingWall);
-        std::cout << "Wall Mode: " << (m_isPlacingWall ? "ON" : "OFF") << std::endl;
     }
 
     void GameScreen::rotateWall()
@@ -298,7 +297,6 @@ namespace App
                 std::cout << "Error: Failed to sync board state." << std::endl;
                 return;
             }
-            std::cout << "Wall placed at " << gridPos.x << ", " << gridPos.y << std::endl;
             m_hud.update(Game::currentPlayer(m_gameState),
                          m_gameState.wallsRemaining[0],
                          m_gameState.wallsRemaining[1],

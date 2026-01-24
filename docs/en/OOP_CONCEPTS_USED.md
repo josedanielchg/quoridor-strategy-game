@@ -1,8 +1,27 @@
+﻿English | [Français](../fr/OOP_CONCEPTS_USED.md)
+
 # OOP Concepts Used
 
-Purpose: Summarize the OOP and C++ concepts used in this project, with concrete references.
+## Table of Contents
+- [Purpose](#purpose)
+- [Concepts table](#concepts-table)
+- Docs
+  - [README](../../README.md)
+  - [Build & Run](BUILD_RUN.md)
+  - [Gameplay & Controls](CONTROLS.md)
+  - [Project Structure](PROJECT_STRUCTURE.md)
+  - [File Responsibilities](FILE_RESPONSIBILITIES.md)
+  - [Heuristic AI](HEURISTIC_AI.md)
+  - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
+  - [Code Quality](CODE_QUALITY.md)
+  - [Project Management](PROJECT_MANAGEMENT.md)
+
+## Purpose
+Summarize the OOP and C++ concepts used in this project, with concrete references.
 
 [Back to README](../../README.md)
+
+## Concepts table
 
 | OOP / C++ Concept | Where it is used (Class/Module) | File(s) | Short explanation |
 |---|---|---|---|
@@ -16,3 +35,4 @@ Purpose: Summarize the OOP and C++ concepts used in this project, with concrete 
 | Async and futures | CPU search in game loop | `include/app/GameScreen.hpp`, `src/app/GameScreen.cpp` | `std::async` and `std::future` allow non-blocking AI turns. |
 | Templates / generic programming | STL usage | Multiple | The code relies on standard template containers rather than custom templates. |
 | Exceptions (not used) | Error handling | Multiple | Functions return bool and log errors instead of throwing exceptions. |
+

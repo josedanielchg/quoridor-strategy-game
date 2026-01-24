@@ -1,6 +1,28 @@
+﻿English | [Français](../fr/BUILD_RUN.md)
+
 # Build and Run
 
-Purpose: Provide full build and run instructions for Windows and Linux.
+## Table of Contents
+- [Purpose](#purpose)
+- [Prerequisites](#prerequisites)
+- [Clone](#clone)
+- [Configure and build](#configure-and-build)
+- [Run](#run)
+- [Assets](#assets)
+- [Troubleshooting](#troubleshooting)
+- Docs
+  - [README](../../README.md)
+  - [Build & Run](BUILD_RUN.md)
+  - [Gameplay & Controls](CONTROLS.md)
+  - [Project Structure](PROJECT_STRUCTURE.md)
+  - [File Responsibilities](FILE_RESPONSIBILITIES.md)
+  - [Heuristic AI](HEURISTIC_AI.md)
+  - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
+  - [Code Quality](CODE_QUALITY.md)
+  - [Project Management](PROJECT_MANAGEMENT.md)
+
+## Purpose
+Provide full build and run instructions for Windows and Linux.
 
 [Back to README](../../README.md)
 
@@ -76,3 +98,4 @@ Verify Git is installed and in PATH, then delete `build/` and reconfigure:
 ```bash
 cmake -S . -B build
 ```
+

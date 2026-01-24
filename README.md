@@ -1,3 +1,5 @@
+﻿English | [Français](docs/fr/README.md)
+
 # QuoridorGame
 
 A Quoridor-style strategy game with an isometric SFML UI and a heuristic CPU opponent.
@@ -9,12 +11,20 @@ Built in C++ (C++20) using SFML for graphics/audio/windowing.
 - [Installation (Quick Start)](#installation-quick-start)
 - [Demo](#demo)
 - [Screenshots](#screenshots)
-- [Documentation Map](#documentation-map)
 - [Architecture Overview](#architecture-overview)
 - [Credits](#credits)
 - [License](#license)
 - [Contributing](#contributing)
 - [Additional Notes](#additional-notes)
+- Docs
+  - [Build & Run](docs/en/BUILD_RUN.md)
+  - [Gameplay & Controls](docs/en/CONTROLS.md)
+  - [Project Structure](docs/en/PROJECT_STRUCTURE.md)
+  - [File Responsibilities](docs/en/FILE_RESPONSIBILITIES.md)
+  - [Heuristic AI](docs/en/HEURISTIC_AI.md)
+  - [OOP Concepts Used](docs/en/OOP_CONCEPTS_USED.md)
+  - [Code Quality](docs/en/CODE_QUALITY.md)
+  - [Project Management](docs/en/PROJECT_MANAGEMENT.md)
 
 ## Overview
 This project implements a 2-player Quoridor board game on a 9x9 grid. Players race to
@@ -70,17 +80,6 @@ Screenshots are stored in `docs/media/` (replace these placeholders with real ca
 ![Menu](docs/media/menu.png)
 ![Wall placement](docs/media/wall_placement.png)
 ![Win screen](docs/media/win_screen.png)
-
-## Documentation Map
-- [Project Structure](docs/en/PROJECT_STRUCTURE.md)
-- [Architecture Details (module map + runtime flow)](docs/en/PROJECT_STRUCTURE.md)
-- [File Responsibilities](docs/en/FILE_RESPONSIBILITIES.md)
-- [Build & Run](docs/en/BUILD_RUN.md)
-- [Gameplay & Controls](docs/en/CONTROLS.md)
-- [Heuristic AI](docs/en/HEURISTIC_AI.md)
-- [OOP Concepts Used](docs/en/OOP_CONCEPTS_USED.md)
-- [Code Quality](docs/en/CODE_QUALITY.md)
-- [Project Management](docs/en/PROJECT_MANAGEMENT.md)
 
 ## Architecture Overview
 - The entry point creates `App::Application`, which owns the SFML window and all screens.

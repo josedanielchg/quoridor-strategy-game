@@ -1,6 +1,25 @@
+﻿English | [Français](../fr/PROJECT_STRUCTURE.md)
+
 # Project Structure
 
-Purpose: Give a first-look view of the codebase layout and module boundaries.
+## Table of Contents
+- [Purpose](#purpose)
+- [High-level tree](#high-level-tree)
+- [Module map](#module-map)
+- [Runtime flow (short)](#runtime-flow-short)
+- Docs
+  - [README](../../README.md)
+  - [Build & Run](BUILD_RUN.md)
+  - [Gameplay & Controls](CONTROLS.md)
+  - [Project Structure](PROJECT_STRUCTURE.md)
+  - [File Responsibilities](FILE_RESPONSIBILITIES.md)
+  - [Heuristic AI](HEURISTIC_AI.md)
+  - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
+  - [Code Quality](CODE_QUALITY.md)
+  - [Project Management](PROJECT_MANAGEMENT.md)
+
+## Purpose
+Give a first-look view of the codebase layout and module boundaries.
 
 [Back to README](../../README.md)
 
@@ -19,12 +38,24 @@ QuoridorGame/
   cmake/
     FindSFML.cmake
   docs/
-    EN/
+    en/
       PROJECT_STRUCTURE.md
       OOP_CONCEPTS_USED.md
       CODE_QUALITY.md
       HEURISTIC_AI.md
       PROJECT_MANAGEMENT.md
+      BUILD_RUN.md
+      CONTROLS.md
+      FILE_RESPONSIBILITIES.md
+    fr/
+      PROJECT_STRUCTURE.md
+      OOP_CONCEPTS_USED.md
+      CODE_QUALITY.md
+      HEURISTIC_AI.md
+      PROJECT_MANAGEMENT.md
+      BUILD_RUN.md
+      CONTROLS.md
+      FILE_RESPONSIBILITIES.md
     media/
       gameplay.png
       menu.png
@@ -69,3 +100,4 @@ QuoridorGame/
 3) The main loop runs: process events -> update -> render.
 4) Gameplay updates include human input, AI turns, and UI updates.
 5) When the user quits, the window closes and the loop ends.
+

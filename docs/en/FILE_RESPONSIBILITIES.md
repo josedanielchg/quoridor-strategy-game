@@ -1,8 +1,27 @@
+﻿English | [Français](../fr/FILE_RESPONSIBILITIES.md)
+
 # File Responsibilities
 
-Purpose: Provide a file-level responsibility map for key headers.
+## Table of Contents
+- [Purpose](#purpose)
+- [Responsibility table](#responsibility-table)
+- Docs
+  - [README](../../README.md)
+  - [Build & Run](BUILD_RUN.md)
+  - [Gameplay & Controls](CONTROLS.md)
+  - [Project Structure](PROJECT_STRUCTURE.md)
+  - [File Responsibilities](FILE_RESPONSIBILITIES.md)
+  - [Heuristic AI](HEURISTIC_AI.md)
+  - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
+  - [Code Quality](CODE_QUALITY.md)
+  - [Project Management](PROJECT_MANAGEMENT.md)
+
+## Purpose
+Provide a file-level responsibility map for key headers.
 
 [Back to README](../../README.md)
+
+## Responsibility table
 
 | File | Responsibility | Key classes/structs | Notes/Dependencies |
 |---|---|---|---|
@@ -41,3 +60,4 @@ Purpose: Provide a file-level responsibility map for key headers.
 | `include/ui/SpriteEntity.hpp` | Sprite helper variants | `UI::SpriteEntity`, `TileSprite`, `WallSprite`, `PawnSprite` | Utility / alternative approach |
 | `include/ui/InputHandler.hpp` | Input module placeholder | - | Not present in current repo (legacy placeholder) |
 | `include/ui/Renderer.hpp` | Renderer module placeholder | - | Not present in current repo (legacy placeholder) |
+

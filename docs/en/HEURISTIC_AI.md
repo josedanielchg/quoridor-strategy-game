@@ -1,6 +1,28 @@
+﻿English | [Français](../fr/HEURISTIC_AI.md)
+
 # Heuristic AI
 
-Purpose: Explain how the CPU player works and how it is integrated into gameplay.
+## Table of Contents
+- [Purpose](#purpose)
+- [Overview](#overview)
+- [Key classes and files](#key-classes-and-files)
+- [Search flow (step-by-step)](#search-flow-step-by-step)
+- [Evaluation inputs](#evaluation-inputs)
+- [Configuration and difficulty](#configuration-and-difficulty)
+- [CPU integration in gameplay](#cpu-integration-in-gameplay)
+- Docs
+  - [README](../../README.md)
+  - [Build & Run](BUILD_RUN.md)
+  - [Gameplay & Controls](CONTROLS.md)
+  - [Project Structure](PROJECT_STRUCTURE.md)
+  - [File Responsibilities](FILE_RESPONSIBILITIES.md)
+  - [Heuristic AI](HEURISTIC_AI.md)
+  - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
+  - [Code Quality](CODE_QUALITY.md)
+  - [Project Management](PROJECT_MANAGEMENT.md)
+
+## Purpose
+Explain how the CPU player works and how it is integrated into gameplay.
 
 [Back to README](../../README.md)
 
@@ -45,3 +67,4 @@ and local mobility.
 - `GameScreen::updateHeuristicTurn()` launches `std::async` when needed and checks the future
   without blocking the render loop.
 - When the future is ready, the move is applied and the HUD is updated.
+
