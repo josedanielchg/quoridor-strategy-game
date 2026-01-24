@@ -1,5 +1,6 @@
 #include "app/HowToPlayScreen.hpp"
 #include "audio/SfxManager.hpp"
+#include "resources/ResourceLoader.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
@@ -8,6 +9,7 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <unordered_set>
 
 #include <fstream>
 
@@ -37,34 +39,29 @@ namespace App
 
     bool HowToPlayScreen::init()
     {
-        if (!m_knightBackgroundTexture.loadFromFile(KNIGHT_BACKGROUND_PATH))
-        {
-            std::cerr << "Failed to load knight how-to background\n";
-            return false;
-        }
+        Resources::loadTextureInto(m_knightBackgroundTexture,
+                                   KNIGHT_BACKGROUND_PATH,
+                                   "HowToPlayScreen",
+                                   "Knight background");
 
-        if (!m_wizardBackgroundTexture.loadFromFile(WIZARD_BACKGROUND_PATH))
-        {
-            std::cerr << "Failed to load wizard how-to background\n";
-            return false;
-        }
+        Resources::loadTextureInto(m_wizardBackgroundTexture,
+                                   WIZARD_BACKGROUND_PATH,
+                                   "HowToPlayScreen",
+                                   "Wizard background");
 
         m_backgroundSprite.setTexture(m_knightBackgroundTexture, true);
         const sf::Vector2u bgSize = m_knightBackgroundTexture.getSize();
         m_backgroundSprite.setOrigin({static_cast<float>(bgSize.x) / 2.f,
                                       static_cast<float>(bgSize.y) / 2.f});
 
-        if (m_font.openFromFile(FONT_PATH))
-        {
-            m_hasFont = true;
-            m_dialogueText.setFillColor(sf::Color::White);
-            m_speakerNameText.setFillColor(sf::Color::White);
-            m_speakerNameShadow.setFillColor(sf::Color(0, 0, 0, 180));
-        }
-        else
-        {
-            std::cerr << "Failed to load font for how-to screen\n";
-        }
+        Resources::loadFontInto(m_font,
+                                FONT_PATH,
+                                "HowToPlayScreen",
+                                "UI font");
+        m_hasFont = true;
+        m_dialogueText.setFillColor(sf::Color::White);
+        m_speakerNameText.setFillColor(sf::Color::White);
+        m_speakerNameShadow.setFillColor(sf::Color(0, 0, 0, 180));
 
         m_steps = loadTutorialStepsFromFile(SCRIPT_PATH);
         if (m_steps.empty())
@@ -81,6 +78,22 @@ namespace App
         m_continueIndicator.setPoint(1, {INDICATOR_SIZE, 0.f});
         m_continueIndicator.setPoint(2, {INDICATOR_SIZE * 0.5f, INDICATOR_SIZE});
         m_continueIndicator.setFillColor(sf::Color::White);
+
+        // Validate any referenced board images at startup (fail fast).
+        std::unordered_set<std::string> validatedPaths;
+        for (const auto &step : m_steps)
+        {
+            if (step.boardImagePath.empty())
+                continue;
+            if (!validatedPaths.insert(step.boardImagePath).second)
+                continue;
+
+            sf::Texture tmp;
+            Resources::loadTextureInto(tmp,
+                                       step.boardImagePath,
+                                       "HowToPlayScreen",
+                                       "Tutorial board image");
+        }
 
         applyStep(0);
         return true;
@@ -311,13 +324,10 @@ namespace App
         if (path == m_loadedBoardPath && m_hasBoardImage)
             return true;
 
-        if (!m_boardTexture.loadFromFile(path))
-        {
-            std::cerr << "Failed to load tutorial board image: " << path << "\n";
-            m_hasBoardImage = false;
-            m_loadedBoardPath.clear();
-            return false;
-        }
+        Resources::loadTextureInto(m_boardTexture,
+                                   path,
+                                   "HowToPlayScreen",
+                                   "Tutorial board image");
 
         m_boardSprite.setTexture(m_boardTexture, true);
         const sf::Vector2u size = m_boardTexture.getSize();

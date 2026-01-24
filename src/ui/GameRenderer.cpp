@@ -1,6 +1,6 @@
 #include "ui/GameRenderer.hpp"
+#include "resources/ResourceLoader.hpp"
 #include "ui/ViewUtils.hpp"
-#include <iostream>
 #include <cmath>
 
 namespace UI
@@ -35,11 +35,10 @@ namespace UI
     bool GameRenderer::init()
     {
         // 1. Load Tile Texture (tiles are renderer-owned)
-        if (!m_texTile.loadFromFile("assets/textures/tile.png"))
-        {
-            std::cerr << "Error: Could not load tile.png\n";
-            return false;
-        }
+        Resources::loadTextureInto(m_texTile,
+                                   "assets/textures/tile.png",
+                                   "GameRenderer",
+                                   "Tile texture");
 
         // Setup Tile Sprite
         m_spriteTile.setTexture(m_texTile, true);

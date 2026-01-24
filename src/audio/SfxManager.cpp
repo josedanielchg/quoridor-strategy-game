@@ -1,9 +1,39 @@
 #include "audio/SfxManager.hpp"
 #include <algorithm>
-#include <iostream>
+#include "resources/AssetLoadError.hpp"
+#include "resources/ResourceLoader.hpp"
+
+#include <string_view>
+#include <utility>
 
 namespace Audio
 {
+    namespace
+    {
+        std::string_view logicalNameForId(SfxId id)
+        {
+            switch (id)
+            {
+            case SfxId::Move:
+                return "SFX: Move";
+            case SfxId::Hover:
+                return "SFX: Hover";
+            case SfxId::Click:
+                return "SFX: Click";
+            case SfxId::Wall:
+                return "SFX: Wall";
+            case SfxId::Win:
+                return "SFX: Win";
+            case SfxId::TutorialNextDialog:
+                return "SFX: TutorialNextDialog";
+            case SfxId::MenuOpen:
+                return "SFX: MenuOpen";
+            default:
+                return "SFX";
+            }
+        }
+    }
+
     SfxManager &SfxManager::instance()
     {
         static SfxManager manager;
@@ -77,23 +107,22 @@ namespace Audio
         const std::size_t index = indexFromId(id);
         if (m_loaded[index])
             return true;
-        if (m_failed[index])
-            return false;
 
         const std::string &path = m_paths[index];
         if (path.empty())
         {
-            std::cerr << "SFX path missing for id " << index << "\n";
-            m_failed[index] = true;
-            return false;
+            Resources::AssetInfo info;
+            info.type = Resources::AssetType::SoundBuffer;
+            info.component = "SfxManager";
+            info.logicalName = std::string(logicalNameForId(id));
+            info.path = "<missing path>";
+            throw Resources::AssetLoadError(std::move(info));
         }
 
-        if (!m_buffers[index].loadFromFile(path))
-        {
-            std::cerr << "Failed to load SFX: " << path << "\n";
-            m_failed[index] = true;
-            return false;
-        }
+        Resources::loadSoundBufferInto(m_buffers[index],
+                                       path,
+                                       "SfxManager",
+                                       logicalNameForId(id));
 
         m_loaded[index] = true;
         return true;
