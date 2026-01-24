@@ -1,15 +1,14 @@
-﻿Français | [English](../en/BUILD_RUN.md)
+﻿Anglais | [Fran㌢is](../fr/BUILD_RUN.md)
 
 # Compilation et execution
 
 ## Table des matieres
-- [Objectif](#objectif)
-- [Prerequis](#prerequis)
-- [Cloner](#cloner)
-- [Configurer et compiler](#configurer-et-compiler)
-- [Executer](#executer)
+- [Prerequis](#prerequisites)
+- [Cloner](#clone)
+- [Configurer et compiler](#configure-and-build)
+- [Executer](#run)
 - [Assets](#assets)
-- [Depannage](#depannage)
+- [Depannage](#troubleshooting)
 - Docs
   - [README](../../README.md)
   - [Compilation et execution](BUILD_RUN.md)
@@ -19,26 +18,20 @@
   - [IA heuristique](HEURISTIC_AI.md)
   - [Concepts OOP utilises](OOP_CONCEPTS_USED.md)
   - [Qualite du code](CODE_QUALITY.md)
-  - [Gestion de projet](PROJECT_MANAGEMENT.md)
-
-## Objectif
-Fournir les instructions de build et run pour Windows et Linux.
-
-[Retour au README](../../README.md)
 
 ## Prerequis
 - Compilateur C++20
-  - Windows: MSVC (Visual Studio 2022 recommande)
-  - Linux: g++ ou clang++
-- CMake >= <CMAKE_MIN_VERSION>
+  - Windows: MSVC (Visual Studio 2022 recommended)
+  - Linux: g++ or clang++
+- CMake >= 3.16
 - Git
-- SFML <SFML_VERSION>
-  - Ce depot telecharge et construit SFML via CMake FetchContent.
+- SFML 3.0
+  - Ce depot est configure pour recuperer et construire SFML automatiquement via CMake FetchContent.
 
 ## Cloner
 
 ```bash
-git clone <LINK>
+git clone https://github.com/josedanielchg/quoridor-strategy-game.git
 cd QuoridorGame
 ```
 
@@ -47,54 +40,32 @@ cd QuoridorGame
 Windows (MSVC / Visual Studio):
 
 ```powershell
-cmake -S . -B build -G "Visual Studio 17 2022" -A x64
-cmake --build build --config Release
+cmake -S . -B build
+cmake --build build
 ```
 
 Compilation debug:
 
 ```powershell
-cmake --build build --config Debug
+cmake --build build
 ```
 
 Linux (g++ / clang):
 
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
+cmake -S . -B build =Release
+cmake --build build
 ```
 
 Compilation debug:
 
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build -j
+cmake -S . -B build =Debug
+cmake --build build
 ```
 
 ## Executer
 - Windows (multi-config):
-  - `build/Release/QuoridorGame.exe`
   - `build/Debug/QuoridorGame.exe`
 - Linux (single-config):
   - `./build/QuoridorGame`
-
-## Assets
-- Windows: les assets sont copies a cote de l'executable apres le build.
-- Linux: lancer depuis la racine du depot ou copier `assets/` a cote de l'executable.
-
-## Depannage
-
-**Assets introuvables / textures manquantes**
-Les assets sont charges via des chemins relatifs (`assets/...`). Assurez-vous que le dossier
-courant est la racine du depot, ou copiez `assets/` a cote de l'executable.
-
-**SFML DLLs manquantes (Windows)**
-Le projet est configure en SFML statique. Si vous passez en shared, copiez les DLL SFML
-pres de `QuoridorGame.exe`.
-
-**FetchContent ne telecharge pas SFML**
-Verifiez que Git est installe et dans le PATH, puis supprimez `build/` et reconfigurez:
-
-```bash
-cmake -S . -B build
-```

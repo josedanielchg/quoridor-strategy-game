@@ -1,12 +1,11 @@
-﻿Français | [English](../en/PROJECT_STRUCTURE.md)
+﻿Anglais | [Fran㌢is](../fr/PROJECT_STRUCTURE.md)
 
 # Structure du projet
 
 ## Table des matieres
-- [Objectif](#objectif)
-- [Arborescence (haut niveau)](#arborescence-haut-niveau)
-- [Carte des modules](#carte-des-modules)
-- [Flux d'execution (court)](#flux-dexecution-court)
+- [Arborescence (haut niveau)](#high-level-tree)
+- [Carte des modules](#module-map)
+- [Flux d'execution (court)](#runtime-flow-short)
 - Docs
   - [README](../../README.md)
   - [Compilation et execution](BUILD_RUN.md)
@@ -16,12 +15,6 @@
   - [IA heuristique](HEURISTIC_AI.md)
   - [Concepts OOP utilises](OOP_CONCEPTS_USED.md)
   - [Qualite du code](CODE_QUALITY.md)
-  - [Gestion de projet](PROJECT_MANAGEMENT.md)
-
-## Objectif
-Donner une vue d'ensemble du layout et des modules.
-
-[Retour au README](../../README.md)
 
 ## Arborescence (haut niveau)
 
@@ -39,31 +32,8 @@ QuoridorGame/
     FindSFML.cmake
   docs/
     en/
-      PROJECT_STRUCTURE.md
-      OOP_CONCEPTS_USED.md
-      CODE_QUALITY.md
-      HEURISTIC_AI.md
-      PROJECT_MANAGEMENT.md
-      BUILD_RUN.md
-      CONTROLS.md
-      FILE_RESPONSIBILITIES.md
     fr/
-      PROJECT_STRUCTURE.md
-      OOP_CONCEPTS_USED.md
-      CODE_QUALITY.md
-      HEURISTIC_AI.md
-      PROJECT_MANAGEMENT.md
-      BUILD_RUN.md
-      CONTROLS.md
-      FILE_RESPONSIBILITIES.md
     media/
-      gameplay.png
-      menu.png
-      wall_placement.png
-      win_screen.png
-    instructions.md
-    structure.md
-    Initial Report/
   include/
     app/
     audio/
@@ -83,21 +53,21 @@ QuoridorGame/
 ## Carte des modules
 
 - App: `include/app/`, `src/app/`
-  - Cycle de vie, routage d'ecrans, et ecrans.
+  - Cycle de vie de l'application, routage des ecrans, et ecrans.
 - Game: `include/game/`, `src/game/`
-  - Regles, etat logique, entites du plateau.
+  - Regles de base, etat logique, et entites du plateau.
 - UI: `include/ui/`, `src/ui/`
-  - Rendu, HUD, menus, widgets, et vues.
+  - Rendu, HUD, menus, widgets d'entree, et utilitaires de vue.
 - Heuristic: `include/heuristic/`, `src/heuristic/`
-  - Decisions CPU (recherche, evaluation, table de transposition).
+  - Prise de decision CPU (recherche + evaluation + table de transposition).
 - Audio: `include/audio/`, `src/audio/`
-  - Gestionnaire d'effets sonores.
+  - Gestionnaire d'effets sonores et pool de sons.
 
 ## Flux d'execution (court)
 
 1) `main.cpp` cree `App::Application` et entre dans `run()`.
-2) `Application` initialise tous les ecrans et choisit l'ecran actif.
+2) `Application` initialise tous les ecrans et definit l'ecran actif.
 3) La boucle principale tourne: events -> update -> render.
-4) Le jeu gere l'input humain, les tours IA, et l'UI.
+4) Les mises a jour du jeu incluent l'input humain, les tours IA, et les mises a jour UI.
 5) Quand l'utilisateur quitte, la fenetre se ferme.
 

@@ -36,7 +36,7 @@ and local mobility.
 1) `GameScreen` detects a CPU turn and schedules a background search using `std::async`.
 2) `HeuristicEngine::findBestMove` prepares a working copy of `GameState` and sets a deadline
    based on `HeuristicSearchConfig::timeLimitMs`.
-3) It generates ordered moves using heuristics and (if present) the transposition table best move.
+3) It generates ordered moves using heuristics and the transposition table best move.
 4) It runs alpha-beta search from each root move, with pruning and a depth limit.
 5) Terminal positions return a large win/loss score; non-terminal positions use the heuristic
    evaluation (distance, walls, mobility).
