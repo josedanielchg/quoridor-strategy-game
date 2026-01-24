@@ -3,7 +3,6 @@
 # File Responsibilities
 
 ## Table of Contents
-- [Purpose](#purpose)
 - [Responsibility table](#responsibility-table)
 - Docs
   - [README](../../README.md)
@@ -14,11 +13,6 @@
   - [Heuristic AI](HEURISTIC_AI.md)
   - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
   - [Code Quality](CODE_QUALITY.md)
-
-## Purpose
-Provide a file-level responsibility map for key headers.
-
-[Back to README](../../README.md)
 
 ## Responsibility table
 

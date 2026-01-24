@@ -3,7 +3,6 @@
 # Code Quality Notes
 
 ## Table of Contents
-- [Purpose](#purpose)
 - [Naming conventions](#naming-conventions)
 - [File naming](#file-naming)
 - [Includes and forward declarations](#includes-and-forward-declarations)
@@ -20,11 +19,6 @@
   - [Heuristic AI](HEURISTIC_AI.md)
   - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
   - [Code Quality](CODE_QUALITY.md)
-
-## Purpose
-Explain the coding conventions and quality practices used in this repository.
-
-[Back to README](../../README.md)
 
 ## Naming conventions
 - Classes and structs: PascalCase (e.g., `GameScreen`, `HeuristicEngine`).
