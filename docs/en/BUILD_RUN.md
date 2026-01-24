@@ -48,6 +48,7 @@ Windows (MSVC / Visual Studio):
 ```powershell
 cmake -S . -B build
 cmake --build build
+```
 
 Linux (g++ / clang):
 
