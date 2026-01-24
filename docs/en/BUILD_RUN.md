@@ -63,6 +63,12 @@ cmake -S . -B build
 cmake --build build
 ```
 
+If your CMake version is newer than 3.5 and you see policy warnings, reconfigure with:
+
+```bash
+cmake -S . -B build "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+```
+
 ## Run
 - Windows (multi-config):
   - `build/Debug/QuoridorGame.exe`
