@@ -16,6 +16,7 @@ Built in C++ (C++20) using SFML for graphics/audio/windowing.
 - Docs
   - [Build & Run](docs/en/BUILD_RUN.md)
   - [Gameplay & Controls](docs/en/CONTROLS.md)
+  - [Functionalities](docs/en/FUNCTIONALITIES.md)
   - [Project Structure](docs/en/PROJECT_STRUCTURE.md)
   - [File Responsibilities](docs/en/FILE_RESPONSIBILITIES.md)
   - [Heuristic AI](docs/en/HEURISTIC_AI.md)
