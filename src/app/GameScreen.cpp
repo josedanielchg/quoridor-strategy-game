@@ -188,7 +188,8 @@ namespace App
             }
             if (m_pauseMenu.isEnabled())
                 return;
-            if (key->scancode == sf::Keyboard::Scancode::W)
+            // Support both W (QWERTY) and Z (AZERTY) for wall placement
+            if (key->scancode == sf::Keyboard::Scancode::W || key->scancode == sf::Keyboard::Scancode::Z)
                 toggleWallMode();
             if (key->scancode == sf::Keyboard::Scancode::R)
                 rotateWall();

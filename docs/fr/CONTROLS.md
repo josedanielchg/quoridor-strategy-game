@@ -19,7 +19,7 @@
 | Action | Commande par defaut |
 |---|---|
 | Ouvrir/fermer le menu pause | `ESC` |
-| Activer le placement de mur | `W` |
+| Activer le placement de mur | `W` or `Z` |
 | Tourner l'orientation du mur | `R` |
 | Selectionner / placer un coup | Clic gauche |
 

@@ -1,0 +1,265 @@
+\documentclass[11pt,a4paper]{article}
+
+% ----------------------------------------------------
+% ESSENTIAL PACKAGES
+% ----------------------------------------------------
+\usepackage[utf8]{inputenc}     % Text encoding (UTF-8)
+\usepackage[T1]{fontenc}        % Character encoding
+\usepackage[english]{babel}     % Document language
+\usepackage{geometry}           % Margin management
+\usepackage{graphicx}           % Image insertion
+\usepackage{amsmath, amssymb}   % Mathematical symbols and equations
+\usepackage{siunitx}            % International System (SI) units
+\usepackage{caption}            % Improved captions
+\usepackage{subcaption}         % Sub-figures
+\usepackage{booktabs}           % Aesthetic tables
+\usepackage{float}              % Figure position control
+\usepackage{xcolor}             % Color management
+\usepackage{fancyhdr}           % Custom headers and footers
+\usepackage{enumitem}           % Customized lists
+\usepackage{physics}            % Physics notation
+\usepackage{titlesec}           % Section styling
+\usepackage[strict]{changepage} % Local margin adjustment
+\usepackage{framed}             % Frames and boxes
+
+% Hyperref should be loaded last (usually)
+\usepackage{hyperref}           % Clickable links in PDF
+\usepackage{listings}           % Monospace blocks
+
+% ----------------------------------------------------
+% PAGE SETUP PARAMETERS
+% ----------------------------------------------------
+\geometry{margin=2.5cm}            % Document margins
+\setlength{\parskip}{0.5em}        % Spacing between paragraphs
+\setlength{\parindent}{0pt}        % No indentation at beginning of paragraphs
+\setlength{\headheight}{13.6pt}    % Fix fancyhdr warning
+\addtolength{\topmargin}{-1.6pt}
+\setlength{\emergencystretch}{2em} % Reduce overfull hbox warnings
+
+% ----------------------------------------------------
+% COLORS
+% ----------------------------------------------------
+\definecolor{darkBlue}{HTML}{003366}    % Dark blue (sections)
+\definecolor{lightBlue}{HTML}{0073CF}   % Medium blue (subsections)
+\definecolor{formalshade}{rgb}{0.95,0.95,1}   % Light background for boxes
+
+% ----------------------------------------------------
+% LINK CONFIGURATION
+% ----------------------------------------------------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=darkBlue,
+    urlcolor=blue,
+    citecolor=gray
+}
+
+% ----------------------------------------------------
+% SECTION STYLING
+% ----------------------------------------------------
+% Section (dark blue, uppercase, bold, horizontal line)
+\titleformat{\section}[block]
+  {\normalfont\Large\bfseries\color{darkBlue}}
+  {\thesection}{1em}{}
+  [\vspace{0.3em}\titlerule\color{darkBlue}\vspace{0.3em}]
+
+% Subsection (light blue)
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{lightBlue}}
+  {\thesubsection}{1em}{}
+
+% Subsubsection (gray)
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black!70}}
+  {\thesubsubsection}{1em}{}
+
+% ----------------------------------------------------
+% HEADERS AND FOOTERS
+% ----------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{ENSTA - IN204 Project}
+\fancyhead[R]{Quoridor Game}
+\fancyfoot[C]{\thepage}
+
+% ----------------------------------------------------
+% FORMAL ENVIRONMENT (BOX)
+% ----------------------------------------------------
+\newenvironment{formal}{%
+\def\FrameCommand{%
+  \hspace{1pt}%
+  {\color{darkBlue}\vrule width 2pt}%
+  {\color{formalshade}\vrule width 4pt}%
+  \colorbox{formalshade}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}%
+\begin{adjustwidth}{}{7pt}%
+\vspace{4pt}%
+}{%
+\vspace{4pt}\end{adjustwidth}\endMakeFramed%
+}
+
+% ----------------------------------------------------
+% BEGIN DOCUMENT
+% ----------------------------------------------------
+\begin{document}
+
+% ====================================================
+% TITLE PAGE
+% ====================================================
+\begin{titlepage}
+    \centering
+    \vspace*{3.5cm}
+
+    \includegraphics[width=0.6\textwidth]{imgs/logo_ensta_2025.png}
+
+    {\Large  IN204 \par}
+    \vspace{0.2cm}
+    {\huge\bfseries Quoridor (C++/SFML) with\\
+Heuristic AI and Modern OOP Architecture \par}
+    \vspace{2.8cm}
+    {\Large CHACÓN José Daniel \par}
+    {\Large MENESES Carlos Adrián \par}
+    \vfill
+    École Nationale des techniques avancées\\
+    January 2026\par
+\end{titlepage}
+
+% ====================================================
+% TABLE OF CONTENTS
+% ====================================================
+\newpage
+\tableofcontents
+\newpage
+
+% ====================================================
+% PROJECT OVERVIEW
+% ====================================================
+\section{Project Overview}
+The project implements a C++/SFML board game aiming to demonstrate object-oriented design, interactive rendering, and a CPU opponent based on search algorithms. The game emphasizes turn-based decision-making, rule validation, and a clear separation between game logic, rendering, and user interface management. The technology stack is C++ with SFML for graphics, input, and audio.
+
+\subsection*{Main Objectives}
+\begin{itemize}[leftmargin=1.2em]
+    \item Implement a complete turn-based board game with a clear victory condition.
+    \item Enforce the legality of moves and wall placements at runtime.
+    \item Provide a responsive graphical interface with screen-based navigation.
+    \item Integrate a heuristic CPU player based on search and evaluation.
+    \item Maintain a modular codebase with well-defined responsibilities.
+\end{itemize}
+
+% ====================================================
+% GAME OVERVIEW
+% ====================================================
+\section{Game Presentation: What is Quoridor?}
+The game is a two-player strategy game played on a grid. Each player controls a pawn and attempts to reach the opposite edge of the board. On each turn, a player either moves their pawn or places a wall to modify available paths. The objective is to reach the target row before the opponent. Wall placements must preserve at least one valid path to the objective for each player.
+
+% ====================================================
+% SYSTEM-LEVEL FLOW
+% ====================================================
+\section{Game Mechanics (System Level)}
+At startup, the application initializes window resources, loads assets, and constructs the initial game state. The main loop follows a standard input–update–render cycle. Input is captured via SFML events and routed to the active screen. The update step advances animations, manages turn logic, and triggers CPU calculation when necessary. The render step draws the board, interface elements, and screen-specific components.
+
+A screen system manages different contexts such as title, menu, gameplay, and credits. The game screen coordinates the rules, visual board, and heuristic engine. A bottom-screen HUD can display the current turn and remaining walls. A pause menu is accessible via a keyboard shortcut and allows resuming or restarting the game.
+
+% ====================================================
+% TECHNICAL STACK
+% ====================================================
+\section{Technical Stack}
+\subsection*{Language and Libraries}
+The project uses C++20 and the SFML library for graphics, input, and audio. SFML provides the rendering window, sprite management, and event handling necessary for the game loop.
+
+\subsection*{Build System}
+The compilation process is managed with CMake (minimum version \textbf{3.22}). The project targets SFML version \textbf{3.0}. The build configuration can be adapted for Windows (MSVC) or Linux (g++/clang).
+
+% ====================================================
+% PROJECT STRUCTURE
+% ====================================================
+\section{Project Structure}
+\subsection*{Directory Tree}
+\begin{verbatim}
+<PROJECT_NAME>/
+|-- CMakeLists.txt
+|-- README.md
+|-- LICENSE
+|-- docs/
+|   `-- Initial Report/
+|-- include/
+|   |-- app/
+|   |-- game/
+|   |-- heuristic/
+|   `-- ui/
+|-- src/
+|   |-- app/
+|   |-- game/
+|   |-- heuristic/
+|   |-- ui/
+|   `-- main.cpp
+`-- assets/
+    |-- fonts/
+    |-- sound/
+    `-- textures/
+\end{verbatim}
+
+\subsection*{Role of Directories}
+\begin{itemize}[leftmargin=1.2em]
+    \item \texttt{src/} : implementation files for application flow, gameplay, AI, and UI.
+    \item \texttt{include/} : public headers defining main interfaces and structures.
+    \item \texttt{assets/} : textures, fonts, and audio used at runtime.
+    \item \texttt{Docs/} : project documentation and reports.
+\end{itemize}
+
+\subsection*{Main Classes/Modules}
+The architecture includes a base screen class and derived screens such as \texttt{TitleScreen}, \texttt{GameScreen}, and \texttt{CreditsScreen}. Game logic is encapsulated in a dedicated rules module, while a UI module handles rendering, HUD elements, and menus. The heuristic engine evaluates positions and selects CPU moves via bounded search.
+
+% ====================================================
+% INSTALLATION AND EXECUTION
+% ====================================================
+\vspace{0.5cm}
+\section{Installation and Execution}
+\subsection*{Prerequisites}
+\begin{itemize}[leftmargin=1.2em]
+    \item C++20 compiler (MSVC, g++, or clang)
+    \item CMake \textbf{3.22} or later
+    \item SFML \textbf{3.0}
+    \item Git
+    \item Linux development libraries (for Linux builds):
+    \begin{verbatim}
+sudo apt install -y \
+  build-essential git \
+  libx11-dev libxrandr-dev libxcursor-dev libxi-dev \
+  libudev-dev \
+  libgl1-mesa-dev \
+  libfreetype-dev \
+  libvorbis-dev libflac-dev
+    \end{verbatim}
+\end{itemize}
+
+\subsection*{Clone Repository}
+\begin{verbatim}
+git clone https://github.com/josedanielchg/quoridor-strategy-game.git
+cd quoridor-strategy-game
+\end{verbatim}
+
+\subsection*{Compilation (Windows)}
+\begin{verbatim}
+cmake -S . -B build
+cmake --build build
+\end{verbatim}
+
+\subsection*{Compilation (Linux)}
+\begin{verbatim}
+cmake -S . -B build
+cmake --build build
+\end{verbatim}
+
+\subsection*{Execution (Windows)}
+\begin{verbatim}
+.\build\Debug\QuoridorGame.exe
+\end{verbatim}
+
+\subsection*{Execution (Linux)}
+\begin{verbatim}
+./build/QuoridorGame
+\end{verbatim}
+
+\end{document}

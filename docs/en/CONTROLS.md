@@ -19,7 +19,7 @@
 | Action | Default Control |
 |---|---|
 | Open/close pause menu | `ESC` |
-| Toggle wall placement mode | `W` |
+| Toggle wall placement mode | `W` or `Z` |
 | Rotate wall orientation | `R` |
 | Select target / place move | Left mouse click |
 
