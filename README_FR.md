@@ -16,6 +16,7 @@ Construit en C++ (C++20) en utilisant SFML pour les graphismes/audio/fenetre.
 - Docs
   - [Compilation et execution](docs/fr/BUILD_RUN.md)
   - [Jouabilite et commandes](docs/fr/CONTROLS.md)
+  - [Fonctionnalites](docs/fr/FUNCTIONALITIES.md)
   - [Structure du projet](docs/fr/PROJECT_STRUCTURE.md)
   - [Responsabilites des fichiers](docs/fr/FILE_RESPONSIBILITIES.md)
   - [IA heuristique](docs/fr/HEURISTIC_AI.md)

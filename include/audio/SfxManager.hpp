@@ -22,21 +22,32 @@ namespace Audio
     class SfxManager
     {
     public:
-        static SfxManager &instance();
+        
+        static SfxManager &instance(); // Access the singleton instance.
 
-        void play(SfxId id);
-        void preloadAll();
-        void setSfxVolume(float volume);
-        void setMuted(bool muted);
-        bool isMuted() const;
+        void play(SfxId id); // Play a sound effect by id.
+        
+        void preloadAll(); // Preload all sound buffers.
+        
+        void setSfxVolume(float volume); // Set the master SFX volume (0-100).
+        
+        void setMuted(bool muted); // Mute or unmute SFX playback.
+        
+        bool isMuted() const; // Check whether SFX is muted.
 
     private:
-        SfxManager();
-        std::size_t indexFromId(SfxId id) const;
-        bool loadBuffer(SfxId id);
-        float volumeFromScale(float scale) const;
-        sf::Sound &acquireSound(const sf::SoundBuffer &buffer, float volumeScale);
-        void applyVolume();
+        
+        SfxManager(); // Initialize asset paths and pool state.
+        
+        std::size_t indexFromId(SfxId id) const; // Map a SfxId to its array index.
+        
+        bool loadBuffer(SfxId id); // Load a buffer on demand.
+        
+        float volumeFromScale(float scale) const; // Convert a scale factor to a clamped volume.
+        
+        sf::Sound &acquireSound(const sf::SoundBuffer &buffer, float volumeScale); // Acquire a sound from the pool or rotate when full.
+        
+        void applyVolume(); // Apply current volume settings to the pool.
 
         static constexpr std::size_t kMaxPool = 16;
         std::array<std::string, static_cast<std::size_t>(SfxId::Count)> m_paths;
