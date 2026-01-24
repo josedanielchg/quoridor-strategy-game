@@ -4,6 +4,7 @@
 #include "audio/SfxManager.hpp"
 #include <chrono>
 #include <future>
+#include <exception>
 #include <iostream>
 #include <utility>
 
@@ -18,28 +19,63 @@ namespace App
         m_cpuPending = false;
         m_cpuThinking = false;
 
-        if (!m_renderer.init())
+        try
         {
-            std::cerr << "Failed to init renderer\n";
+            if (!m_renderer.init())
+            {
+                std::cerr << "GameRenderer initialization failed\n";
+                return false;
+            }
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "GameRenderer initialization failed: " << e.what() << "\n";
             return false;
         }
-        if (!m_hud.init())
-            std::cerr << "Warning: HUD failed\n";
-        else
+
+        bool hudOk = false;
+        try
+        {
+            hudOk = m_hud.init();
+            if (!hudOk)
+                std::cerr << "Hud initialization failed\n";
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Hud initialization failed: " << e.what() << "\n";
+        }
+        if (hudOk)
+        {
             m_hud.update(Game::currentPlayer(m_gameState),
                          m_gameState.wallsRemaining[0],
                          m_gameState.wallsRemaining[1],
                          Game::GameState::MAX_WALLS_PER_PLAYER);
+        }
 
-        if (!m_bottomBar.init())
-            std::cerr << "Warning: Bottom bar failed\n";
+        try
+        {
+            if (!m_bottomBar.init())
+                std::cerr << "InGameBottomBar initialization failed\n";
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "InGameBottomBar initialization failed: " << e.what() << "\n";
+        }
         m_bottomBar.setWallPlacementActive(m_isPlacingWall);
 
-        if (!m_pauseMenu.init())
+        bool pauseOk = false;
+        try
         {
-            std::cerr << "Warning: Pause menu failed\n";
+            pauseOk = m_pauseMenu.init();
+            if (!pauseOk)
+                std::cerr << "PauseMenu initialization failed\n";
         }
-        else
+        catch (const std::exception &e)
+        {
+            std::cerr << "PauseMenu initialization failed: " << e.what() << "\n";
+        }
+
+        if (pauseOk)
         {
             m_pauseMenu.setOnResume([this]()
                                     { m_pauseMenu.setEnabled(false); });
@@ -54,11 +90,19 @@ namespace App
                                           m_onQuit(); });
         }
 
-        if (!m_winnerMenu.init())
+        bool winnerOk = false;
+        try
         {
-            std::cerr << "Warning: Winner menu failed\n";
+            winnerOk = m_winnerMenu.init();
+            if (!winnerOk)
+                std::cerr << "WinnerMenu initialization failed\n";
         }
-        else
+        catch (const std::exception &e)
+        {
+            std::cerr << "WinnerMenu initialization failed: " << e.what() << "\n";
+        }
+
+        if (winnerOk)
         {
             m_winnerMenu.setOnRestart([this]()
                                       {
@@ -70,6 +114,10 @@ namespace App
                                        if (m_onQuit)
                                            m_onQuit(); });
         }
+
+        // Force static wall preview sprites to initialize during startup (fail fast).
+        (void)Game::Wall::previewUpperSprite();
+        (void)Game::Wall::previewDownSprite();
 
         m_bottomBar.setOnClick([this]()
                                {

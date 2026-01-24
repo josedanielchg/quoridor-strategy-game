@@ -1,7 +1,9 @@
 #include "app/Application.hpp"
+#include "audio/SfxManager.hpp"
 #include "game/GameRules.hpp"
 #include "game/Move.hpp"
 #include <iostream>
+#include <exception>
 #include <optional>
 
 namespace App
@@ -12,25 +14,36 @@ namespace App
     {
         m_window.setFramerateLimit(60);
 
+        // Fail-fast: preload SFX so missing audio assets stop startup.
+        Audio::SfxManager::instance().preloadAll();
+
+        auto initScreen = [](const char *name, auto &screen)
+        {
+            try
+            {
+                if (!screen->init())
+                    std::cerr << name << " initialization failed\n";
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << name << " initialization failed: " << e.what() << "\n";
+            }
+        };
+
         m_titleScreen = std::make_unique<TitleScreen>();
-        if (!m_titleScreen->init())
-            std::cerr << "Warning: Title screen failed\n";
+        initScreen("TitleScreen", m_titleScreen);
 
         m_menuScreen = std::make_unique<MenuScreen>();
-        if (!m_menuScreen->init())
-            std::cerr << "Warning: Menu screen failed\n";
+        initScreen("MenuScreen", m_menuScreen);
 
         m_creditsScreen = std::make_unique<CreditsScreen>();
-        if (!m_creditsScreen->init())
-            std::cerr << "Warning: Credits screen failed\n";
+        initScreen("CreditsScreen", m_creditsScreen);
 
         m_howToPlayScreen = std::make_unique<HowToPlayScreen>();
-        if (!m_howToPlayScreen->init())
-            std::cerr << "Warning: How-to-play screen failed\n";
+        initScreen("HowToPlayScreen", m_howToPlayScreen);
 
         m_gameScreen = std::make_unique<GameScreen>();
-        if (!m_gameScreen->init())
-            std::cerr << "Warning: Game screen failed\n";
+        initScreen("GameScreen", m_gameScreen);
 
         m_titleScreen->setOnStart([this]()
                                   { setCurrentScreen(m_menuScreen.get()); });
