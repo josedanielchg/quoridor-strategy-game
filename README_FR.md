@@ -14,13 +14,13 @@ Construit en C++ (C++20) en utilisant SFML pour les graphismes/audio/fenetre.
 - [Credits](#credits)
 - [Contribuer](#contributing)
 - Docs
-  - [Compilation et execution](docs/en/BUILD_RUN.md)
-  - [Jouabilite et commandes](docs/en/CONTROLS.md)
-  - [Structure du projet](docs/en/PROJECT_STRUCTURE.md)
-  - [Responsabilites des fichiers](docs/en/FILE_RESPONSIBILITIES.md)
-  - [IA heuristique](docs/en/HEURISTIC_AI.md)
-  - [Concepts OOP utilises](docs/en/OOP_CONCEPTS_USED.md)
-  - [Qualite du code](docs/en/CODE_QUALITY.md)
+  - [Compilation et execution](docs/fr/BUILD_RUN.md)
+  - [Jouabilite et commandes](docs/fr/CONTROLS.md)
+  - [Structure du projet](docs/fr/PROJECT_STRUCTURE.md)
+  - [Responsabilites des fichiers](docs/fr/FILE_RESPONSIBILITIES.md)
+  - [IA heuristique](docs/fr/HEURISTIC_AI.md)
+  - [Concepts OOP utilises](docs/fr/OOP_CONCEPTS_USED.md)
+  - [Qualite du code](docs/fr/CODE_QUALITY.md)
 
 ## Apercu
 Ce projet implemente un jeu Quoridor a 2 joueurs sur une grille 9x9. Les joueurs tentent
@@ -61,7 +61,7 @@ Executer:
 - Linux: `./build/QuoridorGame`
 
 Pour les prerequis complets, les builds debug, et le depannage, voir
-[docs/en/BUILD_RUN.md](docs/en/BUILD_RUN.md).
+[docs/fr/BUILD_RUN.md](docs/fr/BUILD_RUN.md).
 
 ## Captures d'ecran
 
@@ -74,7 +74,7 @@ Pour les prerequis complets, les builds debug, et le depannage, voir
 - `GameScreen` orchestre le jeu en utilisant `GameState`, `GameRules`, `Board`, les composants UI, et l'IA heuristique.
 - Le tour CPU est lance de facon asynchrone avec `std::async` pour garder un rendu repondant.
 
-Pour plus de details, voir [docs/en/PROJECT_STRUCTURE.md](docs/en/PROJECT_STRUCTURE.md).
+Pour plus de details, voir [docs/fr/PROJECT_STRUCTURE.md](docs/fr/PROJECT_STRUCTURE.md).
 
 ## Credits
 - Developpeurs:
