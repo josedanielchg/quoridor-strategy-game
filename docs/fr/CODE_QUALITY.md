@@ -1,4 +1,4 @@
-﻿Anglais | [Fran㌢is](../fr/CODE_QUALITY.md)
+﻿Anglais | [Français](../fr/CODE_QUALITY.md)
 
 # Qualite du code
 

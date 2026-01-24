@@ -1,4 +1,4 @@
-﻿Anglais | [Fran㌢is](docs/fr/README.md)
+﻿Anglais | [Français](docs/fr/README.md)
 
 # QuoridorGame
 

@@ -1,4 +1,4 @@
-﻿Anglais | [Fran㌢is](../fr/PROJECT_STRUCTURE.md)
+﻿Anglais | [Français](../fr/PROJECT_STRUCTURE.md)
 
 # Structure du projet
 

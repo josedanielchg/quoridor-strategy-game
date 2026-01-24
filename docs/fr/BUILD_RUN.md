@@ -1,4 +1,4 @@
-﻿Anglais | [Fran㌢is](../fr/BUILD_RUN.md)
+﻿Anglais | [Français](../fr/BUILD_RUN.md)
 
 # Compilation et execution
 

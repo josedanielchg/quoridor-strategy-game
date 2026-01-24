@@ -1,4 +1,4 @@
-﻿Anglais | [Fran㌢is](../fr/CONTROLS.md)
+﻿Anglais | [Français](../fr/CONTROLS.md)
 
 # Jouabilite et commandes
 
