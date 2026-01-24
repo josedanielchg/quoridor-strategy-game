@@ -48,25 +48,11 @@ Windows (MSVC / Visual Studio):
 ```powershell
 cmake -S . -B build
 cmake --build build
-```
-
-Debug build:
-
-```powershell
-cmake --build build
-```
 
 Linux (g++ / clang):
 
 ```bash
-cmake -S . -B build =Release
-cmake --build build
-```
-
-Debug build:
-
-```bash
-cmake -S . -B build =Debug
+cmake -S . -B build
 cmake --build build
 ```
 

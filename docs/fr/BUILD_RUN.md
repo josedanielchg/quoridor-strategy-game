@@ -49,17 +49,11 @@ Windows (MSVC / Visual Studio):
 cmake -S . -B build
 cmake --build build
 ```
+
 Linux (g++ / clang):
 
 ```bash
-cmake -S . -B build =Release
-cmake --build build
-```
-
-Compilation debug:
-
-```bash
-cmake -S . -B build =Debug
+cmake -S . -B build
 cmake --build build
 ```
 
