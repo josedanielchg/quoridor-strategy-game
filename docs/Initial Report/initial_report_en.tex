@@ -218,12 +218,22 @@ The architecture includes a base screen class and derived screens such as \textt
 \section{Installation and Execution}
 \subsection*{Prerequisites}
 \begin{itemize}[leftmargin=1.2em]
-    \item C++20 compiler (MSVC, g++, or clang)
+    \item C++20 compiler
+    \begin{itemize}[leftmargin=1.2em]
+        \item Windows: MSVC (Visual Studio 2022 recommended)
+        \item Linux: g++ or clang++
+    \end{itemize}
     \item CMake \textbf{3.22} or later
-    \item SFML \textbf{3.0}
     \item Git
-    \item Linux development libraries (for Linux builds):
-    \begin{verbatim}
+    \item SFML \textbf{3.0}
+    \begin{itemize}[leftmargin=1.2em]
+        \item This repo is configured to fetch and build SFML automatically via CMake FetchContent.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Linux Dependencies}
+Install required development libraries:
+\begin{verbatim}
 sudo apt install -y \
   build-essential git \
   libx11-dev libxrandr-dev libxcursor-dev libxi-dev \
@@ -231,8 +241,7 @@ sudo apt install -y \
   libgl1-mesa-dev \
   libfreetype-dev \
   libvorbis-dev libflac-dev
-    \end{verbatim}
-\end{itemize}
+\end{verbatim}
 
 \subsection*{Clone Repository}
 \begin{verbatim}
@@ -250,6 +259,12 @@ cmake --build build
 \begin{verbatim}
 cmake -S . -B build
 cmake --build build
+\end{verbatim}
+
+\subsection*{CMake Policy Note}
+If your CMake version is newer than 3.5 and you see policy warnings, reconfigure with:
+\begin{verbatim}
+cmake -S . -B build "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 \end{verbatim}
 
 \subsection*{Execution (Windows)}

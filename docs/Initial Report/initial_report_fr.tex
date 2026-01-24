@@ -218,12 +218,22 @@ L'architecture inclut une classe de base d'écran et des écrans dérivés tels 
 \section{Installation et exécution}
 \subsection*{Prérequis}
 \begin{itemize}[leftmargin=1.2em]
-    \item Compilateur C++20 (MSVC, g++ ou clang)
+    \item Compilateur C++20
+    \begin{itemize}[leftmargin=1.2em]
+        \item Windows: MSVC (Visual Studio 2022 recommandé)
+        \item Linux: g++ ou clang++
+    \end{itemize}
     \item CMake \textbf{3.22} ou plus récent
-    \item SFML \textbf{3.0}
     \item Git
-    \item Bibliothèques de développement Linux (pour les compilations sous Linux):
-    \begin{verbatim}
+    \item SFML \textbf{3.0}
+    \begin{itemize}[leftmargin=1.2em]
+        \item Ce dépôt est configuré pour récupérer et construire SFML automatiquement via CMake FetchContent.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Dépendances Linux}
+Installez les bibliothèques de développement requises :
+\begin{verbatim}
 sudo apt install -y \
   build-essential git \
   libx11-dev libxrandr-dev libxcursor-dev libxi-dev \
@@ -231,8 +241,7 @@ sudo apt install -y \
   libgl1-mesa-dev \
   libfreetype-dev \
   libvorbis-dev libflac-dev
-    \end{verbatim}
-\end{itemize}
+\end{verbatim}
 
 \subsection*{Cloner le dépôt}
 \begin{verbatim}
@@ -250,6 +259,12 @@ cmake --build build
 \begin{verbatim}
 cmake -S . -B build
 cmake --build build
+\end{verbatim}
+
+\subsection*{Note sur les policies CMake}
+Si votre version de CMake est plus recente que 3.5 et que vous voyez des avertissements de policy, reconfigurez avec :
+\begin{verbatim}
+cmake -S . -B build "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 \end{verbatim}
 
 \subsection*{Exécution (Windows)}
