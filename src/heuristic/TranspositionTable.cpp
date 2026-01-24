@@ -22,7 +22,7 @@ namespace Game
             return v + 1;
         }
 
-        // Random tables for Zobrist hashing. #
+        // Random tables for Zobrist hasing. #
         struct ZobristTables
         {
             uint64_t pawn[2][GameState::BOARD_SIZE][GameState::BOARD_SIZE];
@@ -85,11 +85,11 @@ namespace Game
         }
     }
 
-    // Compute a Zobrist hash for the logical game state. #
+    // Compute a Zobrist has for the logical game state. #
     uint64_t computeZobrist(const GameState &state)
     {
         const ZobristTables &t = tables();
-        uint64_t hash = 0;
+        uint64_t has = 0;
 
         for (int p = 0; p < 2; ++p)
         {
@@ -97,13 +97,13 @@ namespace Game
             int y = state.pawnY[p];
             if (x >= 0 && x < GameState::BOARD_SIZE && y >= 0 && y < GameState::BOARD_SIZE)
             {
-                hash ^= t.pawn[p][y][x];
+                has ^= t.pawn[p][y][x];
             }
 
             int walls = state.wallsRemaining[p];
             if (walls >= 0 && walls <= GameState::MAX_WALLS_PER_PLAYER)
             {
-                hash ^= t.wallsRemaining[p][walls];
+                has ^= t.wallsRemaining[p][walls];
             }
         }
 
@@ -112,19 +112,19 @@ namespace Game
             for (int x = 0; x < GameState::WALL_GRID; ++x)
             {
                 if (state.hWalls[x][y])
-                    hash ^= t.hWall[x][y];
+                    has ^= t.hWall[x][y];
                 if (state.vWalls[x][y])
-                    hash ^= t.vWall[x][y];
+                    has ^= t.vWall[x][y];
             }
         }
 
         if (state.currentPlayerId == 1 || state.currentPlayerId == 2)
-            hash ^= t.currentPlayer[state.currentPlayerId - 1];
+            has ^= t.currentPlayer[state.currentPlayerId - 1];
 
         if (state.winnerId <= 2)
-            hash ^= t.winner[state.winnerId];
+            has ^= t.winner[state.winnerId];
 
-        return hash;
+        return has;
     }
 
     // Create a table with size rounded to power-of-two. #
