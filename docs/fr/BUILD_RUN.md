@@ -28,6 +28,12 @@
 - SFML 3.0
   - Ce depot est configure pour recuperer et construire SFML automatiquement via CMake FetchContent.
 
+### Dependances Linux
+Installez les bibliotheques de developpement requises:
+```bash
+sudo apt-get install libvorbis-dev
+```
+
 ## Cloner
 
 ```bash
@@ -43,13 +49,6 @@ Windows (MSVC / Visual Studio):
 cmake -S . -B build
 cmake --build build
 ```
-
-Compilation debug:
-
-```powershell
-cmake --build build
-```
-
 Linux (g++ / clang):
 
 ```bash

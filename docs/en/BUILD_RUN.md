@@ -28,6 +28,12 @@
 - SFML 3.0
   - This repo is configured to fetch and build SFML automatically via CMake FetchContent.
 
+### Linux Dependencies
+Install required development libraries:
+```bash
+sudo apt-get install libvorbis-dev
+```
+
 ## Clone
 
 ```bash
