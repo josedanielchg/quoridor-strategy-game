@@ -4,6 +4,7 @@
 #include "game/Move.hpp"
 #include <iostream>
 #include <exception>
+#include <stdexcept>
 #include <optional>
 
 namespace App
@@ -22,7 +23,7 @@ namespace App
             try
             {
                 if (!screen->init())
-                    std::cerr << name << " initialization failed\n";
+                    throw std::runtime_error(std::string(name) + " initialization failed");
             }
             catch (const std::exception &e)
             {

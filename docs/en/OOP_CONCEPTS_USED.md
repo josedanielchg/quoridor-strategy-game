@@ -27,33 +27,20 @@ This page audits the code under `include/` and `src/` and maps key OOP/C++ conce
 | Templates (STL usage) | Partial | `include/game/Board.hpp (std::vector)`, `include/audio/SfxManager.hpp (std::array)` | Templates are used indirectly via STL containers. | No custom templates. |
 | STL containers | Used | `include/game/Board.hpp (std::vector)`, `include/heuristic/TranspositionTable.hpp (std::vector, std::optional)`, `include/audio/SfxManager.hpp (std::array)` | Containers store game state, AI tables, and audio pools. | - |
 | Iterators and range-based loops | Partial | `src/game/Board.cpp (range-based for)` | Iteration relies on container `begin()/end()` with range-based loops. | No custom iterators. |
-| Operator overloading | Not used | No operator overloads found in `include/` or `src/`. | N/A. | - |
-| Streams and file I/O | Used | `src/app/HowToPlayScreen.cpp (std::ifstream, std::istringstream)`, `src/app/Application.cpp (std::cout/cerr)` | Reads tutorial script and logs via standard streams. | - |
-| Exceptions | Partial | `src/game/Board.cpp (throw std::out_of_range)`, `include/game/VisualEntity.hpp (initSprite)`, `src/ui/Button.cpp (openFromFile)`, `src/app/Screen.cpp (openFromFile)` | Only `Board::getField` throws for out-of-range; texture/font/music loading uses return-bool + logging instead of exceptions. | No try/catch handling; resource loading is non-throwing. |
+| Operator overloading | Used | `include/game/VisualEntity.hpp (operator=(VisualEntity &&))`, `src/game/Wall.cpp (Wall::operator=(Wall &&) calls VisualEntity::operator=)` | Wall move assignment explicitly invokes the base `VisualEntity::operator=(std::move(other))` to move the texture/sprite safely. | Mostly assignment overloads; no arithmetic operators. |
+ | Streams and file I/O | Used | `src/app/HowToPlayScreen.cpp (std::ifstream, std::istringstream)`, `src/app/Application.cpp (std::cout/cerr)` | Reads tutorial script and logs via standard streams. | - |
+| Exceptions | Used | `src/game/Board.cpp (throw std::out_of_range)`, `src/app/Application.cpp (throw std::runtime_error in initScreen)`, `src/app/GameScreen.cpp (throw std::runtime_error in init steps)` | `Board::getField` throws for out-of-range; screen init throws `std::runtime_error` and catches `std::exception` to log failures. | Most resource loading uses return-bool + logging instead of exceptions. |
 | Asynchronism (std::async/std::future) | Used | `include/app/GameScreen.hpp (std::future)`, `src/app/GameScreen.cpp (std::async, wait_for, get)` | CPU search runs off the main thread and is polled each frame. | - |
 | Synchronization / atomics | Not used | No mutex/atomic usage found in `include/` or `src/`. | N/A. | - |
 | C++20 concepts / constraints | Not used | No `concept` or `requires` usage found in `include/` or `src/`. | N/A. | - |
-| Casting (static/dynamic) | Partial | `src/app/HowToPlayScreen.cpp (static_cast)`, `src/ui/Button.cpp (static_cast)` | Static casts used for numeric conversions; no dynamic_cast. | - |
 | Namespaces and modular design | Used | `include/app/*`, `include/game/*`, `include/ui/*`, `include/audio/*` | Code is organized by module namespaces and folders. | - |
 
 ## Summary
 
 | Item | Value |
 |---|---|
-| Used | 13 |
-| Partial | 4 |
-| Not used | 3 |
+| Used | 15 |
+| Partial | 3 |
+| Not used | 2 |
 | Unknown | 0 |
 | Top 10 most important concepts used | Inheritance; Polymorphism and virtual override; Encapsulation and access control; Composition / ownership; RAII / resource management; Smart pointers (unique_ptr); Constructors and destructors; Asynchronism (std::async/std::future); STL containers; Namespaces and modular design |
-
-## Gaps & next steps
-
-| Concept not used or partial | Why it is not used (or partial) | How to integrate without changing scope |
-|---|---|---|
-| Operator overloading | No operator overloads defined. | Add only if a value type (e.g., math vector) needs natural operators. |
-| C++20 concepts / constraints | No `concept`/`requires` usage in the codebase. | Use concepts if new template utilities are introduced. |
-| Synchronization / atomics | No shared-state concurrency beyond `std::future`. | Add only if multiple threads write shared data. |
-| Exceptions | Only `Board::getField` throws; resource loading is handled by return values and logs. | Add top-level catch blocks if exceptions are expected, or standardize on error-return for all resource loaders. |
-| Templates (STL usage) | Only indirect use via STL. | Introduce templates only when reuse justifies it. |
-| Iterators and range-based loops | No custom iterators or iterator-based algorithms. | Consider only if a custom container is added. |
-| Casting (static/dynamic) | Only numeric `static_cast` found. | Avoid `dynamic_cast` unless runtime type checks are required. |

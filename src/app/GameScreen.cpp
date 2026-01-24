@@ -5,6 +5,7 @@
 #include <chrono>
 #include <future>
 #include <exception>
+#include <stdexcept>
 #include <iostream>
 #include <utility>
 
@@ -23,26 +24,25 @@ namespace App
         {
             if (!m_renderer.init())
             {
-                std::cerr << "GameRenderer initialization failed\n";
-                return false;
+                throw std::runtime_error("GameRenderer initialization failed");
             }
         }
         catch (const std::exception &e)
         {
-            std::cerr << "GameRenderer initialization failed: " << e.what() << "\n";
+            std::cerr << e.what() << "\n";
             return false;
         }
 
         bool hudOk = false;
         try
         {
-            hudOk = m_hud.init();
-            if (!hudOk)
-                std::cerr << "Hud initialization failed\n";
+            if (!m_hud.init())
+                throw std::runtime_error("Hud initialization failed");
+            hudOk = true;
         }
         catch (const std::exception &e)
         {
-            std::cerr << "Hud initialization failed: " << e.what() << "\n";
+            std::cerr << e.what() << "\n";
         }
         if (hudOk)
         {
@@ -55,24 +55,24 @@ namespace App
         try
         {
             if (!m_bottomBar.init())
-                std::cerr << "InGameBottomBar initialization failed\n";
+                throw std::runtime_error("InGameBottomBar initialization failed");
         }
         catch (const std::exception &e)
         {
-            std::cerr << "InGameBottomBar initialization failed: " << e.what() << "\n";
+            std::cerr << e.what() << "\n";
         }
         m_bottomBar.setWallPlacementActive(m_isPlacingWall);
 
         bool pauseOk = false;
         try
         {
-            pauseOk = m_pauseMenu.init();
-            if (!pauseOk)
-                std::cerr << "PauseMenu initialization failed\n";
+            if (!m_pauseMenu.init())
+                throw std::runtime_error("PauseMenu initialization failed");
+            pauseOk = true;
         }
         catch (const std::exception &e)
         {
-            std::cerr << "PauseMenu initialization failed: " << e.what() << "\n";
+            std::cerr << e.what() << "\n";
         }
 
         if (pauseOk)
@@ -93,13 +93,13 @@ namespace App
         bool winnerOk = false;
         try
         {
-            winnerOk = m_winnerMenu.init();
-            if (!winnerOk)
-                std::cerr << "WinnerMenu initialization failed\n";
+            if (!m_winnerMenu.init())
+                throw std::runtime_error("WinnerMenu initialization failed");
+            winnerOk = true;
         }
         catch (const std::exception &e)
         {
-            std::cerr << "WinnerMenu initialization failed: " << e.what() << "\n";
+            std::cerr << e.what() << "\n";
         }
 
         if (winnerOk)
