@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 project(QuoridorGame VERSION 0.1 LANGUAGES CXX)
 
 # Force C++20
