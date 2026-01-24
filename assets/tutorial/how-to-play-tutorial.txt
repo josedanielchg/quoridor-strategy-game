@@ -28,5 +28,4 @@ knight|assets/tutorial/board_step_08.png|No extra turns. No final wall. Just vic
 wizard|assets/tutorial/board_step_09.png|Two plans exist: go faster, or slow the other.
 knight|assets/tutorial/board_step_09.png|The trick is choosing the right one at the right time.
 
-wizard|assets/tutorial/board_step_10.png|Let us summarize in one glance.
-knight|assets/tutorial/board_step_10.png|Then you are ready to play.
+knight|assets/tutorial/board_step_09.png|Then you are ready to play.
