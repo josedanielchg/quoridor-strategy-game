@@ -1,7 +1,7 @@
 #include "game/Board.hpp"
 #include "game/GameState.hpp"
-#include "resources/ResourceLoader.hpp"
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 
 namespace Game
@@ -29,16 +29,19 @@ namespace Game
 
         if (loadVisuals && !m_hasBackground)
         {
-            Resources::loadTextureInto(m_backgroundTexture,
-                                       "assets/textures/bg.png",
-                                       "Board",
-                                       "Board background");
-
-            m_backgroundSprite.setTexture(m_backgroundTexture, true);
-            sf::Vector2u texSize = m_backgroundTexture.getSize();
-            m_backgroundSprite.setOrigin({float(texSize.x) / 2.f, float(texSize.y) / 2.f});
-            m_backgroundSprite.setPosition({0.f, 0.f});
-            m_hasBackground = true;
+            if (!m_backgroundTexture.loadFromFile("assets/textures/bg.png"))
+            {
+                std::cerr << "Error: Could not load bg.png\n";
+                m_hasBackground = false;
+            }
+            else
+            {
+                m_backgroundSprite.setTexture(m_backgroundTexture, true);
+                sf::Vector2u texSize = m_backgroundTexture.getSize();
+                m_backgroundSprite.setOrigin({float(texSize.x) / 2.f, float(texSize.y) / 2.f});
+                m_backgroundSprite.setPosition({0.f, 0.f});
+                m_hasBackground = true;
+            }
         }
     }
 

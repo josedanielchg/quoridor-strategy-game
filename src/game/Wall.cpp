@@ -1,7 +1,7 @@
 #include "game/Wall.hpp"
 #include "game/Board.hpp"
 #include "game/WallRules.hpp"
-#include "resources/ResourceLoader.hpp"
+#include <iostream>
 #include <cstring>
 
 namespace Game
@@ -37,13 +37,16 @@ namespace Game
     {
         (void)initSprite();
 
-        Resources::loadTextureInto(m_texDown,
-                                   "assets/textures/wall-down.png",
-                                   "Wall",
-                                   "Wall down texture");
-        m_spriteDown.setTexture(m_texDown, true);
-        sf::Vector2u downSize = m_texDown.getSize();
-        m_spriteDown.setOrigin({float(downSize.x) / 1.09f, float(downSize.y) / 1.29f});
+        if (!m_texDown.loadFromFile("assets/textures/wall-down.png"))
+        {
+            std::cerr << "Error: Could not load wall-down.png\n";
+        }
+        else
+        {
+            m_spriteDown.setTexture(m_texDown, true);
+            sf::Vector2u downSize = m_texDown.getSize();
+            m_spriteDown.setOrigin({float(downSize.x) / 1.09f, float(downSize.y) / 1.29f});
+        }
     }
 
     Wall::Wall(Wall &&other) noexcept

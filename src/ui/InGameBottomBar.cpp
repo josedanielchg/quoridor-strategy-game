@@ -1,10 +1,10 @@
 #include "ui/InGameBottomBar.hpp"
 #include "audio/SfxManager.hpp"
-#include "resources/ResourceLoader.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 namespace UI
 {
@@ -30,25 +30,28 @@ namespace UI
 
     bool InGameBottomBar::init()
     {
-        Resources::loadTextureInto(m_hamburgerTexture,
-                                   HAMBURGER_ICON_PATH,
-                                   "InGameBottomBar",
-                                   "Menu icon");
+        if (!m_hamburgerTexture.loadFromFile(HAMBURGER_ICON_PATH))
+        {
+            std::cerr << "Failed to load hamburger icon: " << HAMBURGER_ICON_PATH << "\n";
+            return false;
+        }
 
         m_hamburgerSprite.setTexture(m_hamburgerTexture, true);
         const sf::Vector2u texSize = m_hamburgerTexture.getSize();
         m_hamburgerSprite.setOrigin({static_cast<float>(texSize.x) / 2.f,
                                      static_cast<float>(texSize.y) / 2.f});
 
-        Resources::loadTextureInto(m_wIconTexture,
-                                   W_ICON_PATH,
-                                   "InGameBottomBar",
-                                   "W key icon");
+        if (!m_wIconTexture.loadFromFile(W_ICON_PATH))
+        {
+            std::cerr << "Failed to load W icon: " << W_ICON_PATH << "\n";
+            return false;
+        }
 
-        Resources::loadTextureInto(m_rIconTexture,
-                                   R_ICON_PATH,
-                                   "InGameBottomBar",
-                                   "R key icon");
+        if (!m_rIconTexture.loadFromFile(R_ICON_PATH))
+        {
+            std::cerr << "Failed to load R icon: " << R_ICON_PATH << "\n";
+            return false;
+        }
 
         m_wIconSprite.setTexture(m_wIconTexture, true);
         m_rIconSprite.setTexture(m_rIconTexture, true);
@@ -59,17 +62,20 @@ namespace UI
         m_rIconSprite.setOrigin({static_cast<float>(rTexSize.x) / 2.f,
                                  static_cast<float>(rTexSize.y) / 2.f});
 
-        Resources::loadFontInto(m_font,
-                                "assets/fonts/pixelon.ttf",
-                                "InGameBottomBar",
-                                "UI font");
-        m_hasFont = true;
-        m_wLabel.setFont(m_font);
-        m_rLabel.setFont(m_font);
-        m_wLabel.setString(W_LABEL_TEXT);
-        m_rLabel.setString(R_LABEL_TEXT);
-        m_wLabel.setFillColor(sf::Color::White);
-        m_rLabel.setFillColor(sf::Color::White);
+        if (m_font.openFromFile("assets/fonts/pixelon.ttf"))
+        {
+            m_hasFont = true;
+            m_wLabel.setFont(m_font);
+            m_rLabel.setFont(m_font);
+            m_wLabel.setString(W_LABEL_TEXT);
+            m_rLabel.setString(R_LABEL_TEXT);
+            m_wLabel.setFillColor(sf::Color::White);
+            m_rLabel.setFillColor(sf::Color::White);
+        }
+        else
+        {
+            std::cerr << "Warning: Failed to load font for bottom bar labels\n";
+        }
 
         updateWallIndicatorColors();
         return true;

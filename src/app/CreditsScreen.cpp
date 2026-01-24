@@ -1,9 +1,9 @@
 #include "app/CreditsScreen.hpp"
-#include "resources/ResourceLoader.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 namespace App
 {
@@ -24,20 +24,22 @@ namespace App
 
     bool CreditsScreen::init()
     {
-        Resources::loadTextureInto(m_backgroundTexture,
-                                   BACKGROUND_PATH,
-                                   "CreditsScreen",
-                                   "Background spritesheet");
+        if (!m_backgroundTexture.loadFromFile(BACKGROUND_PATH))
+        {
+            std::cerr << "Failed to load credits background\n";
+            return false;
+        }
 
         m_backgroundSprite.setTexture(m_backgroundTexture, true);
         m_backgroundSprite.setTextureRect(
             sf::IntRect({0, 0}, {FRAME_WIDTH, FRAME_HEIGHT}));
         m_backgroundSprite.setOrigin({FRAME_WIDTH / 2.f, FRAME_HEIGHT / 2.f});
 
-        Resources::loadFontInto(m_font,
-                                FONT_PATH,
-                                "CreditsScreen",
-                                "UI font");
+        if (!m_font.openFromFile(FONT_PATH))
+        {
+            std::cerr << "Failed to load font for credits screen\n";
+            return false;
+        }
 
         m_titleText.setFillColor(sf::Color::White);
         m_bodyText.setString(

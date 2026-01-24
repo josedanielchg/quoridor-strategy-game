@@ -1,7 +1,8 @@
 #include "ui/Button.hpp"
-#include "resources/ResourceLoader.hpp"
 #include <algorithm>
 #include <cmath>
+#include <filesystem>
+#include <iostream>
 
 namespace UI
 {
@@ -19,10 +20,12 @@ namespace UI
         if (!initTiles(tilePath, hoverTilePath))
             return false;
 
-        Resources::loadFontInto(m_font,
-                                fontPath,
-                                "Button",
-                                "UI font");
+        if (!m_font.openFromFile(fontPath))
+        {
+            std::cerr << "Failed to load font: " << fontPath << " (cwd: "
+                      << std::filesystem::current_path().string() << ")\n";
+            return false;
+        }
 
         m_baseFontSize = fontSize;
         m_label.setFont(m_font);

@@ -20,7 +20,6 @@ namespace App
 
     protected:
         virtual const char *getMusicPath() const { return nullptr; }
-        virtual const char *screenName() const { return "Screen"; }
         void restartMusic();
     };
 }
