@@ -1,11 +1,11 @@
 #include "app/TitleScreen.hpp"
+#include "resources/ResourceLoader.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <cmath>
 #include <filesystem>
-#include <iostream>
 #include <utility>
 
 namespace App
@@ -23,23 +23,20 @@ namespace App
 
     bool TitleScreen::init()
     {
-        if (!m_backgroundTexture.loadFromFile("assets/textures/quoridor-bg-sprite-sheet.png"))
-        {
-            std::cerr << "Failed to load title background\n";
-            return false;
-        }
+        Resources::loadTextureInto(m_backgroundTexture,
+                                   "assets/textures/quoridor-bg-sprite-sheet.png",
+                                   "TitleScreen",
+                                   "Background spritesheet");
 
         m_backgroundSprite.setTexture(m_backgroundTexture, true);
         m_backgroundSprite.setTextureRect(
             sf::IntRect({0, 0}, {FRAME_WIDTH, FRAME_HEIGHT}));
         m_backgroundSprite.setOrigin({FRAME_WIDTH / 2.f, FRAME_HEIGHT / 2.f});
 
-        if (!m_font.openFromFile("assets/fonts/pixelon.ttf"))
-        {
-            std::cerr << "Failed to load font for title screen (cwd: "
-                      << std::filesystem::current_path().string() << ")\n";
-            return false;
-        }
+        Resources::loadFontInto(m_font,
+                                "assets/fonts/pixelon.ttf",
+                                "TitleScreen",
+                                "UI font");
 
         m_promptLine1.setFont(m_font);
         m_promptLine1.setString("PLEASE PRESS ANY KEY");

@@ -1,7 +1,7 @@
 #pragma once
 #include "game/Entity.hpp"
+#include "resources/ResourceLoader.hpp"
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <memory>
 #include <utility>
 
@@ -46,11 +46,10 @@ namespace Game
             if (path.empty())
                 return true; // Nothing to load
 
-            if (!m_texture.loadFromFile(path))
-            {
-                std::cerr << "Error: Could not load " << path << "\n";
-                return false;
-            }
+            Resources::loadTextureInto(m_texture,
+                                       path,
+                                       "VisualEntity",
+                                       path);
 
             // create the sprite after the texture is loaded
             m_sprite = std::make_unique<sf::Sprite>(m_texture);

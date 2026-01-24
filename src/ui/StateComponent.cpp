@@ -1,5 +1,6 @@
 #include "ui/StateComponent.hpp"
 #include "audio/SfxManager.hpp"
+#include "resources/ResourceLoader.hpp"
 
 namespace UI
 {
@@ -11,12 +12,16 @@ namespace UI
 
     bool StateComponent::initTiles(const std::string &tilePath, const std::string &hoverTilePath)
     {
-        if (!m_tileTexture.loadFromFile(tilePath))
-            return false;
+        Resources::loadTextureInto(m_tileTexture,
+                                   tilePath,
+                                   "StateComponent",
+                                   tilePath);
 
         const std::string hoverPath = hoverTilePath.empty() ? tilePath : hoverTilePath;
-        if (!m_hoverTileTexture.loadFromFile(hoverPath))
-            return false;
+        Resources::loadTextureInto(m_hoverTileTexture,
+                                   hoverPath,
+                                   "StateComponent",
+                                   hoverPath);
 
         m_tileSprite.setTexture(m_tileTexture, true);
         m_hoverTileSprite.setTexture(m_hoverTileTexture, true);

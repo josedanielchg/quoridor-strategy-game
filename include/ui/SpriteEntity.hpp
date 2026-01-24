@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
+#include "resources/ResourceLoader.hpp"
 #include "ui/UiConstants.hpp"
 
 namespace UI
@@ -20,8 +21,10 @@ namespace UI
         // Load texture from file and setup sprite (texture + origin)
         bool initFromFile(const std::string &path)
         {
-            if (!m_texture.loadFromFile(path))
-                return false;
+            Resources::loadTextureInto(m_texture,
+                                       path,
+                                       "SpriteEntity",
+                                       path);
 
             m_sprite.setTexture(m_texture, true);
             m_sprite.setOrigin(computeOrigin(m_texture));
@@ -68,10 +71,14 @@ namespace UI
         // Load both pawn textures (primary path for player 1, alt for player 2)
         bool initFromFiles(const std::string &pathP1, const std::string &pathP2)
         {
-            if (!m_texture.loadFromFile(pathP1))
-                return false;
-            if (!m_textureP2.loadFromFile(pathP2))
-                return false;
+            Resources::loadTextureInto(m_texture,
+                                       pathP1,
+                                       "PawnSprite",
+                                       pathP1);
+            Resources::loadTextureInto(m_textureP2,
+                                       pathP2,
+                                       "PawnSprite",
+                                       pathP2);
 
             m_sprite.setTexture(m_texture, true);
             m_sprite.setOrigin(computeOrigin(m_texture));

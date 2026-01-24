@@ -1,7 +1,7 @@
 #include "app/Application.hpp"
-#include "game/GameRules.hpp"
-#include "game/Move.hpp"
+#include "audio/SfxManager.hpp"
 #include <iostream>
+#include <stdexcept>
 #include <optional>
 
 namespace App
@@ -12,25 +12,28 @@ namespace App
     {
         m_window.setFramerateLimit(60);
 
+        // Fail-fast: preload SFX so missing audio assets stop startup.
+        Audio::SfxManager::instance().preloadAll();
+
         m_titleScreen = std::make_unique<TitleScreen>();
         if (!m_titleScreen->init())
-            std::cerr << "Warning: Title screen failed\n";
+            throw std::runtime_error("TitleScreen initialization failed");
 
         m_menuScreen = std::make_unique<MenuScreen>();
         if (!m_menuScreen->init())
-            std::cerr << "Warning: Menu screen failed\n";
+            throw std::runtime_error("MenuScreen initialization failed");
 
         m_creditsScreen = std::make_unique<CreditsScreen>();
         if (!m_creditsScreen->init())
-            std::cerr << "Warning: Credits screen failed\n";
+            throw std::runtime_error("CreditsScreen initialization failed");
 
         m_howToPlayScreen = std::make_unique<HowToPlayScreen>();
         if (!m_howToPlayScreen->init())
-            std::cerr << "Warning: How-to-play screen failed\n";
+            throw std::runtime_error("HowToPlayScreen initialization failed");
 
         m_gameScreen = std::make_unique<GameScreen>();
         if (!m_gameScreen->init())
-            std::cerr << "Warning: Game screen failed\n";
+            throw std::runtime_error("GameScreen initialization failed");
 
         m_titleScreen->setOnStart([this]()
                                   { setCurrentScreen(m_menuScreen.get()); });
