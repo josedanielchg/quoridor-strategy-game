@@ -14,7 +14,6 @@
   - [Heuristic AI](HEURISTIC_AI.md)
   - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
   - [Code Quality](CODE_QUALITY.md)
-  - [Project Management](PROJECT_MANAGEMENT.md)
 
 ## Purpose
 Summarize the OOP and C++ concepts used in this project, with concrete references.

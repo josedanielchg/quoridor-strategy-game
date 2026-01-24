@@ -21,7 +21,6 @@ Built in C++ (C++20) using SFML for graphics/audio/windowing.
   - [Heuristic AI](docs/en/HEURISTIC_AI.md)
   - [OOP Concepts Used](docs/en/OOP_CONCEPTS_USED.md)
   - [Code Quality](docs/en/CODE_QUALITY.md)
-  - [Project Management](docs/en/PROJECT_MANAGEMENT.md)
 
 ## Overview
 This project implements a 2-player Quoridor board game on a 9x9 grid. Players race to

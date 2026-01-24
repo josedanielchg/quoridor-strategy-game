@@ -15,7 +15,6 @@
   - [Heuristic AI](HEURISTIC_AI.md)
   - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
   - [Code Quality](CODE_QUALITY.md)
-  - [Project Management](PROJECT_MANAGEMENT.md)
 
 ## Purpose
 Describe how the project was planned and produced.

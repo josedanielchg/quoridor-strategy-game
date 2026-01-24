@@ -14,7 +14,6 @@
   - [Heuristic AI](HEURISTIC_AI.md)
   - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
   - [Code Quality](CODE_QUALITY.md)
-  - [Project Management](PROJECT_MANAGEMENT.md)
 
 ## Purpose
 Provide a file-level responsibility map for key headers.
