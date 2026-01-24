@@ -3,7 +3,6 @@
 # Heuristic AI
 
 ## Table of Contents
-- [Purpose](#purpose)
 - [Overview](#overview)
 - [Key classes and files](#key-classes-and-files)
 - [Search flow (step-by-step)](#search-flow-step-by-step)
@@ -20,11 +19,6 @@
   - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
   - [Code Quality](CODE_QUALITY.md)
   - [Project Management](PROJECT_MANAGEMENT.md)
-
-## Purpose
-Explain how the CPU player works and how it is integrated into gameplay.
-
-[Back to README](../../README.md)
 
 ## Overview
 The CPU uses a depth-limited alpha-beta search with move ordering and a transposition table.

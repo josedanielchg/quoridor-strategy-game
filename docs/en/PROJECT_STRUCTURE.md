@@ -3,7 +3,6 @@
 # Project Structure
 
 ## Table of Contents
-- [Purpose](#purpose)
 - [High-level tree](#high-level-tree)
 - [Module map](#module-map)
 - [Runtime flow (short)](#runtime-flow-short)
@@ -17,11 +16,6 @@
   - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
   - [Code Quality](CODE_QUALITY.md)
   - [Project Management](PROJECT_MANAGEMENT.md)
-
-## Purpose
-Give a first-look view of the codebase layout and module boundaries.
-
-[Back to README](../../README.md)
 
 ## High-level tree
 
@@ -39,31 +33,8 @@ QuoridorGame/
     FindSFML.cmake
   docs/
     en/
-      PROJECT_STRUCTURE.md
-      OOP_CONCEPTS_USED.md
-      CODE_QUALITY.md
-      HEURISTIC_AI.md
-      PROJECT_MANAGEMENT.md
-      BUILD_RUN.md
-      CONTROLS.md
-      FILE_RESPONSIBILITIES.md
     fr/
-      PROJECT_STRUCTURE.md
-      OOP_CONCEPTS_USED.md
-      CODE_QUALITY.md
-      HEURISTIC_AI.md
-      PROJECT_MANAGEMENT.md
-      BUILD_RUN.md
-      CONTROLS.md
-      FILE_RESPONSIBILITIES.md
     media/
-      gameplay.png
-      menu.png
-      wall_placement.png
-      win_screen.png
-    instructions.md
-    structure.md
-    Initial Report/
   include/
     app/
     audio/

@@ -46,7 +46,6 @@ Provide a file-level responsibility map for key headers.
 | `include/game/Wall.hpp` | Wall entity + preview sprites | `Game::Wall` | Validates locally via `WallRules` |
 | `include/heuristic/HeuristicEngine.hpp` | CPU search engine | `Game::HeuristicEngine`, `Game::HeuristicSearchConfig` | Alpha-beta + heuristics |
 | `include/heuristic/TranspositionTable.hpp` | TT + Zobrist hashing | `Game::TranspositionTable`, `Game::TTEntry`, `computeZobrist(...)` | Speeds up search |
-| `include/heuristic/PathFinder.hpp` | A* path existence helper | `Game::PathFinder` | Not present in current repo (legacy placeholder) |
 | `include/ui/UiConstants.hpp` | UI sizing/scaling constants | constants | Shared by renderer/menus |
 | `include/ui/ViewUtils.hpp` | Letterbox view utility | `makeLetterboxView(...)` | Consistent scaling |
 | `include/ui/GameRenderer.hpp` | Isometric renderer + mouse grid | `UI::GameRenderer` | Draws board/entities |

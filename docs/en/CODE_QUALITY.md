@@ -36,7 +36,7 @@ Explain the coding conventions and quality practices used in this repository.
 
 ## File naming
 - Header files: `.hpp` and source files: `.cpp`.
-- Files usually match the main class name (e.g., `GameScreen.hpp/.cpp`).
+- Files match the main class name (e.g., `GameScreen.hpp/.cpp`).
 - Directory layout maps to modules: `include/app`, `include/game`, `include/ui`, `include/heuristic`, `include/audio`.
 
 ## Includes and forward declarations
@@ -59,8 +59,3 @@ Explain the coding conventions and quality practices used in this repository.
 ## Error handling
 - Most `init` or resource-load functions return `bool` and log to `std::cerr`.
 - The project does not use exceptions for control flow.
-
-## Formatting and tooling
-- No `.clang-format` or automated formatter is present in the repo.
-- Style is consistent: 4-space indentation, braces on new lines, and clear spacing.
-

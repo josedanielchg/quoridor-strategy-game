@@ -9,13 +9,10 @@ Built in C++ (C++20) using SFML for graphics/audio/windowing.
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [Installation (Quick Start)](#installation-quick-start)
-- [Demo](#demo)
 - [Screenshots](#screenshots)
 - [Architecture Overview](#architecture-overview)
 - [Credits](#credits)
-- [License](#license)
 - [Contributing](#contributing)
-- [Additional Notes](#additional-notes)
 - Docs
   - [Build & Run](docs/en/BUILD_RUN.md)
   - [Gameplay & Controls](docs/en/CONTROLS.md)
@@ -49,15 +46,15 @@ heuristic search.
 Windows (MSVC / Visual Studio):
 
 ```powershell
-cmake -S . -B build -G "Visual Studio 17 2022" -A x64
-cmake --build build --config Release
+cmake -S . -B build
+cmake --build build
 ```
 
 Linux (g++ / clang):
 
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
+cmake -S . -B build
+cmake --build build
 ```
 
 Run:
@@ -67,19 +64,10 @@ Run:
 For full prerequisites, debug builds, and troubleshooting, see
 [docs/en/BUILD_RUN.md](docs/en/BUILD_RUN.md).
 
-## Demo
-Quick try:
-1) Build Release (see Installation).
-2) Run the executable.
-3) From the title/menu screen, choose Single Player or Multiplayer to start a match.
-
 ## Screenshots
-Screenshots are stored in `docs/media/` (replace these placeholders with real captures if needed):
 
 ![Gameplay](docs/media/gameplay.png)
-![Menu](docs/media/menu.png)
-![Wall placement](docs/media/wall_placement.png)
-![Win screen](docs/media/win_screen.png)
+![Start](docs/media/start.png)
 
 ## Architecture Overview
 - The entry point creates `App::Application`, which owns the SFML window and all screens.
@@ -91,27 +79,24 @@ For more detail, see [docs/en/PROJECT_STRUCTURE.md](docs/en/PROJECT_STRUCTURE.md
 
 ## Credits
 - Developers:
-  - `<DEVELOPER_1>`
-  - `<DEVELOPER_2>`
-- Music tool:
-  - Suno (`<NOTES_ABOUT_TRACKS/USAGE>`)
-- Image tool:
-  - Gemini (`<NOTES_ABOUT_ASSETS/USAGE>`)
-
-## License
-This project is licensed under `<LICENSE_NAME>`. See `LICENSE` for details.
+  - CHACON GOMEZ Jose Daniel
+  - GitHub: https://github.com/josedanielchg
+  - MENESES GAMBOA Carlos Adrian
+  - GitHub: https://github.com/MenesesCarlos29
+- Music:
+  - Suno (v4.5-all)
+  - Tracks used:
+    - Castle Circuits (Version 1)
+    - Castle Circuits (Version 2)
+  - Source: https://suno.com/
+  - No commercial use
+- Art / Images:
+  - Gemini (Nano Banana Pro)
+  - Source: https://gemini.google.com/
+  - No commercial use
 
 ## Contributing
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/my-change`
 3. Commit your changes
 4. Push to your fork and open a Pull Request
-
-## Additional Notes
-Placeholders to replace before publishing:
-- `<LINK>`: repository clone URL
-- `<CMAKE_MIN_VERSION>`: minimum required CMake version
-- `<SFML_VERSION>`: SFML version used by the project
-- `<LICENSE_NAME>`: license identifier
-- Credits: developer names and asset/tool notes
-- Add or replace demo media under `docs/media/`

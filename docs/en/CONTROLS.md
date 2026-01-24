@@ -3,7 +3,6 @@
 # Gameplay and Controls
 
 ## Table of Contents
-- [Purpose](#purpose)
 - [Controls table](#controls-table)
 - Docs
   - [README](../../README.md)
@@ -15,11 +14,6 @@
   - [OOP Concepts Used](OOP_CONCEPTS_USED.md)
   - [Code Quality](CODE_QUALITY.md)
   - [Project Management](PROJECT_MANAGEMENT.md)
-
-## Purpose
-Document the default gameplay controls.
-
-[Back to README](../../README.md)
 
 ## Controls table
 
