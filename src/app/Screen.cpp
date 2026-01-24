@@ -15,12 +15,14 @@ namespace App
             std::unordered_set<std::string> failedPaths;
         };
 
+        // Return the shared music state singleton for all screens. #
         SharedMusicState &sharedMusic()
         {
             static SharedMusicState state;
             return state;
         }
 
+        // Log a failed open once per path to avoid repeated warnings. #
         void logOpenFailure(SharedMusicState &state, const std::string &path)
         {
             if (state.failedPaths.insert(path).second)
@@ -30,6 +32,7 @@ namespace App
         }
     }
 
+    // Start or resume the screen music without restarting the same track. #
     void Screen::onEnter()
     {
         const char *path = getMusicPath();
@@ -60,6 +63,7 @@ namespace App
         state.music.play();
     }
 
+    // Pause the current screen music when leaving the screen. #
     void Screen::onExit()
     {
         const char *path = getMusicPath();
@@ -74,6 +78,7 @@ namespace App
             state.music.pause();
     }
 
+    // Restart the current screen music from the beginning. #
     void Screen::restartMusic()
     {
         const char *path = getMusicPath();
