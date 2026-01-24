@@ -8,15 +8,12 @@ namespace UI
     class GameRenderer
     {
     private:
-        // Helper: Convert Grid(x,y) to Screen(px,py)
-        sf::Vector2f cartesianToIsometric(int gridX, int gridY) const;
-
-        // Drawing helpers (extracted from render for clarity)
-        void applyWallTransform(sf::Sprite &sprite, sf::Vector2f &pos, Game::Orientation orientation) const;
-        void drawWallPart(sf::RenderWindow &window, sf::Vector2i gridPos, Game::Orientation orientation, const sf::Sprite &baseSprite, bool isPreview);
-        void drawTile(sf::RenderWindow &window, int gridX, int gridY);
-        void drawPawnAt(sf::RenderWindow &window, const std::vector<Game::Pawn> &pawns, int gridX, int gridY);
-        void drawWallsAt(sf::RenderWindow &window, const std::vector<Game::Wall> &walls, int gridX, int gridY);
+        sf::Vector2f cartesianToIsometric(int gridX, int gridY) const; // Grid to screen #
+        void applyWallTransform(sf::Sprite &sprite, sf::Vector2f &pos, Game::Orientation orientation) const; // Orient wall #
+        void drawWallPart(sf::RenderWindow &window, sf::Vector2i gridPos, Game::Orientation orientation, const sf::Sprite &baseSprite, bool isPreview); // Draw wall part #
+        void drawTile(sf::RenderWindow &window, int gridX, int gridY); // Draw tile #
+        void drawPawnAt(sf::RenderWindow &window, const std::vector<Game::Pawn> &pawns, int gridX, int gridY); // Draw pawn #
+        void drawWallsAt(sf::RenderWindow &window, const std::vector<Game::Wall> &walls, int gridX, int gridY); // Draw walls #
 
         // Textures (Must stay alive while game runs)
         sf::Texture m_texTile;
@@ -37,25 +34,13 @@ namespace UI
         sf::View m_view;
 
     public:
-        GameRenderer();
-
-        // Load textures and setup sprites
-        bool init();
-
-        // Draw everything
-        void render(sf::RenderWindow &window, const Game::Board &board);
-
-        // Handle resizing (centering the isometric board)
-        void handleResize(sf::RenderWindow &window, sf::Vector2u size);
-
-        // Updates the hovered tile indices
-        void setHoveredTile(sf::Vector2i gridCoords);
-
-        // Converts Screen Pixel (Mouse) -> Grid Index (0..8) / Returns {-1, -1} if outside board
-        sf::Vector2i getMouseGridPos(const sf::RenderWindow &window, sf::Vector2i mousePos) const;
-
-        // Wall Preview Logic
-        void setWallPreview(bool active, sf::Vector2i gridPos, Game::Orientation orientation);
+        GameRenderer(); // Build renderer #
+        bool init(); // Load textures #
+        void render(sf::RenderWindow &window, const Game::Board &board); // Draw board #
+        void handleResize(sf::RenderWindow &window, sf::Vector2u size); // Update view #
+        void setHoveredTile(sf::Vector2i gridCoords); // Set hover tile #
+        sf::Vector2i getMouseGridPos(const sf::RenderWindow &window, sf::Vector2i mousePos) const; // Mouse to grid #
+        void setWallPreview(bool active, sf::Vector2i gridPos, Game::Orientation orientation); // Wall preview #
     };
 
 }

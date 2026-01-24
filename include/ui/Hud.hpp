@@ -19,10 +19,10 @@ namespace UI
         int m_currentPlayerId = 1;
 
     public:
-        Hud();
+        Hud(); // Build HUD state #
 
-        bool init();
-        void update(int currentPlayerId, int p1WallsRemaining, int p2WallsRemaining, int maxWallsPerPlayer);
-        void render(sf::RenderWindow &window);
+        bool init(); // Load indicator assets and font #
+        void update(int currentPlayerId, int p1WallsRemaining, int p2WallsRemaining, int maxWallsPerPlayer); // Update counters #
+        void render(sf::RenderWindow &window); // Draw HUD #
     };
 }

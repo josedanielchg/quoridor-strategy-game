@@ -19,6 +19,7 @@ namespace UI
         const sf::Color WALL_MODE_ACTIVE_COLOR(200, 200, 200, 180);
     }
 
+    // Construct sprites and labels bound to textures/fonts. #
     InGameBottomBar::InGameBottomBar()
         : m_hamburgerSprite(m_hamburgerTexture),
           m_wIconSprite(m_wIconTexture),
@@ -28,6 +29,7 @@ namespace UI
     {
     }
 
+    // Load icons, font, and initialize label text. #
     bool InGameBottomBar::init()
     {
         if (!m_hamburgerTexture.loadFromFile(HAMBURGER_ICON_PATH))
@@ -81,21 +83,25 @@ namespace UI
         return true;
     }
 
+    // Register callback for menu button click. #
     void InGameBottomBar::setOnClick(std::function<void()> onClick)
     {
         m_onClick = std::move(onClick);
     }
 
+    // Register callback for wall mode toggle. #
     void InGameBottomBar::setOnToggleWallMode(std::function<void()> onToggleWallMode)
     {
         m_onToggleWallMode = std::move(onToggleWallMode);
     }
 
+    // Register callback for wall rotation. #
     void InGameBottomBar::setOnRotateWall(std::function<void()> onRotateWall)
     {
         m_onRotateWall = std::move(onRotateWall);
     }
 
+    // Update wall mode state and visuals. #
     void InGameBottomBar::setWallPlacementActive(bool active)
     {
         if (m_wallModeActive == active)
@@ -107,6 +113,7 @@ namespace UI
         updateWallIndicatorColors();
     }
 
+    // Handle hover and click interactions inside the bar. #
     bool InGameBottomBar::handleEvent(const sf::Event &event, sf::RenderWindow &window)
     {
         if (const auto *mouseMove = event.getIf<sf::Event::MouseMoved>())
@@ -153,6 +160,7 @@ namespace UI
         return false;
     }
 
+    // Draw bar, icons, labels, and menu button. #
     void InGameBottomBar::render(sf::RenderWindow &window)
     {
         updateLayout(window);
@@ -175,6 +183,7 @@ namespace UI
         window.setView(oldView);
     }
 
+    // Clear hover state and reset colors. #
     void InGameBottomBar::resetHover()
     {
         m_hovered = false;
@@ -183,6 +192,7 @@ namespace UI
         applyHoverColor();
     }
 
+    // Recalculate geometry based on current view size. #
     void InGameBottomBar::updateLayout(const sf::RenderWindow &window)
     {
         m_view = UI::makeLetterboxView(window.getSize());
@@ -220,6 +230,7 @@ namespace UI
         layoutControlsIcons();
     }
 
+    // Update hover flags based on mouse position. #
     void InGameBottomBar::updateHoverState(const sf::Vector2f &worldPos)
     {
         const bool hovered = m_hamburgerBounds.contains(worldPos);
@@ -241,6 +252,7 @@ namespace UI
         applyHoverColor();
     }
 
+    // Apply hover colors to icons and labels. #
     void InGameBottomBar::applyHoverColor()
     {
         m_hamburgerSprite.setColor(m_hovered ? HOVER_COLOR : sf::Color::White);
@@ -267,11 +279,13 @@ namespace UI
         }
     }
 
+    // Refresh colors for wall mode indicators. #
     void InGameBottomBar::updateWallIndicatorColors()
     {
         applyHoverColor();
     }
 
+    // Position control icons and labels within the bar. #
     void InGameBottomBar::layoutControlsIcons()
     {
         const bool showRotate = m_wallModeActive;

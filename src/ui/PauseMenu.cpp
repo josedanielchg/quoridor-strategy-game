@@ -7,6 +7,7 @@
 
 namespace UI
 {
+    // Initialize pause menu background and buttons. #
     bool PauseMenu::init()
     {
         if (!initBackground("assets/textures/pause-background.png"))
@@ -62,24 +63,28 @@ namespace UI
         return true;
     }
 
+    // Set resume button action. #
     void PauseMenu::setOnResume(std::function<void()> action)
     {
         if (m_resumeButton)
             m_resumeButton->setOnClick(std::move(action));
     }
 
+    // Set restart button action. #
     void PauseMenu::setOnRestart(std::function<void()> action)
     {
         if (m_restartButton)
             m_restartButton->setOnClick(std::move(action));
     }
 
+    // Set quit button action. #
     void PauseMenu::setOnQuit(std::function<void()> action)
     {
         if (m_quitButton)
             m_quitButton->setOnClick(std::move(action));
     }
 
+    // Layout pause menu background and buttons. #
     void PauseMenu::layout(const sf::RenderWindow &window)
     {
         const sf::View view = UI::makeLetterboxView(window.getSize());

@@ -14,6 +14,7 @@ namespace UI
     static constexpr float WALLS_TEXT_RIGHT_PADDING = 39.f;
     static constexpr float WALLS_TEXT_FONT_SIZE = 40.f;
 
+    // Construct HUD sprites and texts with shared textures/fonts. #
     Hud::Hud()
         : m_player1IndicatorSprite(m_player1IndicatorTexture),
           m_player2IndicatorSprite(m_player2IndicatorTexture),
@@ -22,6 +23,7 @@ namespace UI
     {
     }
 
+    // Load indicator textures and font assets. #
     bool Hud::init()
     {
         if (!m_player1IndicatorTexture.loadFromFile("assets/textures/player1-indicator.png"))
@@ -56,6 +58,7 @@ namespace UI
         return true;
     }
 
+    // Update wall counters and active player id. #
     void Hud::update(int currentPlayerId, int p1WallsRemaining, int p2WallsRemaining, int maxWallsPerPlayer)
     {
         m_currentPlayerId = currentPlayerId;
@@ -63,6 +66,7 @@ namespace UI
         m_player2WallsText.setString("Walls: " + std::to_string(p2WallsRemaining) + "/" + std::to_string(maxWallsPerPlayer));
     }
 
+    // Render indicators and wall counts in UI view. #
     void Hud::render(sf::RenderWindow &window)
     {
         // Save current view (Isometric)

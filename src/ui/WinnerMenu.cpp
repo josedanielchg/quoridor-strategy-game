@@ -9,6 +9,7 @@ namespace UI
 {
     namespace
     {
+        // Resolve banner path based on winner id. #
         const char *bannerPathForPlayer(int playerId)
         {
             return (playerId == 2) ? "assets/textures/ui_banner_win_p2.png"
@@ -16,6 +17,7 @@ namespace UI
         }
     }
 
+    // Initialize menu buttons and winner banner. #
     bool WinnerMenu::init()
     {
         setScreenBackdropEnabled(true);
@@ -55,6 +57,7 @@ namespace UI
         return true;
     }
 
+    // Update the winner id and reload banner texture. #
     void WinnerMenu::setWinner(int playerId)
     {
         if (playerId == m_winnerId && m_hasBackground)
@@ -68,18 +71,21 @@ namespace UI
         }
     }
 
+    // Set restart button action. #
     void WinnerMenu::setOnRestart(std::function<void()> action)
     {
         if (m_restartButton)
             m_restartButton->setOnClick(std::move(action));
     }
 
+    // Set quit button action. #
     void WinnerMenu::setOnQuit(std::function<void()> action)
     {
         if (m_quitButton)
             m_quitButton->setOnClick(std::move(action));
     }
 
+    // Layout banner and buttons relative to the view. #
     void WinnerMenu::layout(const sf::RenderWindow &window)
     {
         const sf::View view = UI::makeLetterboxView(window.getSize());

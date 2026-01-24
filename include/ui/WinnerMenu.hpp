@@ -8,13 +8,13 @@ namespace UI
     class WinnerMenu : public Menu
     {
     public:
-        bool init();
-        void setWinner(int playerId);
-        void setOnRestart(std::function<void()> action);
-        void setOnQuit(std::function<void()> action);
+        bool init(); // Build winner menu #
+        void setWinner(int playerId); // Update winner banner #
+        void setOnRestart(std::function<void()> action); // Register restart action #
+        void setOnQuit(std::function<void()> action); // Register quit action #
 
     private:
-        void layout(const sf::RenderWindow &window) override;
+        void layout(const sf::RenderWindow &window) override; // Layout buttons and banner #
 
         Button *m_restartButton = nullptr;
         Button *m_quitButton = nullptr;

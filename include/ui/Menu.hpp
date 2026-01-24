@@ -10,27 +10,27 @@ namespace UI
     class Menu
     {
     public:
-        Menu();
-        virtual ~Menu() = default;
+        Menu(); // Build menu state #
+        virtual ~Menu() = default; // Polymorphic cleanup #
 
-        bool initBackground(const std::string &path);
+        bool initBackground(const std::string &path); // Load background texture #
 
-        void setEnabled(bool enabled);
-        void toggleEnabled();
-        bool isEnabled() const;
+        void setEnabled(bool enabled); // Enable or disable menu #
+        void toggleEnabled(); // Toggle enabled state #
+        bool isEnabled() const; // Query enabled state #
 
-        void addButton(std::unique_ptr<StateComponent> button);
+        void addButton(std::unique_ptr<StateComponent> button); // Add a button #
 
-        void updateHover(const sf::RenderWindow &window, sf::Vector2i mousePos);
-        bool handleClick(const sf::RenderWindow &window, sf::Vector2i mousePos);
+        void updateHover(const sf::RenderWindow &window, sf::Vector2i mousePos); // Update hover state #
+        bool handleClick(const sf::RenderWindow &window, sf::Vector2i mousePos); // Handle click #
 
-        virtual void render(sf::RenderWindow &window);
+        virtual void render(sf::RenderWindow &window); // Draw menu #
 
     protected:
-        virtual void layout(const sf::RenderWindow &window);
-        void setScreenBackdropEnabled(bool enabled);
-        void setScreenBackdropColors(const sf::Color &top, const sf::Color &bottom);
-        void updateScreenBackdrop(const sf::View &view);
+        virtual void layout(const sf::RenderWindow &window); // Compute layout #
+        void setScreenBackdropEnabled(bool enabled); // Enable backdrop #
+        void setScreenBackdropColors(const sf::Color &top, const sf::Color &bottom); // Set backdrop colors #
+        void updateScreenBackdrop(const sf::View &view); // Update backdrop geometry #
 
         bool m_enabled = false;
         sf::Texture m_backgroundTexture;

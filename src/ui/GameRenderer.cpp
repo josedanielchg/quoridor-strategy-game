@@ -11,6 +11,7 @@ namespace UI
     static const float ISO_WIDTH = UI::FIELD_SIZE.x * UI::BOARD_SCALE * 0.50f;
     static const float ISO_HEIGHT = UI::FIELD_SIZE.y * UI::BOARD_SCALE * 0.36f;
 
+    // Initialize renderer metrics and board origin. #
     GameRenderer::GameRenderer()
         : m_spriteTile(m_texTile),
           m_isoWidth(ISO_WIDTH),
@@ -32,6 +33,7 @@ namespace UI
         m_boardOrigin = {originX, originY - 30.f * UI::BOARD_SCALE};
     }
 
+    // Load tile texture and configure sprite scaling. #
     bool GameRenderer::init()
     {
         // 1. Load Tile Texture (tiles are renderer-owned)
@@ -54,7 +56,7 @@ namespace UI
         return true;
     }
 
-    // Converts Grid Coordinates (0..8) to Screen Pixels
+    // Convert grid coordinates to screen position. #
     sf::Vector2f GameRenderer::cartesianToIsometric(int gridX, int gridY) const
     {
         float x = (gridX - gridY) * m_isoWidth;
@@ -62,6 +64,7 @@ namespace UI
         return {x + m_boardOrigin.x, y + m_boardOrigin.y};
     }
 
+    // Apply orientation-based transforms to a wall sprite. #
     void GameRenderer::applyWallTransform(sf::Sprite &sprite, sf::Vector2f &pos, Game::Orientation orientation) const
     {
         sprite.setRotation(sf::degrees(0));
@@ -77,6 +80,7 @@ namespace UI
         }
     }
 
+    // Draw a wall sprite part at a grid position. #
     void GameRenderer::drawWallPart(sf::RenderWindow &window, sf::Vector2i gridPos, Game::Orientation orientation, const sf::Sprite &baseSprite, bool isPreview)
     {
         sf::Vector2f pos = cartesianToIsometric(gridPos.x, gridPos.y);
@@ -99,6 +103,7 @@ namespace UI
         window.draw(s);
     }
 
+    // Draw a single tile at grid coordinates. #
     void GameRenderer::drawTile(sf::RenderWindow &window, int gridX, int gridY)
     {
         sf::Vector2f pos = cartesianToIsometric(gridX, gridY);
@@ -112,6 +117,7 @@ namespace UI
         window.draw(m_spriteTile);
     }
 
+    // Draw any pawn that occupies the grid cell. #
     void GameRenderer::drawPawnAt(sf::RenderWindow &window, const std::vector<Game::Pawn> &pawns, int gridX, int gridY)
     {
         for (const auto &pawn : pawns)
@@ -137,6 +143,7 @@ namespace UI
         }
     }
 
+    // Draw wall segments affecting the grid cell. #
     void GameRenderer::drawWallsAt(sf::RenderWindow &window, const std::vector<Game::Wall> &walls, int gridX, int gridY)
     {
         for (const auto &wall : walls)
@@ -178,6 +185,7 @@ namespace UI
         }
     }
 
+    // Render the board, tiles, pawns, and walls. #
     void GameRenderer::render(sf::RenderWindow &window, const Game::Board &board)
     {
         window.setView(m_view);
@@ -198,12 +206,14 @@ namespace UI
         }
     }
 
+    // Recompute view for the new window size. #
     void GameRenderer::handleResize(sf::RenderWindow &window, sf::Vector2u size)
     {
         (void)window;
         m_view = UI::makeLetterboxView(size, REFERENCE_SIZE);
     }
 
+    // Convert mouse position into grid coordinates. #
     sf::Vector2i GameRenderer::getMouseGridPos(const sf::RenderWindow &window, sf::Vector2i mousePos) const
     {
         // 1. Convert Screen Pixels -> World Coords (taking View/Zoom into account)
@@ -230,11 +240,13 @@ namespace UI
         return {-1, -1};
     }
 
+    // Update hovered tile coordinates. #
     void GameRenderer::setHoveredTile(sf::Vector2i gridCoords)
     {
         m_hoveredCoords = gridCoords;
     }
 
+    // Enable or update wall preview display. #
     void GameRenderer::setWallPreview(bool active, sf::Vector2i gridPos, Game::Orientation orientation)
     {
         m_showWallPreview = active;

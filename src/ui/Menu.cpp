@@ -5,12 +5,14 @@
 
 namespace UI
 {
+    // Construct menu sprites and backdrop geometry. #
     Menu::Menu()
         : m_backgroundSprite(m_backgroundTexture),
           m_screenBackdrop(sf::PrimitiveType::TriangleStrip, 4)
     {
     }
 
+    // Load background texture and setup sprite. #
     bool Menu::initBackground(const std::string &path)
     {
         if (!m_backgroundTexture.loadFromFile(path))
@@ -24,26 +26,31 @@ namespace UI
         return true;
     }
 
+    // Enable or disable the menu. #
     void Menu::setEnabled(bool enabled)
     {
         m_enabled = enabled;
     }
 
+    // Toggle menu enabled state. #
     void Menu::toggleEnabled()
     {
         m_enabled = !m_enabled;
     }
 
+    // Return whether the menu is enabled. #
     bool Menu::isEnabled() const
     {
         return m_enabled;
     }
 
+    // Add a button to the menu. #
     void Menu::addButton(std::unique_ptr<StateComponent> button)
     {
         m_buttons.emplace_back(std::move(button));
     }
 
+    // Update hover state for all buttons. #
     void Menu::updateHover(const sf::RenderWindow &window, sf::Vector2i mousePos)
     {
         if (!m_enabled)
@@ -59,6 +66,7 @@ namespace UI
         }
     }
 
+    // Handle click on any button. #
     bool Menu::handleClick(const sf::RenderWindow &window, sf::Vector2i mousePos)
     {
         if (!m_enabled)
@@ -76,6 +84,7 @@ namespace UI
         return false;
     }
 
+    // Draw backdrop, background, and buttons. #
     void Menu::render(sf::RenderWindow &window)
     {
         if (!m_enabled)
@@ -101,6 +110,7 @@ namespace UI
         window.setView(oldView);
     }
 
+    // Compute background scale and button positions. #
     void Menu::layout(const sf::RenderWindow &window)
     {
         const sf::View view = UI::makeLetterboxView(window.getSize());
@@ -153,17 +163,20 @@ namespace UI
         }
     }
 
+    // Toggle full-screen backdrop visibility. #
     void Menu::setScreenBackdropEnabled(bool enabled)
     {
         m_screenBackdropEnabled = enabled;
     }
 
+    // Set gradient colors for the backdrop. #
     void Menu::setScreenBackdropColors(const sf::Color &top, const sf::Color &bottom)
     {
         m_screenBackdropTop = top;
         m_screenBackdropBottom = bottom;
     }
 
+    // Update backdrop geometry for current view. #
     void Menu::updateScreenBackdrop(const sf::View &view)
     {
         const sf::Vector2f viewSize = view.getSize();

@@ -3,12 +3,14 @@
 
 namespace UI
 {
+    // Construct sprites bound to textures. #
     StateComponent::StateComponent()
         : m_tileSprite(m_tileTexture),
           m_hoverTileSprite(m_hoverTileTexture)
     {
     }
 
+    // Load base and hover textures and configure sprites. #
     bool StateComponent::initTiles(const std::string &tilePath, const std::string &hoverTilePath)
     {
         if (!m_tileTexture.loadFromFile(tilePath))
@@ -30,34 +32,40 @@ namespace UI
         return true;
     }
 
+    // Set sprite positions. #
     void StateComponent::setPosition(const sf::Vector2f &position)
     {
         m_tileSprite.setPosition(position);
         m_hoverTileSprite.setPosition(position);
     }
 
+    // Set sprite scales. #
     void StateComponent::setScale(const sf::Vector2f &scale)
     {
         m_tileSprite.setScale(scale);
         m_hoverTileSprite.setScale(scale);
     }
 
+    // Return current sprite position. #
     sf::Vector2f StateComponent::position() const
     {
         return m_tileSprite.getPosition();
     }
 
+    // Return current sprite size. #
     sf::Vector2f StateComponent::size() const
     {
         const sf::FloatRect rect = m_tileSprite.getGlobalBounds();
         return rect.size;
     }
 
+    // Return current sprite bounds. #
     sf::FloatRect StateComponent::bounds() const
     {
         return m_tileSprite.getGlobalBounds();
     }
 
+    // Update hover state based on mouse position. #
     void StateComponent::updateHover(const sf::Vector2f &mousePos)
     {
         const bool isHovered = bounds().contains(mousePos);
@@ -67,6 +75,7 @@ namespace UI
         m_state = nextState;
     }
 
+    // Handle click if within bounds. #
     bool StateComponent::handleClick(const sf::Vector2f &mousePos)
     {
         if (!bounds().contains(mousePos))
@@ -77,6 +86,7 @@ namespace UI
         return true;
     }
 
+    // Draw the appropriate sprite for current state. #
     void StateComponent::render(sf::RenderWindow &window) const
     {
         if (m_state == ComponentState::Hovered)
@@ -85,10 +95,12 @@ namespace UI
             window.draw(m_tileSprite);
     }
 
+    // Default click handler (override in subclasses). #
     void StateComponent::onClick()
     {
     }
 
+    // Center the sprite origin on its texture. #
     void StateComponent::setCenteredOrigin(sf::Sprite &sprite, const sf::Texture &texture)
     {
         const sf::Vector2u size = texture.getSize();

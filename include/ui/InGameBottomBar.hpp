@@ -7,22 +7,22 @@ namespace UI
     class InGameBottomBar
     {
     public:
-        InGameBottomBar();
-        bool init();
-        void setOnClick(std::function<void()> onClick);
-        void setOnToggleWallMode(std::function<void()> onToggleWallMode);
-        void setOnRotateWall(std::function<void()> onRotateWall);
-        void setWallPlacementActive(bool active);
-        bool handleEvent(const sf::Event &event, sf::RenderWindow &window);
-        void render(sf::RenderWindow &window);
-        void resetHover();
+        InGameBottomBar(); // Build bar state #
+        bool init(); // Load icons and font #
+        void setOnClick(std::function<void()> onClick); // Register menu click #
+        void setOnToggleWallMode(std::function<void()> onToggleWallMode); // Register wall mode toggle #
+        void setOnRotateWall(std::function<void()> onRotateWall); // Register rotate action #
+        void setWallPlacementActive(bool active); // Set wall mode state #
+        bool handleEvent(const sf::Event &event, sf::RenderWindow &window); // Handle input #
+        void render(sf::RenderWindow &window); // Draw bottom bar #
+        void resetHover(); // Clear hover state #
 
     private:
-        void updateLayout(const sf::RenderWindow &window);
-        void updateHoverState(const sf::Vector2f &worldPos);
-        void applyHoverColor();
-        void layoutControlsIcons();
-        void updateWallIndicatorColors();
+        void updateLayout(const sf::RenderWindow &window); // Recompute layout #
+        void updateHoverState(const sf::Vector2f &worldPos); // Update hover flags #
+        void applyHoverColor(); // Apply hover colors #
+        void layoutControlsIcons(); // Position control icons/labels #
+        void updateWallIndicatorColors(); // Refresh wall mode visuals #
 
         static constexpr float CONTROL_ICON_W_RATIO = (122.f / 1728.f) * 0.5f;
         static constexpr float CONTROL_ICON_H_RATIO = (118.f / 1117.f) * 0.5f;

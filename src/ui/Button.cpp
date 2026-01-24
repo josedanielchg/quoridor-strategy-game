@@ -6,11 +6,13 @@
 
 namespace UI
 {
+    // Construct button label with shared font. #
     Button::Button()
         : m_label(m_font)
     {
     }
 
+    // Initialize tile textures, font, and label styling. #
     bool Button::init(const std::string &tilePath,
                       const std::string &hoverTilePath,
                       const std::string &fontPath,
@@ -37,28 +39,33 @@ namespace UI
         return true;
     }
 
+    // Update label text and recenter it. #
     void Button::setLabel(const std::string &label)
     {
         m_label.setString(label);
         updateLabelPosition();
     }
 
+    // Set the label color. #
     void Button::setTextColor(const sf::Color &color)
     {
         m_label.setFillColor(color);
     }
 
+    // Store click callback. #
     void Button::setOnClick(std::function<void()> onClick)
     {
         m_onClick = std::move(onClick);
     }
 
+    // Set button position and recenter label. #
     void Button::setPosition(const sf::Vector2f &position)
     {
         StateComponent::setPosition(position);
         updateLabelPosition();
     }
 
+    // Scale button and adjust label size. #
     void Button::setScale(const sf::Vector2f &scale)
     {
         StateComponent::setScale(scale);
@@ -68,18 +75,21 @@ namespace UI
         updateLabelPosition();
     }
 
+    // Draw button tile and label. #
     void Button::render(sf::RenderWindow &window) const
     {
         StateComponent::render(window);
         window.draw(m_label);
     }
 
+    // Invoke click callback if present. #
     void Button::onClick()
     {
         if (m_onClick)
             m_onClick();
     }
 
+    // Center label over the button position. #
     void Button::updateLabelPosition()
     {
         const sf::FloatRect bounds = m_label.getLocalBounds();
