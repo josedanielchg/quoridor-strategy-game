@@ -1,12 +1,12 @@
 #include "app/MenuScreen.hpp"
 #include "audio/SfxManager.hpp"
-#include "resources/ResourceLoader.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <filesystem>
+#include <iostream>
 
 namespace App
 {
@@ -21,20 +21,23 @@ namespace App
 
     bool MenuScreen::init()
     {
-        Resources::loadTextureInto(m_backgroundTexture,
-                                   "assets/textures/quoridor-bg-sprite-sheet.png",
-                                   "MenuScreen",
-                                   "Background spritesheet");
+        if (!m_backgroundTexture.loadFromFile("assets/textures/quoridor-bg-sprite-sheet.png"))
+        {
+            std::cerr << "Failed to load menu background\n";
+            return false;
+        }
 
         m_backgroundSprite.setTexture(m_backgroundTexture, true);
         m_backgroundSprite.setTextureRect(
             sf::IntRect({0, 0}, {FRAME_WIDTH, FRAME_HEIGHT}));
         m_backgroundSprite.setOrigin({FRAME_WIDTH / 2.f, FRAME_HEIGHT / 2.f});
 
-        Resources::loadFontInto(m_font,
-                                "assets/fonts/pixelon.ttf",
-                                "MenuScreen",
-                                "UI font");
+        if (!m_font.openFromFile("assets/fonts/pixelon.ttf"))
+        {
+            std::cerr << "Failed to load font for menu screen (cwd: "
+                      << std::filesystem::current_path().string() << ")\n";
+            return false;
+        }
 
         m_options = {Option::SinglePlayer,
                      Option::Multiplayer,

@@ -1,8 +1,8 @@
 #include "ui/WinnerMenu.hpp"
-#include "resources/ResourceLoader.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
+#include <iostream>
 #include <vector>
 
 namespace UI
@@ -27,7 +27,10 @@ namespace UI
                            std::string(),
                            "assets/fonts/pixelon.ttf",
                            "Restart"))
+        {
+            std::cerr << "Failed to load Restart button\n";
             return false;
+        }
         m_restartButton = restart.get();
         addButton(std::move(restart));
 
@@ -36,17 +39,18 @@ namespace UI
                         std::string(),
                         "assets/fonts/pixelon.ttf",
                         "Quit"))
+        {
+            std::cerr << "Failed to load Quit button\n";
             return false;
+        }
         m_quitButton = quit.get();
         addButton(std::move(quit));
 
         if (!initBackground(bannerPathForPlayer(m_winnerId)))
+        {
+            std::cerr << "Failed to load winner banner\n";
             return false;
-
-        // Validate both winner banners at startup (fail fast).
-        sf::Texture tmp;
-        Resources::loadTextureInto(tmp, bannerPathForPlayer(1), "WinnerMenu", "Winner banner P1");
-        Resources::loadTextureInto(tmp, bannerPathForPlayer(2), "WinnerMenu", "Winner banner P2");
+        }
 
         return true;
     }
@@ -57,7 +61,11 @@ namespace UI
             return;
 
         m_winnerId = playerId;
-        (void)initBackground(bannerPathForPlayer(m_winnerId));
+        if (!initBackground(bannerPathForPlayer(m_winnerId)))
+        {
+            std::cerr << "Failed to load winner banner\n";
+            m_hasBackground = false;
+        }
     }
 
     void WinnerMenu::setOnRestart(std::function<void()> action)

@@ -30,7 +30,6 @@ namespace App
 
     private:
         const char *getMusicPath() const override { return MUSIC_PATH; }
-        const char *screenName() const override { return "MenuScreen"; }
         void updateLayout(const sf::View &view);
         void setSelectedIndex(std::size_t index);
         void applyOptionColors(std::uint8_t selectedAlpha);
