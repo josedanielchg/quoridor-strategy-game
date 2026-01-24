@@ -8,6 +8,7 @@ namespace Game
 {
     namespace
     {
+        // Build wall occupancy grids from the board walls. #
         void buildWallGrids(const Board &board,
                             uint8_t hWalls[WALL_GRID][WALL_GRID],
                             uint8_t vWalls[WALL_GRID][WALL_GRID])
@@ -29,6 +30,7 @@ namespace Game
         }
     }
 
+    // Construct a wall and load its textures. #
     Wall::Wall(int x, int y, Orientation orientation)
         : VisualEntity(x, y),
           m_orientation(orientation),
@@ -49,6 +51,7 @@ namespace Game
         }
     }
 
+    // Move-construct a wall and rebind textures. #
     Wall::Wall(Wall &&other) noexcept
         : VisualEntity(std::move(other)),
           m_orientation(other.m_orientation),
@@ -58,6 +61,7 @@ namespace Game
         m_spriteDown.setTexture(m_texDown, false);
     }
 
+    // Move-assign a wall and rebind textures. #
     Wall &Wall::operator=(Wall &&other) noexcept
     {
         if (this != &other)
@@ -71,38 +75,47 @@ namespace Game
         return *this;
     }
 
+    // Return wall orientation. #
     Orientation Wall::orientation() const { return m_orientation; }
 
+    // Return upper wall sprite. #
     const sf::Sprite &Wall::upperSprite() const { return sprite(); }
 
+    // Return down wall sprite. #
     const sf::Sprite &Wall::downSprite() const { return m_spriteDown; }
 
+    // Return shared preview wall instance. #
     const Wall &Wall::previewWall()
     {
         static Wall wall(0, 0, Orientation::Horizontal);
         return wall;
     }
 
+    // Return preview upper sprite. #
     const sf::Sprite &Wall::previewUpperSprite()
     {
         return previewWall().upperSprite();
     }
 
+    // Return preview down sprite. #
     const sf::Sprite &Wall::previewDownSprite()
     {
         return previewWall().downSprite();
     }
 
+    // Resolve texture path for upper wall. #
     std::string Wall::getTexturePath() const
     {
         return "assets/textures/wall-upper.png";
     }
 
+    // Compute the wall sprite origin. #
     sf::Vector2f Wall::getSpriteOrigin(const sf::Vector2u &texSize) const
     {
         return {float(texSize.x) / 1.09f, float(texSize.y) / 1.29f};
     }
 
+    // Validate wall placement using local wall rules. #
     bool Wall::isValidMove(const Board &board, int targetX, int targetY) const
     {
         uint8_t hWalls[WALL_GRID][WALL_GRID];

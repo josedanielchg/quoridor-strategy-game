@@ -8,12 +8,14 @@ namespace Game
 {
     static const sf::Vector2f BACKGROUND_CANVAS_SIZE = {1728.f, 1117.f};
 
+    // Construct board and initialize default state. #
     Board::Board()
         : m_backgroundSprite(m_backgroundTexture)
     {
         init();
     }
 
+    // Reset grid, walls, pawns, and optionally background visuals. #
     void Board::init(bool loadVisuals)
     {
         m_fields.clear();
@@ -45,6 +47,7 @@ namespace Game
         }
     }
 
+    // Return a mutable field reference (throws if out of bounds). #
     Field &Board::getField(int x, int y)
     {
         if (!isValid(x, y))
@@ -52,6 +55,7 @@ namespace Game
         return m_fields[y * SIZE + x];
     }
 
+    // Return a const field reference (throws if out of bounds). #
     const Field &Board::getField(int x, int y) const
     {
         if (!isValid(x, y))
@@ -59,10 +63,14 @@ namespace Game
         return m_fields[y * SIZE + x];
     }
 
+    // Expose the full field list. #
     const std::vector<Field> &Board::getAllFields() const { return m_fields; }
+    // Expose the full wall list. #
     const std::vector<Wall> &Board::getAllWalls() const { return m_walls; }
+    // Expose the full pawn list. #
     const std::vector<Pawn> &Board::getAllPawns() const { return m_pawns; }
 
+    // Set initial pawn positions by id. #
     void Board::setPawns(int p1x, int p1y, int p2x, int p2y)
     {
         m_pawns.clear();
@@ -70,6 +78,7 @@ namespace Game
         m_pawns.emplace_back(2, p2x, p2y);
     }
 
+    // Rebuild board content from a GameState snapshot. #
     bool Board::loadFromState(const GameState &state)
     {
         init(false);
@@ -95,6 +104,7 @@ namespace Game
         return true;
     }
 
+    // Draw the board background with letterbox scaling. #
     void Board::drawBackground(sf::RenderWindow &window) const
     {
         if (!m_hasBackground)
@@ -117,6 +127,7 @@ namespace Game
         window.draw(sprite);
     }
 
+    // Find pawn at grid coordinates, if any. #
     const Pawn *Board::getPawnAt(int x, int y) const
     {
         for (const auto &p : m_pawns)
@@ -127,6 +138,7 @@ namespace Game
         return nullptr;
     }
 
+    // Find pawn by id (mutable). #
     Pawn *Board::getPawnById(int id)
     {
         for (auto &p : m_pawns)
@@ -137,6 +149,7 @@ namespace Game
         return nullptr;
     }
 
+    // Find pawn by id (const). #
     const Pawn *Board::getPawnById(int id) const
     {
         for (const auto &p : m_pawns)
@@ -147,6 +160,7 @@ namespace Game
         return nullptr;
     }
 
+    // Validate and place a wall in the grid. #
     bool Board::placeWall(int x, int y, Orientation orientation)
     {
         // Create temp wall to check validity
@@ -159,6 +173,7 @@ namespace Game
         m_walls.emplace_back(x, y, orientation);
         return true;
     }
+    // Apply or remove wall blocking on affected edges. #
     void Board::toggleWall(int x, int y, Orientation ori, bool blocking)
     {
         if (ori == Orientation::Horizontal)
@@ -197,6 +212,7 @@ namespace Game
         }
     }
 
+    // Move a pawn if the target is valid. #
     bool Board::movePawn(int pawnId, int targetX, int targetY)
     {
         Pawn *pawn = getPawnById(pawnId);
@@ -212,6 +228,7 @@ namespace Game
         return false;
     }
 
+    // Check if grid coordinates are in bounds. #
     bool Board::isValid(int x, int y) const
     {
         return x >= 0 && x < SIZE && y >= 0 && y < SIZE;

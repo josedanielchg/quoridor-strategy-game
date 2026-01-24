@@ -13,23 +13,20 @@ namespace Game
         int m_y;
 
     public:
-        Entity(int x, int y) : m_x(x), m_y(y) {}
-        virtual ~Entity() = default;
+        Entity(int x, int y) : m_x(x), m_y(y) {} // Initialize position #
+        virtual ~Entity() = default; // Polymorphic cleanup #
 
-        // Getters
-        int x() const { return m_x; }
-        int y() const { return m_y; }
+        int x() const { return m_x; } // Get x position #
+        int y() const { return m_y; } // Get y position #
 
-        void setPosition(int x, int y)
+        void setPosition(int x, int y) // Update entity position #
         {
             m_x = x;
             m_y = y;
         }
 
-        // MANDATORY Methods
-        virtual bool isValidMove(const Board &board, int targetX, int targetY) const = 0;
+        virtual bool isValidMove(const Board &board, int targetX, int targetY) const = 0; // Validate a move #
 
-        // Visuals
-        virtual std::string getTexturePath() const = 0;
+        virtual std::string getTexturePath() const = 0; // Texture path for visuals #
     };
 }

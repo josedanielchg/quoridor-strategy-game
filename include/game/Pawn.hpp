@@ -10,15 +10,13 @@ namespace Game
         int m_id;
 
     public:
-        Pawn(int id, int startX, int startY);
+        Pawn(int id, int startX, int startY); // Create pawn with id #
 
-        int id() const;
+        int id() const; // Get pawn id #
 
-        // Checks if the move to (x, y) is legal (adjacency + walls)
-        bool isValidMove(const Board &board, int targetX, int targetY) const override;
-        std::string getTexturePath() const override;
+        bool isValidMove(const Board &board, int targetX, int targetY) const override; // Validate pawn move #
+        std::string getTexturePath() const override; // Pawn texture path #
 
-        // Optional: provide custom sprite origin for pawns
-        sf::Vector2f getSpriteOrigin(const sf::Vector2u &texSize) const override;
+        sf::Vector2f getSpriteOrigin(const sf::Vector2u &texSize) const override; // Pawn sprite origin #
     };
 }

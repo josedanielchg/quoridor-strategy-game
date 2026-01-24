@@ -2,13 +2,13 @@
 
 namespace Game
 {
-    enum class Orientation
+    enum class Orientation // Wall orientation #
     {
         Horizontal,
         Vertical
     };
 
-    enum class MoveType
+    enum class MoveType // Move kind #
     {
         PawnMove,
         WallPlacement

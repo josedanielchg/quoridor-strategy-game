@@ -14,15 +14,15 @@ namespace Game
         int m_playerId;
 
     public:
-        Move(MoveType type, int x, int y, Orientation orientation, int playerId);
+        Move(MoveType type, int x, int y, Orientation orientation, int playerId); // Build a move #
 
-        static Move Pawn(int x, int y, int playerId);
-        static Move Wall(int x, int y, Orientation orientation, int playerId);
+        static Move Pawn(int x, int y, int playerId); // Pawn move factory #
+        static Move Wall(int x, int y, Orientation orientation, int playerId); // Wall move factory #
 
-        MoveType type() const;
-        int x() const;
-        int y() const;
-        Orientation orientation() const;
-        int playerId() const;
+        MoveType type() const; // Get move type #
+        int x() const; // Get x coordinate #
+        int y() const; // Get y coordinate #
+        Orientation orientation() const; // Get wall orientation #
+        int playerId() const; // Get player id #
     };
 }

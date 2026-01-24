@@ -8,7 +8,6 @@
 namespace Game
 {
 
-    // VisualEntity: Adds simple SFML Texture/Sprite handling to Entities
     class VisualEntity : public Entity
     {
     protected:
@@ -16,17 +15,17 @@ namespace Game
         std::unique_ptr<sf::Sprite> m_sprite;
 
     public:
-        VisualEntity(int x, int y) : Entity(x, y), m_sprite(nullptr) {}
-        virtual ~VisualEntity() = default;
-        VisualEntity(const VisualEntity &) = delete;
-        VisualEntity &operator=(const VisualEntity &) = delete;
-        VisualEntity(VisualEntity &&other) noexcept
+        VisualEntity(int x, int y) : Entity(x, y), m_sprite(nullptr) {} // Init visual entity #
+        virtual ~VisualEntity() = default; // Polymorphic cleanup #
+        VisualEntity(const VisualEntity &) = delete; // No copy #
+        VisualEntity &operator=(const VisualEntity &) = delete; // No copy #
+        VisualEntity(VisualEntity &&other) noexcept // Move construct #
             : Entity(std::move(other)), m_texture(std::move(other.m_texture)), m_sprite(std::move(other.m_sprite))
         {
             if (m_sprite)
                 m_sprite->setTexture(m_texture, false);
         }
-        VisualEntity &operator=(VisualEntity &&other) noexcept
+        VisualEntity &operator=(VisualEntity &&other) noexcept // Move assign #
         {
             if (this != &other)
             {
@@ -39,12 +38,11 @@ namespace Game
             return *this;
         }
 
-        // Load texture from path returned by getTexturePath(), setup sprite and origin
-        bool initSprite()
+        bool initSprite() // Load texture and build sprite #
         {
             const std::string path = getTexturePath();
             if (path.empty())
-                return true; // Nothing to load
+                return true;
 
             if (!m_texture.loadFromFile(path))
             {
@@ -52,7 +50,6 @@ namespace Game
                 return false;
             }
 
-            // create the sprite after the texture is loaded
             m_sprite = std::make_unique<sf::Sprite>(m_texture);
 
             sf::Vector2u texSize = m_texture.getSize();
@@ -62,15 +59,13 @@ namespace Game
             return true;
         }
 
-        // Child classes may override to provide custom origin
-        virtual sf::Vector2f getSpriteOrigin(const sf::Vector2u &texSize) const
+        virtual sf::Vector2f getSpriteOrigin(const sf::Vector2u &texSize) const // Default sprite origin #
         {
             return {float(texSize.x) / 2.f, float(texSize.y) / 2.f};
         }
 
-        // Access the sprite for rendering (copy if you need to mutate safely)
-        const sf::Sprite &sprite() const { return *m_sprite; }
-        sf::Sprite &sprite() { return *m_sprite; }
+        const sf::Sprite &sprite() const { return *m_sprite; } // Read-only sprite #
+        sf::Sprite &sprite() { return *m_sprite; } // Mutable sprite #
     };
 
 }

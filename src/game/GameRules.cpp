@@ -10,6 +10,7 @@ namespace Game
 {
     static_assert(GameState::WALL_GRID == WALL_GRID, "Wall grid size mismatch.");
 
+    // Initialize a new game state with default positions and walls. #
     void initGameState(GameState &state)
     {
         state.pawnX[0] = 4;
@@ -31,38 +32,45 @@ namespace Game
 
     namespace
     {
+        // Check if a board cell is inside bounds. #
         bool inBoundsCell(int x, int y)
         {
             return x >= 0 && x < GameState::BOARD_SIZE && y >= 0 && y < GameState::BOARD_SIZE;
         }
 
+        // Check if a wall anchor is inside bounds. #
         bool inBoundsWall(int x, int y)
         {
             return x >= 0 && x < GameState::WALL_GRID && y >= 0 && y < GameState::WALL_GRID;
         }
 
+        // Check for a horizontal wall at anchor. #
         bool hasHorizontalWall(const GameState &state, int x, int y)
         {
             return inBoundsWall(x, y) && state.hWalls[x][y] != 0;
         }
 
+        // Check for a vertical wall at anchor. #
         bool hasVerticalWall(const GameState &state, int x, int y)
         {
             return inBoundsWall(x, y) && state.vWalls[x][y] != 0;
         }
 
+        // Check if any pawn occupies the cell. #
         bool isOccupied(const GameState &state, int x, int y)
         {
             return (state.pawnX[0] == x && state.pawnY[0] == y) ||
                    (state.pawnX[1] == x && state.pawnY[1] == y);
         }
 
+        // Check if the opponent occupies a cell. #
         bool isOpponentAt(const GameState &state, int playerId, int x, int y)
         {
             int opponentIdx = (playerId == 1) ? 1 : 0;
             return state.pawnX[opponentIdx] == x && state.pawnY[opponentIdx] == y;
         }
 
+        // Check if movement between two cells is blocked by walls. #
         bool isBlockedBetween(const GameState &state, int x, int y, int nx, int ny)
         {
             int dx = nx - x;
@@ -89,10 +97,14 @@ namespace Game
         }
     }
 
+    // Return the current player id. #
     int currentPlayer(const GameState &state) { return state.currentPlayerId; }
+    // Return the winner id (0 if none). #
     int winner(const GameState &state) { return state.winnerId; }
+    // Check if the game has ended. #
     bool isGameOver(const GameState &state) { return state.winnerId != 0; }
 
+    // Compute shortest distances to the goal row. #
     void computeDistancesToGoal(const GameState &state, int playerId,
                                 int16_t dist[GameState::BOARD_SIZE][GameState::BOARD_SIZE])
     {
@@ -143,6 +155,7 @@ namespace Game
         }
     }
 
+    // Update cached distance grids if marked dirty. #
     void updateDistanceCache(GameState &state)
     {
         if (state.distDirty == 0)
@@ -153,6 +166,7 @@ namespace Game
         state.distDirty = 0;
     }
 
+    // Validate a pawn move under current walls and rules. #
     bool isPawnMoveValid(const GameState &state, int playerId, int targetX, int targetY)
     {
         if (playerId != 1 && playerId != 2)
@@ -206,6 +220,7 @@ namespace Game
         return true;
     }
 
+    // Validate a wall placement including path availability. #
     bool isWallPlacementValid(const GameState &state, int playerId, int x, int y, Orientation orientation)
     {
         if (playerId != 1 && playerId != 2)
@@ -235,6 +250,7 @@ namespace Game
         return true;
     }
 
+    // Check if a player has reached their goal row. #
     bool hasPlayerWon(const GameState &state, int playerId)
     {
         if (playerId == 1)
@@ -244,6 +260,7 @@ namespace Game
         return false;
     }
 
+    // Apply a move without validation and record undo data. #
     bool applyMoveUnchecked(GameState &state, const Move &move, MoveUndoState &undoState)
     {
         int playerId = move.playerId();
@@ -297,6 +314,7 @@ namespace Game
         return true;
     }
 
+    // Undo a previously applied move using recorded data. #
     void undoMove(GameState &state, const Move &move, const MoveUndoState &undoState)
     {
         int playerId = undoState.currentPlayerId;
@@ -326,6 +344,7 @@ namespace Game
         }
     }
 
+    // Validate then apply a move for the current player. #
     bool applyMove(GameState &state, const Move &move)
     {
         int playerId = move.playerId();
@@ -357,6 +376,7 @@ namespace Game
         return applyMoveUnchecked(state, move, undoState);
     }
 
+    // Generate all legal moves for the current player. #
     std::vector<Move> generateLegalMoves(const GameState &state)
     {
         std::vector<Move> moves;
@@ -388,6 +408,7 @@ namespace Game
         return moves;
     }
 
+    // Score the game state for the given perspective. #
     int evaluateState(GameState &state, int perspectivePlayerId)
     {
         updateDistanceCache(state);

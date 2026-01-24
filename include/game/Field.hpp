@@ -23,21 +23,18 @@ namespace Game
         bool m_connections[static_cast<int>(Direction::Count)];
 
     public:
-        Field();
-        Field(int x, int y);
+        Field(); // Create empty field #
+        Field(int x, int y); // Create field at coords #
 
-        // Getters
-        int x() const;
-        int y() const;
-        int occupantId() const; // 0 = None, 1 = P1, 2 = P2
+        int x() const; // Get x position #
+        int y() const; // Get y position #
+        int occupantId() const; // Get occupant id #
 
-        // Setters
-        void setOccupantId(int id);
+        void setOccupantId(int id); // Set occupant id #
 
-        // Graph Logic
-        void disconnect(Direction dir);
-        void connect(Direction dir);
+        void disconnect(Direction dir); // Remove edge #
+        void connect(Direction dir); // Add edge #
 
-        bool hasPath(Direction dir) const;
+        bool hasPath(Direction dir) const; // Check edge #
     };
 }

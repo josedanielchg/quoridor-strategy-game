@@ -11,23 +11,22 @@ namespace Game
         sf::Texture m_texDown;
         sf::Sprite m_spriteDown;
 
-        static const Wall &previewWall();
+        static const Wall &previewWall(); // Shared preview wall #
 
     public:
-        Wall(int x, int y, Orientation orientation);
-        Wall(Wall &&other) noexcept;
-        Wall &operator=(Wall &&other) noexcept;
+        Wall(int x, int y, Orientation orientation); // Create wall #
+        Wall(Wall &&other) noexcept; // Move construct wall #
+        Wall &operator=(Wall &&other) noexcept; // Move assign wall #
 
-        Orientation orientation() const;
-        const sf::Sprite &upperSprite() const;
-        const sf::Sprite &downSprite() const;
-        static const sf::Sprite &previewUpperSprite();
-        static const sf::Sprite &previewDownSprite();
+        Orientation orientation() const; // Get wall orientation #
+        const sf::Sprite &upperSprite() const; // Upper wall sprite #
+        const sf::Sprite &downSprite() const; // Down wall sprite #
+        static const sf::Sprite &previewUpperSprite(); // Upper preview sprite #
+        static const sf::Sprite &previewDownSprite(); // Down preview sprite #
 
-        // Checks if placing a wall here is valid (Overlap, Bounds)
-        bool isValidMove(const Board &board, int targetX, int targetY) const override;
+        bool isValidMove(const Board &board, int targetX, int targetY) const override; // Validate placement #
 
-        std::string getTexturePath() const override;
-        sf::Vector2f getSpriteOrigin(const sf::Vector2u &texSize) const override;
+        std::string getTexturePath() const override; // Wall texture path #
+        sf::Vector2f getSpriteOrigin(const sf::Vector2u &texSize) const override; // Wall origin #
     };
 }

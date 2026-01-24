@@ -2,6 +2,7 @@
 
 namespace Game
 {
+    // Validate wall placement against local overlap/cross rules. #
     bool isWallPlacementLegalLocal(const uint8_t hWalls[WALL_GRID][WALL_GRID],
                                    const uint8_t vWalls[WALL_GRID][WALL_GRID],
                                    int x, int y, Orientation orientation)

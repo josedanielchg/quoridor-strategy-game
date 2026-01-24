@@ -9,6 +9,7 @@ namespace Game
 {
     namespace
     {
+        // Build a temporary GameState snapshot from the board. #
         bool fillStateFromBoard(const Board &board, GameState &state)
         {
             std::memset(&state, 0, sizeof(state));
@@ -48,14 +49,17 @@ namespace Game
         }
     }
 
+    // Construct a pawn and initialize its sprite. #
     Pawn::Pawn(int id, int startX, int startY)
         : VisualEntity(startX, startY), m_id(id)
     {
         (void)initSprite();
     }
 
+    // Return pawn id. #
     int Pawn::id() const { return m_id; }
 
+    // Resolve the texture path for this pawn id. #
     std::string Pawn::getTexturePath() const
     {
         if (m_id == 1)
@@ -63,11 +67,13 @@ namespace Game
         return "assets/textures/pawn_p2.png";
     }
 
+    // Compute the sprite origin for baseline alignment. #
     sf::Vector2f Pawn::getSpriteOrigin(const sf::Vector2u &texSize) const
     {
         return {float(texSize.x) / 2.f, float(texSize.y) - UI::PAWN_BASELINE_OFFSET};
     }
 
+    // Validate a pawn move using game rules on a derived state. #
     bool Pawn::isValidMove(const Board &board, int targetX, int targetY) const
     {
         GameState state{};

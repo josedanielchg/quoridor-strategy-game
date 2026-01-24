@@ -25,35 +25,30 @@ namespace Game
         bool m_hasBackground = false;
 
     public:
-        Board();
+        Board(); // Initialize board data #
 
-        // Initialize grid and neighbor connections
-        void init(bool loadVisuals = true);
-        void drawBackground(sf::RenderWindow &window) const;
+        void init(bool loadVisuals = true); // Reset grid and visuals #
+        void drawBackground(sf::RenderWindow &window) const; // Draw board background #
 
-        // Graph Operations
-        Field &getField(int x, int y);
-        const Field &getField(int x, int y) const;
-        const std::vector<Field> &getAllFields() const;
+        Field &getField(int x, int y); // Access a mutable field #
+        const Field &getField(int x, int y) const; // Access a field #
+        const std::vector<Field> &getAllFields() const; // Get all fields #
 
-        // Entity Access
-        const std::vector<Wall> &getAllWalls() const;
-        const std::vector<Pawn> &getAllPawns() const;
-        void setPawns(int p1x, int p1y, int p2x, int p2y);
-        bool loadFromState(const GameState &state);
+        const std::vector<Wall> &getAllWalls() const; // Get all walls #
+        const std::vector<Pawn> &getAllPawns() const; // Get all pawns #
+        void setPawns(int p1x, int p1y, int p2x, int p2y); // Set pawn positions #
+        bool loadFromState(const GameState &state); // Sync board from state #
 
-        // Helper: Returns pointer to pawn at x,y or nullptr
-        const Pawn *getPawnAt(int x, int y) const;
-        Pawn *getPawnById(int id);
-        const Pawn *getPawnById(int id) const;
+        const Pawn *getPawnAt(int x, int y) const; // Find pawn at grid #
+        Pawn *getPawnById(int id); // Find pawn by id #
+        const Pawn *getPawnById(int id) const; // Find pawn by id #
 
-        // Actions
-        bool placeWall(int x, int y, Orientation orientation);
-        bool movePawn(int pawnId, int targetX, int targetY);
+        bool placeWall(int x, int y, Orientation orientation); // Place a wall #
+        bool movePawn(int pawnId, int targetX, int targetY); // Move a pawn #
 
-        bool isValid(int x, int y) const;
+        bool isValid(int x, int y) const; // Check bounds #
 
-        void toggleWall(int x, int y, Orientation ori, bool blocking);
+        void toggleWall(int x, int y, Orientation ori, bool blocking); // Block/unblock edges #
     };
 
 }
