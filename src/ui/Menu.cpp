@@ -1,4 +1,5 @@
 #include "ui/Menu.hpp"
+#include "resources/ResourceLoader.hpp"
 #include "ui/UiConstants.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
@@ -13,8 +14,10 @@ namespace UI
 
     bool Menu::initBackground(const std::string &path)
     {
-        if (!m_backgroundTexture.loadFromFile(path))
-            return false;
+        Resources::loadTextureInto(m_backgroundTexture,
+                                   path,
+                                   "Menu",
+                                   path);
 
         m_backgroundSprite.setTexture(m_backgroundTexture, true);
         const sf::Vector2u size = m_backgroundTexture.getSize();

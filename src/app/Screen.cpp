@@ -1,8 +1,7 @@
 #include "app/Screen.hpp"
+#include "resources/ResourceLoader.hpp"
 #include <SFML/Audio.hpp>
-#include <iostream>
 #include <string>
-#include <unordered_set>
 
 namespace App
 {
@@ -12,21 +11,12 @@ namespace App
         {
             sf::Music music;
             std::string currentPath;
-            std::unordered_set<std::string> failedPaths;
         };
 
         SharedMusicState &sharedMusic()
         {
             static SharedMusicState state;
             return state;
-        }
-
-        void logOpenFailure(SharedMusicState &state, const std::string &path)
-        {
-            if (state.failedPaths.insert(path).second)
-            {
-                std::cerr << "Failed to open music: " << path << "\n";
-            }
         }
     }
 
@@ -47,12 +37,10 @@ namespace App
         }
 
         state.music.stop();
-        if (!state.music.openFromFile(pathStr))
-        {
-            logOpenFailure(state, pathStr);
-            state.currentPath.clear();
-            return;
-        }
+        Resources::openMusicInto(state.music,
+                                 pathStr,
+                                 screenName(),
+                                 "Screen music");
 
         state.currentPath = pathStr;
         state.music.setLooping(true);

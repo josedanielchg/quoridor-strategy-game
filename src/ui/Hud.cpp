@@ -1,9 +1,8 @@
 #include "ui/Hud.hpp"
+#include "resources/ResourceLoader.hpp"
 #include "ui/ViewUtils.hpp"
 #include <algorithm>
 #include <cmath>
-#include <filesystem>
-#include <iostream>
 #include <string>
 
 namespace UI
@@ -24,17 +23,15 @@ namespace UI
 
     bool Hud::init()
     {
-        if (!m_player1IndicatorTexture.loadFromFile("assets/textures/player1-indicator.png"))
-        {
-            std::cerr << "Failed to load player1-indicator.png" << std::endl;
-            return false;
-        }
+        Resources::loadTextureInto(m_player1IndicatorTexture,
+                                   "assets/textures/player1-indicator.png",
+                                   "Hud",
+                                   "Player 1 indicator");
 
-        if (!m_player2IndicatorTexture.loadFromFile("assets/textures/player2-indicator.png"))
-        {
-            std::cerr << "Failed to load player2-indicator.png" << std::endl;
-            return false;
-        }
+        Resources::loadTextureInto(m_player2IndicatorTexture,
+                                   "assets/textures/player2-indicator.png",
+                                   "Hud",
+                                   "Player 2 indicator");
 
         m_player1IndicatorSprite.setTexture(m_player1IndicatorTexture, true);
         m_player2IndicatorSprite.setTexture(m_player2IndicatorTexture, true);
@@ -42,12 +39,10 @@ namespace UI
 
         m_hasIndicators = true;
 
-        if (!m_font.openFromFile("assets/fonts/pixelon.ttf"))
-        {
-            std::cerr << "Failed to load font: assets/fonts/pixelon.ttf (cwd: "
-                      << std::filesystem::current_path().string() << ")\n";
-            return false;
-        }
+        Resources::loadFontInto(m_font,
+                                "assets/fonts/pixelon.ttf",
+                                "Hud",
+                                "UI font");
 
         m_player1WallsText.setFillColor(sf::Color::White);
         m_player2WallsText.setFillColor(sf::Color::White);

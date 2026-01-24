@@ -2,9 +2,11 @@
 #include "game/Move.hpp"
 #include "game/GameRules.hpp"
 #include "audio/SfxManager.hpp"
+#include "resources/ResourceLoader.hpp"
 #include <chrono>
 #include <future>
 #include <iostream>
+#include <stdexcept>
 #include <utility>
 
 namespace App
@@ -19,57 +21,50 @@ namespace App
         m_cpuThinking = false;
 
         if (!m_renderer.init())
-        {
-            std::cerr << "Failed to init renderer\n";
-            return false;
-        }
+            throw std::runtime_error("GameRenderer initialization failed");
+
         if (!m_hud.init())
-            std::cerr << "Warning: HUD failed\n";
-        else
-            m_hud.update(Game::currentPlayer(m_gameState),
-                         m_gameState.wallsRemaining[0],
-                         m_gameState.wallsRemaining[1],
-                         Game::GameState::MAX_WALLS_PER_PLAYER);
+            throw std::runtime_error("Hud initialization failed");
+        m_hud.update(Game::currentPlayer(m_gameState),
+                     m_gameState.wallsRemaining[0],
+                     m_gameState.wallsRemaining[1],
+                     Game::GameState::MAX_WALLS_PER_PLAYER);
 
         if (!m_bottomBar.init())
-            std::cerr << "Warning: Bottom bar failed\n";
+            throw std::runtime_error("InGameBottomBar initialization failed");
         m_bottomBar.setWallPlacementActive(m_isPlacingWall);
 
         if (!m_pauseMenu.init())
-        {
-            std::cerr << "Warning: Pause menu failed\n";
-        }
-        else
-        {
-            m_pauseMenu.setOnResume([this]()
-                                    { m_pauseMenu.setEnabled(false); });
-            m_pauseMenu.setOnRestart([this]()
-                                     {
-                                         resetGame();
-                                         m_pauseMenu.setEnabled(false); });
-            m_pauseMenu.setOnQuit([this]()
-                                  {
-                                      resetUIState();
-                                      if (m_onQuit)
-                                          m_onQuit(); });
-        }
+            throw std::runtime_error("PauseMenu initialization failed");
+
+        m_pauseMenu.setOnResume([this]()
+                                { m_pauseMenu.setEnabled(false); });
+        m_pauseMenu.setOnRestart([this]()
+                                 {
+                                     resetGame();
+                                     m_pauseMenu.setEnabled(false); });
+        m_pauseMenu.setOnQuit([this]()
+                              {
+                                  resetUIState();
+                                  if (m_onQuit)
+                                      m_onQuit(); });
 
         if (!m_winnerMenu.init())
-        {
-            std::cerr << "Warning: Winner menu failed\n";
-        }
-        else
-        {
-            m_winnerMenu.setOnRestart([this]()
-                                      {
-                                          resetGame();
-                                          m_winnerMenu.setEnabled(false); });
-            m_winnerMenu.setOnQuit([this]()
-                                   {
-                                       resetUIState();
-                                       if (m_onQuit)
-                                           m_onQuit(); });
-        }
+            throw std::runtime_error("WinnerMenu initialization failed");
+
+        m_winnerMenu.setOnRestart([this]()
+                                  {
+                                      resetGame();
+                                      m_winnerMenu.setEnabled(false); });
+        m_winnerMenu.setOnQuit([this]()
+                               {
+                                   resetUIState();
+                                   if (m_onQuit)
+                                       m_onQuit(); });
+
+        // Force static wall preview sprites to initialize during startup (fail fast).
+        (void)Game::Wall::previewUpperSprite();
+        (void)Game::Wall::previewDownSprite();
 
         m_bottomBar.setOnClick([this]()
                                {
@@ -79,6 +74,10 @@ namespace App
                                         { toggleWallMode(); });
         m_bottomBar.setOnRotateWall([this]()
                                     { rotateWall(); });
+
+        // Validate GameScreen music early (avoid failing only when entering the screen).
+        sf::Music musicProbe;
+        Resources::openMusicInto(musicProbe, MUSIC_PATH, "GameScreen", "Game music");
 
         return true;
     }
