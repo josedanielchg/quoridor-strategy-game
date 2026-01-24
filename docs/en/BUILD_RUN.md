@@ -32,7 +32,7 @@
 
 ```bash
 git clone https://github.com/josedanielchg/quoridor-strategy-game.git
-cd QuoridorGame
+cd quoridor-strategy-game
 ```
 
 ## Configure and build

@@ -29,7 +29,7 @@ This page audits the code under `include/` and `src/` and maps key OOP/C++ conce
 | Iterators and range-based loops | Partial | `src/game/Board.cpp (range-based for)` | Iteration relies on container `begin()/end()` with range-based loops. | No custom iterators. |
 | Operator overloading | Not used | No operator overloads found in `include/` or `src/`. | N/A. | - |
 | Streams and file I/O | Used | `src/app/HowToPlayScreen.cpp (std::ifstream, std::istringstream)`, `src/app/Application.cpp (std::cout/cerr)` | Reads tutorial script and logs via standard streams. | - |
-| Exceptions | Partial | `src/game/Board.cpp (throw std::out_of_range)` | Exceptions are thrown for invalid access; no try/catch found. | No handling strategy. |
+| Exceptions | Partial | `src/game/Board.cpp (throw std::out_of_range)`, `include/game/VisualEntity.hpp (initSprite)`, `src/ui/Button.cpp (openFromFile)`, `src/app/Screen.cpp (openFromFile)` | Only `Board::getField` throws for out-of-range; texture/font/music loading uses return-bool + logging instead of exceptions. | No try/catch handling; resource loading is non-throwing. |
 | Asynchronism (std::async/std::future) | Used | `include/app/GameScreen.hpp (std::future)`, `src/app/GameScreen.cpp (std::async, wait_for, get)` | CPU search runs off the main thread and is polled each frame. | - |
 | Synchronization / atomics | Not used | No mutex/atomic usage found in `include/` or `src/`. | N/A. | - |
 | C++20 concepts / constraints | Not used | No `concept` or `requires` usage found in `include/` or `src/`. | N/A. | - |
@@ -53,7 +53,7 @@ This page audits the code under `include/` and `src/` and maps key OOP/C++ conce
 | Operator overloading | No operator overloads defined. | Add only if a value type (e.g., math vector) needs natural operators. |
 | C++20 concepts / constraints | No `concept`/`requires` usage in the codebase. | Use concepts if new template utilities are introduced. |
 | Synchronization / atomics | No shared-state concurrency beyond `std::future`. | Add only if multiple threads write shared data. |
-| Exceptions | Only `throw` is used; no `try/catch`. | Add top-level catch blocks if exceptions are expected. |
+| Exceptions | Only `Board::getField` throws; resource loading is handled by return values and logs. | Add top-level catch blocks if exceptions are expected, or standardize on error-return for all resource loaders. |
 | Templates (STL usage) | Only indirect use via STL. | Introduce templates only when reuse justifies it. |
 | Iterators and range-based loops | No custom iterators or iterator-based algorithms. | Consider only if a custom container is added. |
 | Casting (static/dynamic) | Only numeric `static_cast` found. | Avoid `dynamic_cast` unless runtime type checks are required. |
